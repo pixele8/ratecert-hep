@@ -1,0 +1,42 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ratecert-hep"
+version = "0.1.0"
+description = "Finite-sample and fixed-point trigger-rate certification prototype"
+requires-python = ">=3.10"
+dependencies = ["numpy>=1.24", "scipy>=1.10"]
+readme = "README.md"
+license = { text = "MIT" }
+keywords = [
+    "trigger rate",
+    "fixed-point arithmetic",
+    "finite-sample confidence bound",
+    "Poisson upper limit",
+    "Clopper-Pearson interval",
+    "high energy physics",
+]
+
+[project.urls]
+Homepage = "https://github.com/pixele8/ratecert-hep"
+Repository = "https://github.com/pixele8/ratecert-hep"
+
+[project.scripts]
+ratecert-hep = "ratecert.cli:main"
+
+[project.optional-dependencies]
+dev = ["pytest>=8"]
+public-data = ["pandas>=2.0", "tables>=3.8"]
+figures = ["matplotlib>=3.8"]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+addopts = "-q"

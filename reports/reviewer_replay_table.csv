@@ -1,0 +1,64 @@
+chain,score_bits,deployment_prefix,exposure_s,target_acceptance,rate_budget_hz,rate_lsb_hz,counter_bits,alpha,count,sample_size,point_estimate,upper_bound,rate_margin_hz,counter_max_count,status,reasons
+LHCO acceptance,8,10000,,0.005,,,,0.00037037037037037035,24,10000,0.0024,0.004534519616326681,,,CERTIFIED,
+LHCO acceptance,8,10000,,0.01,,,,0.00037037037037037035,64,10000,0.0064,0.009555488676577566,,,CERTIFIED,
+LHCO acceptance,8,10000,,0.02,,,,0.00037037037037037035,133,10000,0.0133,0.017616507324229327,,,CERTIFIED,
+LHCO acceptance,8,50000,,0.005,,,,0.00037037037037037035,209,50000,0.00418,0.0052448294950515895,,,NOT_CERTIFIED,finite-sample upper acceptance exceeds target_acceptance
+LHCO acceptance,8,50000,,0.01,,,,0.00037037037037037035,429,50000,0.00858,0.010061401388531793,,,NOT_CERTIFIED,finite-sample upper acceptance exceeds target_acceptance
+LHCO acceptance,8,50000,,0.02,,,,0.00037037037037037035,807,50000,0.01614,0.018129388289206325,,,CERTIFIED,
+LHCO acceptance,8,100000,,0.005,,,,0.00037037037037037035,424,100000,0.00424,0.004978530948707055,,,CERTIFIED,
+LHCO acceptance,8,100000,,0.01,,,,0.00037037037037037035,883,100000,0.00883,0.00987273425125185,,,CERTIFIED,
+LHCO acceptance,8,100000,,0.02,,,,0.00037037037037037035,1812,100000,0.01812,0.01958677330798163,,,CERTIFIED,
+LHCO acceptance,10,10000,,0.005,,,,0.00037037037037037035,24,10000,0.0024,0.004534519616326681,,,CERTIFIED,
+LHCO acceptance,10,10000,,0.01,,,,0.00037037037037037035,65,10000,0.0065,0.009676013844878132,,,CERTIFIED,
+LHCO acceptance,10,10000,,0.02,,,,0.00037037037037037035,138,10000,0.0138,0.018186746642582328,,,CERTIFIED,
+LHCO acceptance,10,50000,,0.005,,,,0.00037037037037037035,224,50000,0.00448,0.005578861314483868,,,NOT_CERTIFIED,finite-sample upper acceptance exceeds target_acceptance
+LHCO acceptance,10,50000,,0.01,,,,0.00037037037037037035,421,50000,0.00842,0.00988852081195603,,,CERTIFIED,
+LHCO acceptance,10,50000,,0.02,,,,0.00037037037037037035,855,50000,0.0171,0.019143966351985408,,,CERTIFIED,
+LHCO acceptance,10,100000,,0.005,,,,0.00037037037037037035,450,100000,0.0045,0.005259327088959907,,,NOT_CERTIFIED,finite-sample upper acceptance exceeds target_acceptance
+LHCO acceptance,10,100000,,0.01,,,,0.00037037037037037035,916,100000,0.00916,0.010221006387223827,,,NOT_CERTIFIED,finite-sample upper acceptance exceeds target_acceptance
+LHCO acceptance,10,100000,,0.02,,,,0.00037037037037037035,1785,100000,0.01785,0.01930635014088138,,,CERTIFIED,
+LHCO acceptance,12,10000,,0.005,,,,0.00037037037037037035,24,10000,0.0024,0.004534519616326681,,,CERTIFIED,
+LHCO acceptance,12,10000,,0.01,,,,0.00037037037037037035,65,10000,0.0065,0.009676013844878132,,,CERTIFIED,
+LHCO acceptance,12,10000,,0.02,,,,0.00037037037037037035,138,10000,0.0138,0.018186746642582328,,,CERTIFIED,
+LHCO acceptance,12,50000,,0.005,,,,0.00037037037037037035,224,50000,0.00448,0.005578861314483868,,,NOT_CERTIFIED,finite-sample upper acceptance exceeds target_acceptance
+LHCO acceptance,12,50000,,0.01,,,,0.00037037037037037035,425,50000,0.0085,0.009974976636269828,,,CERTIFIED,
+LHCO acceptance,12,50000,,0.02,,,,0.00037037037037037035,858,50000,0.01716,0.019207323206355743,,,CERTIFIED,
+LHCO acceptance,12,100000,,0.005,,,,0.00037037037037037035,455,100000,0.00455,0.00531325602442278,,,NOT_CERTIFIED,finite-sample upper acceptance exceeds target_acceptance
+LHCO acceptance,12,100000,,0.01,,,,0.00037037037037037035,927,100000,0.00927,0.010337021685412525,,,NOT_CERTIFIED,finite-sample upper acceptance exceeds target_acceptance
+LHCO acceptance,12,100000,,0.02,,,,0.00037037037037037035,1816,100000,0.01816,0.019628310475543455,,,CERTIFIED,
+Explicit Poisson rate,1,,1.0,,10.0,0.01,8,0.0002777777777777778,14,14,14.0,32.09755618975004,0.005,255,NOT_CERTIFIED,finite-sample upper rate exceeds the declared rate-counter full scale; finite-sample upper rate plus fixed-point margin exceeds budget
+Explicit Poisson rate,1,,1.0,,12.0,0.01,8,0.0002777777777777778,8,8,8.0,23.097860414946837,0.005,255,NOT_CERTIFIED,finite-sample upper rate exceeds the declared rate-counter full scale; finite-sample upper rate plus fixed-point margin exceeds budget
+Explicit Poisson rate,1,,1.0,,10.0,0.01,16,0.0002777777777777778,4,4,4.0,16.474665861056103,0.005,65535,NOT_CERTIFIED,finite-sample upper rate plus fixed-point margin exceeds budget
+Explicit Poisson rate,1,,1.0,,12.0,0.01,16,0.0002777777777777778,5,5,5.0,18.207537237816382,0.005,65535,NOT_CERTIFIED,finite-sample upper rate plus fixed-point margin exceeds budget
+Explicit Poisson rate,1,,1.0,,10.0,0.05,8,0.0002777777777777778,9,9,9.0,24.655237430500108,0.025,255,NOT_CERTIFIED,finite-sample upper rate exceeds the declared rate-counter full scale; finite-sample upper rate plus fixed-point margin exceeds budget
+Explicit Poisson rate,1,,1.0,,12.0,0.05,8,0.0002777777777777778,10,10,10.0,26.185469797339962,0.025,255,NOT_CERTIFIED,finite-sample upper rate exceeds the declared rate-counter full scale; finite-sample upper rate plus fixed-point margin exceeds budget
+Explicit Poisson rate,1,,1.0,,10.0,0.05,16,0.0002777777777777778,6,6,6.0,19.881402541854648,0.025,65535,NOT_CERTIFIED,finite-sample upper rate plus fixed-point margin exceeds budget
+Explicit Poisson rate,1,,1.0,,12.0,0.05,16,0.0002777777777777778,7,7,7.0,21.508654710266043,0.025,65535,NOT_CERTIFIED,finite-sample upper rate plus fixed-point margin exceeds budget
+Explicit Poisson rate,1,,1.0,,10.0,0.1,8,0.0002777777777777778,4,4,4.0,16.474665861056103,0.05,255,NOT_CERTIFIED,finite-sample upper rate plus fixed-point margin exceeds budget
+Explicit Poisson rate,1,,1.0,,12.0,0.1,8,0.0002777777777777778,8,8,8.0,23.097860414946837,0.05,255,NOT_CERTIFIED,finite-sample upper rate plus fixed-point margin exceeds budget
+Explicit Poisson rate,1,,1.0,,10.0,0.1,16,0.0002777777777777778,10,10,10.0,26.185469797339962,0.05,65535,NOT_CERTIFIED,finite-sample upper rate plus fixed-point margin exceeds budget
+Explicit Poisson rate,1,,1.0,,12.0,0.1,16,0.0002777777777777778,8,8,8.0,23.097860414946837,0.05,65535,NOT_CERTIFIED,finite-sample upper rate plus fixed-point margin exceeds budget
+Explicit Poisson rate,1,,10.0,,10.0,0.01,8,0.0002777777777777778,86,86,8.6,12.288589878071353,0.005,255,NOT_CERTIFIED,finite-sample upper rate exceeds the declared rate-counter full scale; finite-sample upper rate plus fixed-point margin exceeds budget
+Explicit Poisson rate,1,,10.0,,12.0,0.01,8,0.0002777777777777778,90,90,9.0,12.761701671448659,0.005,255,NOT_CERTIFIED,finite-sample upper rate exceeds the declared rate-counter full scale; finite-sample upper rate plus fixed-point margin exceeds budget
+Explicit Poisson rate,1,,10.0,,10.0,0.01,16,0.0002777777777777778,79,79,7.9,11.456485472698306,0.005,65535,NOT_CERTIFIED,finite-sample upper rate plus fixed-point margin exceeds budget
+Explicit Poisson rate,1,,10.0,,12.0,0.01,16,0.0002777777777777778,76,76,7.6,11.098107973604376,0.005,65535,CERTIFIED,
+Explicit Poisson rate,1,,10.0,,10.0,0.05,8,0.0002777777777777778,54,54,5.4,8.429703194986706,0.025,255,CERTIFIED,
+Explicit Poisson rate,1,,10.0,,12.0,0.05,8,0.0002777777777777778,71,71,7.1,10.498230561066318,0.025,255,CERTIFIED,
+Explicit Poisson rate,1,,10.0,,10.0,0.05,16,0.0002777777777777778,90,90,9.0,12.761701671448659,0.025,65535,NOT_CERTIFIED,finite-sample upper rate plus fixed-point margin exceeds budget
+Explicit Poisson rate,1,,10.0,,12.0,0.05,16,0.0002777777777777778,81,81,8.1,11.694798764496932,0.025,65535,CERTIFIED,
+Explicit Poisson rate,1,,10.0,,10.0,0.1,8,0.0002777777777777778,84,84,8.4,12.051404818924505,0.05,255,NOT_CERTIFIED,finite-sample upper rate plus fixed-point margin exceeds budget
+Explicit Poisson rate,1,,10.0,,12.0,0.1,8,0.0002777777777777778,62,62,6.2,9.409302546453764,0.05,255,CERTIFIED,
+Explicit Poisson rate,1,,10.0,,10.0,0.1,16,0.0002777777777777778,73,73,7.3,10.738584256641733,0.05,65535,NOT_CERTIFIED,finite-sample upper rate plus fixed-point margin exceeds budget
+Explicit Poisson rate,1,,10.0,,12.0,0.1,16,0.0002777777777777778,85,85,8.5,12.17005128958465,0.05,65535,NOT_CERTIFIED,finite-sample upper rate plus fixed-point margin exceeds budget
+Explicit Poisson rate,1,,100.0,,10.0,0.01,8,0.0002777777777777778,793,793,7.93,8.949384290930809,0.005,255,NOT_CERTIFIED,rate counter overflow: count 793 exceeds 255; finite-sample upper rate exceeds the declared rate-counter full scale
+Explicit Poisson rate,1,,100.0,,12.0,0.01,8,0.0002777777777777778,814,814,8.14,9.172163192298338,0.005,255,NOT_CERTIFIED,rate counter overflow: count 814 exceeds 255; finite-sample upper rate exceeds the declared rate-counter full scale
+Explicit Poisson rate,1,,100.0,,10.0,0.01,16,0.0002777777777777778,784,784,7.84,8.853855947772974,0.005,65535,CERTIFIED,
+Explicit Poisson rate,1,,100.0,,12.0,0.01,16,0.0002777777777777778,811,811,8.11,9.140347796295798,0.005,65535,CERTIFIED,
+Explicit Poisson rate,1,,100.0,,10.0,0.05,8,0.0002777777777777778,796,796,7.96,8.981220104754208,0.025,255,NOT_CERTIFIED,rate counter overflow: count 796 exceeds 255
+Explicit Poisson rate,1,,100.0,,12.0,0.05,8,0.0002777777777777778,798,798,7.98,9.00244206230172,0.025,255,NOT_CERTIFIED,rate counter overflow: count 798 exceeds 255
+Explicit Poisson rate,1,,100.0,,10.0,0.05,16,0.0002777777777777778,784,784,7.84,8.853855947772974,0.025,65535,CERTIFIED,
+Explicit Poisson rate,1,,100.0,,12.0,0.05,16,0.0002777777777777778,791,791,7.91,8.928158488257369,0.025,65535,CERTIFIED,
+Explicit Poisson rate,1,,100.0,,10.0,0.1,8,0.0002777777777777778,808,808,8.08,9.108529044603412,0.05,255,NOT_CERTIFIED,rate counter overflow: count 808 exceeds 255
+Explicit Poisson rate,1,,100.0,,12.0,0.1,8,0.0002777777777777778,786,786,7.86,8.875087195121047,0.05,255,NOT_CERTIFIED,rate counter overflow: count 786 exceeds 255
+Explicit Poisson rate,1,,100.0,,10.0,0.1,16,0.0002777777777777778,790,790,7.9,8.917545006695072,0.05,65535,CERTIFIED,
+Explicit Poisson rate,1,,100.0,,12.0,0.1,16,0.0002777777777777778,791,791,7.91,8.928158488257369,0.05,65535,CERTIFIED,

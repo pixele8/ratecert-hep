@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+*.egg-info/
+build/
+dist/
+.venv/
+venv/
+
+# LaTeX build artifacts
+*.aux
+*.bbl
+*.blg
+*.log
+*.out
+*.toc
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+
+# External public data: not versioned, fetched from Zenodo.
+# See README "External data" for the DOI and verification hashes.
+data/
+
+# Generated figures and compiled manuscripts: reproducible from source.
+# NOTE: paper_cpc/figures/*.pdf are deliberately NOT ignored below, so that the
+# manuscript builds from a clean clone without regenerating the plots first.
+reports/figures/
+*.pdf
+!paper_cpc/figures/*.pdf
+_preview_*.png
+
+# Scratch
+tmp/
+*.tmp

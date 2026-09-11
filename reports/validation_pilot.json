@@ -1,0 +1,57 @@
+{
+  "poisson_coverage_pilot": {
+    "true_rate_hz": 8.0,
+    "exposure_s": 20.0,
+    "alpha": 0.01,
+    "replicates": 10000,
+    "observed_coverage": 0.9901,
+    "expected_minimum_coverage": 0.99
+  },
+  "near_budget_boundary": {
+    "certified": false,
+    "status": "NOT_CERTIFIED",
+    "deployment_block_id": "boundary-deploy-v1",
+    "calibration_block_id": "boundary-cal-v1",
+    "threshold_code": 205,
+    "count": 95,
+    "exposure_s": 10.0,
+    "point_rate_hz": 9.5,
+    "recorded_point_rate_hz": 9.5,
+    "upper_rate_hz": 12.025227994799012,
+    "recorded_upper_rate_hz": 12.025227994799012,
+    "alpha": 0.01,
+    "rate_budget_hz": 10.0,
+    "rate_resolution_hz": 0.1,
+    "observed_rate_step_hz": 0.09999999999999432,
+    "quantization_margin_hz": 0.05,
+    "deployment_margin_hz": -2.075227994799012,
+    "prescale": 1,
+    "fixed_point": {
+      "saturation_count": 0,
+      "max_abs_error": 0.001947949495723078,
+      "error_bound": 0.001953125,
+      "n_scores": 1000,
+      "score_spec": {
+        "bits": 10,
+        "fractional_bits": 8,
+        "signed": false,
+        "rounding": "nearest_even",
+        "saturation": "error",
+        "lsb": 0.00390625,
+        "code_min": 0,
+        "code_max": 1023
+      },
+      "rate_spec": {
+        "lsb_hz": 0.1,
+        "rounding": "nearest_even",
+        "error_bound_hz": 0.05
+      }
+    },
+    "reasons": [
+      "finite-sample upper rate plus fixed-point margin exceeds budget"
+    ],
+    "warnings": [
+      "observed threshold step is diagnostic; deterministic rate LSB is used for certification"
+    ]
+  }
+}

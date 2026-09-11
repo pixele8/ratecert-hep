@@ -1,0 +1,28 @@
+{
+  "study": "RateCert-HEP reference-platform primitive timing",
+  "n_events": 100000,
+  "repeats": 20,
+  "seed": 123,
+  "python": "3.10.7",
+  "platform": "Windows-10-10.0.19045-SP0",
+  "measurements": {
+    "quantize_scores": {
+      "repeats": 20,
+      "median_ms": 2.3678500001551583,
+      "min_ms": 2.1407999884104356,
+      "max_ms": 2.7017999964300543
+    },
+    "certify_acceptance": {
+      "repeats": 20,
+      "median_ms": 2.8087000027881004,
+      "min_ms": 2.5313000078313053,
+      "max_ms": 3.404300005058758
+    },
+    "certify_rate": {
+      "repeats": 20,
+      "median_ms": 7.198849998530932,
+      "min_ms": 6.733299989718944,
+      "max_ms": 8.258799993200228
+    }
+  }
+}

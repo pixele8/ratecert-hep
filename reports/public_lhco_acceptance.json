@@ -1,0 +1,2002 @@
+{
+  "cells": [
+    {
+      "alpha": 0.00037037037037037035,
+      "bits": 8,
+      "calibration_block_id": "lhco-rnd-cal-10000-b8",
+      "calibration_empirical_acceptance": 0.0025,
+      "calibration_selection_rule": "clopper_pearson_upper_bound",
+      "calibration_warnings": [
+        "threshold selected against a calibration Clopper-Pearson upper bound"
+      ],
+      "certified": true,
+      "confidence": 0.9996296296296296,
+      "count": 24,
+      "deployment_block_id": "lhco-rnd-deploy-10000-b8",
+      "empirical_acceptance": 0.0024,
+      "input_rate_hz": null,
+      "point_rate_hz": null,
+      "prequantized_acceptance": 0.0023,
+      "prescale": 1,
+      "provenance": {
+        "calibration_event_id_sha256": "4bd08da00da9b0473d23e0c4d9d451e75901f9db805a833b9a658b032c41e84f",
+        "deployment_event_id_sha256": "48eaeceec3bf645d5b852aaa0bcb376ba21ec72a16262f7cb828ade4f8d2c5df",
+        "public_data_mode": true,
+        "sample_prefix_n": 10000
+      },
+      "quantity": "background_acceptance_probability",
+      "quantization_acceptance_delta": 9.999999999999983e-05,
+      "quantization_sweep": {
+        "max_abs_acceptance_delta": 0.054,
+        "signed_acceptance_delta_at_max": 0.054,
+        "threshold_code_at_max": 62,
+        "threshold_value_at_max": 0.2421875,
+        "thresholds_evaluated": 76
+      },
+      "rate_budget_hz": null,
+      "rate_lsb_hz": null,
+      "rate_quantization": null,
+      "reasons": [],
+      "recorded_point_rate_hz": null,
+      "recorded_upper_rate_hz": null,
+      "sample_size": 10000,
+      "sample_size_requested": 10000,
+      "score_lsb": 0.00390625,
+      "score_quantization": {
+        "error_bound": 0.001953125,
+        "max_abs_error": 0.0019530282150984624,
+        "n_scores": 10000,
+        "prequantized_acceptance_at_threshold": 0.0023,
+        "quantization_acceptance_delta": 9.999999999999983e-05,
+        "saturation_count": 0,
+        "spec": {
+          "bits": 8,
+          "code_max": 255,
+          "code_min": 0,
+          "fractional_bits": 8,
+          "lsb": 0.00390625,
+          "rounding": "nearest_even",
+          "saturation": "error",
+          "signed": false
+        },
+        "threshold_value": 0.484375
+      },
+      "selection_alpha": 0.00037037037037037035,
+      "status": "CERTIFIED",
+      "target_acceptance": 0.005,
+      "target_acceptance_requested": 0.005,
+      "threshold_code": 124,
+      "upper_acceptance": 0.004534519616326681,
+      "upper_rate_hz": null,
+      "warnings": [
+        "no live-time or input flux supplied: this certificate is an acceptance probability, not a detector Hz measurement"
+      ]
+    },
+    {
+      "alpha": 0.00037037037037037035,
+      "bits": 8,
+      "calibration_block_id": "lhco-rnd-cal-10000-b8",
+      "calibration_empirical_acceptance": 0.0062,
+      "calibration_selection_rule": "clopper_pearson_upper_bound",
+      "calibration_warnings": [
+        "threshold selected against a calibration Clopper-Pearson upper bound"
+      ],
+      "certified": true,
+      "confidence": 0.9996296296296296,
+      "count": 64,
+      "deployment_block_id": "lhco-rnd-deploy-10000-b8",
+      "empirical_acceptance": 0.0064,
+      "input_rate_hz": null,
+      "point_rate_hz": null,
+      "prequantized_acceptance": 0.006,
+      "prescale": 1,
+      "provenance": {
+        "calibration_event_id_sha256": "4bd08da00da9b0473d23e0c4d9d451e75901f9db805a833b9a658b032c41e84f",
+        "deployment_event_id_sha256": "48eaeceec3bf645d5b852aaa0bcb376ba21ec72a16262f7cb828ade4f8d2c5df",
+        "public_data_mode": true,
+        "sample_prefix_n": 10000
+      },
+      "quantity": "background_acceptance_probability",
+      "quantization_acceptance_delta": 0.0004000000000000002,
+      "quantization_sweep": {
+        "max_abs_acceptance_delta": 0.054,
+        "signed_acceptance_delta_at_max": 0.054,
+        "threshold_code_at_max": 62,
+        "threshold_value_at_max": 0.2421875,
+        "thresholds_evaluated": 76
+      },
+      "rate_budget_hz": null,
+      "rate_lsb_hz": null,
+      "rate_quantization": null,
+      "reasons": [],
+      "recorded_point_rate_hz": null,
+      "recorded_upper_rate_hz": null,
+      "sample_size": 10000,
+      "sample_size_requested": 10000,
+      "score_lsb": 0.00390625,
+      "score_quantization": {
+        "error_bound": 0.001953125,
+        "max_abs_error": 0.0019530282150984624,
+        "n_scores": 10000,
+        "prequantized_acceptance_at_threshold": 0.006,
+        "quantization_acceptance_delta": 0.0004000000000000002,
+        "saturation_count": 0,
+        "spec": {
+          "bits": 8,
+          "code_max": 255,
+          "code_min": 0,
+          "fractional_bits": 8,
+          "lsb": 0.00390625,
+          "rounding": "nearest_even",
+          "saturation": "error",
+          "signed": false
+        },
+        "threshold_value": 0.44140625
+      },
+      "selection_alpha": 0.00037037037037037035,
+      "status": "CERTIFIED",
+      "target_acceptance": 0.01,
+      "target_acceptance_requested": 0.01,
+      "threshold_code": 113,
+      "upper_acceptance": 0.009555488676577566,
+      "upper_rate_hz": null,
+      "warnings": [
+        "no live-time or input flux supplied: this certificate is an acceptance probability, not a detector Hz measurement"
+      ]
+    },
+    {
+      "alpha": 0.00037037037037037035,
+      "bits": 8,
+      "calibration_block_id": "lhco-rnd-cal-10000-b8",
+      "calibration_empirical_acceptance": 0.0144,
+      "calibration_selection_rule": "clopper_pearson_upper_bound",
+      "calibration_warnings": [
+        "threshold selected against a calibration Clopper-Pearson upper bound"
+      ],
+      "certified": true,
+      "confidence": 0.9996296296296296,
+      "count": 133,
+      "deployment_block_id": "lhco-rnd-deploy-10000-b8",
+      "empirical_acceptance": 0.0133,
+      "input_rate_hz": null,
+      "point_rate_hz": null,
+      "prequantized_acceptance": 0.0131,
+      "prescale": 1,
+      "provenance": {
+        "calibration_event_id_sha256": "4bd08da00da9b0473d23e0c4d9d451e75901f9db805a833b9a658b032c41e84f",
+        "deployment_event_id_sha256": "48eaeceec3bf645d5b852aaa0bcb376ba21ec72a16262f7cb828ade4f8d2c5df",
+        "public_data_mode": true,
+        "sample_prefix_n": 10000
+      },
+      "quantity": "background_acceptance_probability",
+      "quantization_acceptance_delta": 0.0001999999999999988,
+      "quantization_sweep": {
+        "max_abs_acceptance_delta": 0.054,
+        "signed_acceptance_delta_at_max": 0.054,
+        "threshold_code_at_max": 62,
+        "threshold_value_at_max": 0.2421875,
+        "thresholds_evaluated": 76
+      },
+      "rate_budget_hz": null,
+      "rate_lsb_hz": null,
+      "rate_quantization": null,
+      "reasons": [],
+      "recorded_point_rate_hz": null,
+      "recorded_upper_rate_hz": null,
+      "sample_size": 10000,
+      "sample_size_requested": 10000,
+      "score_lsb": 0.00390625,
+      "score_quantization": {
+        "error_bound": 0.001953125,
+        "max_abs_error": 0.0019530282150984624,
+        "n_scores": 10000,
+        "prequantized_acceptance_at_threshold": 0.0131,
+        "quantization_acceptance_delta": 0.0001999999999999988,
+        "saturation_count": 0,
+        "spec": {
+          "bits": 8,
+          "code_max": 255,
+          "code_min": 0,
+          "fractional_bits": 8,
+          "lsb": 0.00390625,
+          "rounding": "nearest_even",
+          "saturation": "error",
+          "signed": false
+        },
+        "threshold_value": 0.40625
+      },
+      "selection_alpha": 0.00037037037037037035,
+      "status": "CERTIFIED",
+      "target_acceptance": 0.02,
+      "target_acceptance_requested": 0.02,
+      "threshold_code": 104,
+      "upper_acceptance": 0.017616507324229327,
+      "upper_rate_hz": null,
+      "warnings": [
+        "no live-time or input flux supplied: this certificate is an acceptance probability, not a detector Hz measurement"
+      ]
+    },
+    {
+      "alpha": 0.00037037037037037035,
+      "bits": 8,
+      "calibration_block_id": "lhco-rnd-cal-50000-b8",
+      "calibration_empirical_acceptance": 0.00364,
+      "calibration_selection_rule": "clopper_pearson_upper_bound",
+      "calibration_warnings": [
+        "threshold selected against a calibration Clopper-Pearson upper bound"
+      ],
+      "certified": false,
+      "confidence": 0.9996296296296296,
+      "count": 209,
+      "deployment_block_id": "lhco-rnd-deploy-50000-b8",
+      "empirical_acceptance": 0.00418,
+      "input_rate_hz": null,
+      "point_rate_hz": null,
+      "prequantized_acceptance": 0.004,
+      "prescale": 1,
+      "provenance": {
+        "calibration_event_id_sha256": "c5e5e1b2db408aa7aa1f40b29847f8e7700fb68645a5b46dd41746992311ff4f",
+        "deployment_event_id_sha256": "0538b3e34223b1def94cec68453ed15f8311812d398cb8fc70c2bfa741a34347",
+        "public_data_mode": true,
+        "sample_prefix_n": 50000
+      },
+      "quantity": "background_acceptance_probability",
+      "quantization_acceptance_delta": 0.0001799999999999996,
+      "quantization_sweep": {
+        "max_abs_acceptance_delta": 0.0559,
+        "signed_acceptance_delta_at_max": 0.0559,
+        "threshold_code_at_max": 62,
+        "threshold_value_at_max": 0.2421875,
+        "thresholds_evaluated": 93
+      },
+      "rate_budget_hz": null,
+      "rate_lsb_hz": null,
+      "rate_quantization": null,
+      "reasons": [
+        "finite-sample upper acceptance exceeds target_acceptance"
+      ],
+      "recorded_point_rate_hz": null,
+      "recorded_upper_rate_hz": null,
+      "sample_size": 50000,
+      "sample_size_requested": 50000,
+      "score_lsb": 0.00390625,
+      "score_quantization": {
+        "error_bound": 0.001953125,
+        "max_abs_error": 0.001953091442423338,
+        "n_scores": 50000,
+        "prequantized_acceptance_at_threshold": 0.004,
+        "quantization_acceptance_delta": 0.0001799999999999996,
+        "saturation_count": 0,
+        "spec": {
+          "bits": 8,
+          "code_max": 255,
+          "code_min": 0,
+          "fractional_bits": 8,
+          "lsb": 0.00390625,
+          "rounding": "nearest_even",
+          "saturation": "error",
+          "signed": false
+        },
+        "threshold_value": 0.45703125
+      },
+      "selection_alpha": 0.00037037037037037035,
+      "status": "NOT_CERTIFIED",
+      "target_acceptance": 0.005,
+      "target_acceptance_requested": 0.005,
+      "threshold_code": 117,
+      "upper_acceptance": 0.0052448294950515895,
+      "upper_rate_hz": null,
+      "warnings": [
+        "no live-time or input flux supplied: this certificate is an acceptance probability, not a detector Hz measurement"
+      ]
+    },
+    {
+      "alpha": 0.00037037037037037035,
+      "bits": 8,
+      "calibration_block_id": "lhco-rnd-cal-50000-b8",
+      "calibration_empirical_acceptance": 0.00852,
+      "calibration_selection_rule": "clopper_pearson_upper_bound",
+      "calibration_warnings": [
+        "threshold selected against a calibration Clopper-Pearson upper bound"
+      ],
+      "certified": false,
+      "confidence": 0.9996296296296296,
+      "count": 429,
+      "deployment_block_id": "lhco-rnd-deploy-50000-b8",
+      "empirical_acceptance": 0.00858,
+      "input_rate_hz": null,
+      "point_rate_hz": null,
+      "prequantized_acceptance": 0.00812,
+      "prescale": 1,
+      "provenance": {
+        "calibration_event_id_sha256": "c5e5e1b2db408aa7aa1f40b29847f8e7700fb68645a5b46dd41746992311ff4f",
+        "deployment_event_id_sha256": "0538b3e34223b1def94cec68453ed15f8311812d398cb8fc70c2bfa741a34347",
+        "public_data_mode": true,
+        "sample_prefix_n": 50000
+      },
+      "quantity": "background_acceptance_probability",
+      "quantization_acceptance_delta": 0.00046000000000000034,
+      "quantization_sweep": {
+        "max_abs_acceptance_delta": 0.0559,
+        "signed_acceptance_delta_at_max": 0.0559,
+        "threshold_code_at_max": 62,
+        "threshold_value_at_max": 0.2421875,
+        "thresholds_evaluated": 93
+      },
+      "rate_budget_hz": null,
+      "rate_lsb_hz": null,
+      "rate_quantization": null,
+      "reasons": [
+        "finite-sample upper acceptance exceeds target_acceptance"
+      ],
+      "recorded_point_rate_hz": null,
+      "recorded_upper_rate_hz": null,
+      "sample_size": 50000,
+      "sample_size_requested": 50000,
+      "score_lsb": 0.00390625,
+      "score_quantization": {
+        "error_bound": 0.001953125,
+        "max_abs_error": 0.001953091442423338,
+        "n_scores": 50000,
+        "prequantized_acceptance_at_threshold": 0.00812,
+        "quantization_acceptance_delta": 0.00046000000000000034,
+        "saturation_count": 0,
+        "spec": {
+          "bits": 8,
+          "code_max": 255,
+          "code_min": 0,
+          "fractional_bits": 8,
+          "lsb": 0.00390625,
+          "rounding": "nearest_even",
+          "saturation": "error",
+          "signed": false
+        },
+        "threshold_value": 0.42578125
+      },
+      "selection_alpha": 0.00037037037037037035,
+      "status": "NOT_CERTIFIED",
+      "target_acceptance": 0.01,
+      "target_acceptance_requested": 0.01,
+      "threshold_code": 109,
+      "upper_acceptance": 0.010061401388531793,
+      "upper_rate_hz": null,
+      "warnings": [
+        "no live-time or input flux supplied: this certificate is an acceptance probability, not a detector Hz measurement"
+      ]
+    },
+    {
+      "alpha": 0.00037037037037037035,
+      "bits": 8,
+      "calibration_block_id": "lhco-rnd-cal-50000-b8",
+      "calibration_empirical_acceptance": 0.0168,
+      "calibration_selection_rule": "clopper_pearson_upper_bound",
+      "calibration_warnings": [
+        "threshold selected against a calibration Clopper-Pearson upper bound"
+      ],
+      "certified": true,
+      "confidence": 0.9996296296296296,
+      "count": 807,
+      "deployment_block_id": "lhco-rnd-deploy-50000-b8",
+      "empirical_acceptance": 0.01614,
+      "input_rate_hz": null,
+      "point_rate_hz": null,
+      "prequantized_acceptance": 0.01534,
+      "prescale": 1,
+      "provenance": {
+        "calibration_event_id_sha256": "c5e5e1b2db408aa7aa1f40b29847f8e7700fb68645a5b46dd41746992311ff4f",
+        "deployment_event_id_sha256": "0538b3e34223b1def94cec68453ed15f8311812d398cb8fc70c2bfa741a34347",
+        "public_data_mode": true,
+        "sample_prefix_n": 50000
+      },
+      "quantity": "background_acceptance_probability",
+      "quantization_acceptance_delta": 0.0008000000000000021,
+      "quantization_sweep": {
+        "max_abs_acceptance_delta": 0.0559,
+        "signed_acceptance_delta_at_max": 0.0559,
+        "threshold_code_at_max": 62,
+        "threshold_value_at_max": 0.2421875,
+        "thresholds_evaluated": 93
+      },
+      "rate_budget_hz": null,
+      "rate_lsb_hz": null,
+      "rate_quantization": null,
+      "reasons": [],
+      "recorded_point_rate_hz": null,
+      "recorded_upper_rate_hz": null,
+      "sample_size": 50000,
+      "sample_size_requested": 50000,
+      "score_lsb": 0.00390625,
+      "score_quantization": {
+        "error_bound": 0.001953125,
+        "max_abs_error": 0.001953091442423338,
+        "n_scores": 50000,
+        "prequantized_acceptance_at_threshold": 0.01534,
+        "quantization_acceptance_delta": 0.0008000000000000021,
+        "saturation_count": 0,
+        "spec": {
+          "bits": 8,
+          "code_max": 255,
+          "code_min": 0,
+          "fractional_bits": 8,
+          "lsb": 0.00390625,
+          "rounding": "nearest_even",
+          "saturation": "error",
+          "signed": false
+        },
+        "threshold_value": 0.3984375
+      },
+      "selection_alpha": 0.00037037037037037035,
+      "status": "CERTIFIED",
+      "target_acceptance": 0.02,
+      "target_acceptance_requested": 0.02,
+      "threshold_code": 102,
+      "upper_acceptance": 0.018129388289206325,
+      "upper_rate_hz": null,
+      "warnings": [
+        "no live-time or input flux supplied: this certificate is an acceptance probability, not a detector Hz measurement"
+      ]
+    },
+    {
+      "alpha": 0.00037037037037037035,
+      "bits": 8,
+      "calibration_block_id": "lhco-rnd-cal-100000-b8",
+      "calibration_empirical_acceptance": 0.00393,
+      "calibration_selection_rule": "clopper_pearson_upper_bound",
+      "calibration_warnings": [
+        "threshold selected against a calibration Clopper-Pearson upper bound"
+      ],
+      "certified": true,
+      "confidence": 0.9996296296296296,
+      "count": 424,
+      "deployment_block_id": "lhco-rnd-deploy-100000-b8",
+      "empirical_acceptance": 0.00424,
+      "input_rate_hz": null,
+      "point_rate_hz": null,
+      "prequantized_acceptance": 0.00405,
+      "prescale": 1,
+      "provenance": {
+        "calibration_event_id_sha256": "431dd814ddf3a6d864016868dd602f64f0fbcdc2afc83e5203d10a085fda9264",
+        "deployment_event_id_sha256": "46dab62a13254075160756b7097e9602a34edf0cd53efca096d2924969a49d05",
+        "public_data_mode": true,
+        "sample_prefix_n": 100000
+      },
+      "quantity": "background_acceptance_probability",
+      "quantization_acceptance_delta": 0.00019000000000000006,
+      "quantization_sweep": {
+        "max_abs_acceptance_delta": 0.05534,
+        "signed_acceptance_delta_at_max": 0.05534,
+        "threshold_code_at_max": 62,
+        "threshold_value_at_max": 0.2421875,
+        "thresholds_evaluated": 103
+      },
+      "rate_budget_hz": null,
+      "rate_lsb_hz": null,
+      "rate_quantization": null,
+      "reasons": [],
+      "recorded_point_rate_hz": null,
+      "recorded_upper_rate_hz": null,
+      "sample_size": 100000,
+      "sample_size_requested": 100000,
+      "score_lsb": 0.00390625,
+      "score_quantization": {
+        "error_bound": 0.001953125,
+        "max_abs_error": 0.001953091442423338,
+        "n_scores": 100000,
+        "prequantized_acceptance_at_threshold": 0.00405,
+        "quantization_acceptance_delta": 0.00019000000000000006,
+        "saturation_count": 0,
+        "spec": {
+          "bits": 8,
+          "code_max": 255,
+          "code_min": 0,
+          "fractional_bits": 8,
+          "lsb": 0.00390625,
+          "rounding": "nearest_even",
+          "saturation": "error",
+          "signed": false
+        },
+        "threshold_value": 0.45703125
+      },
+      "selection_alpha": 0.00037037037037037035,
+      "status": "CERTIFIED",
+      "target_acceptance": 0.005,
+      "target_acceptance_requested": 0.005,
+      "threshold_code": 117,
+      "upper_acceptance": 0.004978530948707055,
+      "upper_rate_hz": null,
+      "warnings": [
+        "no live-time or input flux supplied: this certificate is an acceptance probability, not a detector Hz measurement"
+      ]
+    },
+    {
+      "alpha": 0.00037037037037037035,
+      "bits": 8,
+      "calibration_block_id": "lhco-rnd-cal-100000-b8",
+      "calibration_empirical_acceptance": 0.00854,
+      "calibration_selection_rule": "clopper_pearson_upper_bound",
+      "calibration_warnings": [
+        "threshold selected against a calibration Clopper-Pearson upper bound"
+      ],
+      "certified": true,
+      "confidence": 0.9996296296296296,
+      "count": 883,
+      "deployment_block_id": "lhco-rnd-deploy-100000-b8",
+      "empirical_acceptance": 0.00883,
+      "input_rate_hz": null,
+      "point_rate_hz": null,
+      "prequantized_acceptance": 0.00839,
+      "prescale": 1,
+      "provenance": {
+        "calibration_event_id_sha256": "431dd814ddf3a6d864016868dd602f64f0fbcdc2afc83e5203d10a085fda9264",
+        "deployment_event_id_sha256": "46dab62a13254075160756b7097e9602a34edf0cd53efca096d2924969a49d05",
+        "public_data_mode": true,
+        "sample_prefix_n": 100000
+      },
+      "quantity": "background_acceptance_probability",
+      "quantization_acceptance_delta": 0.0004399999999999994,
+      "quantization_sweep": {
+        "max_abs_acceptance_delta": 0.05534,
+        "signed_acceptance_delta_at_max": 0.05534,
+        "threshold_code_at_max": 62,
+        "threshold_value_at_max": 0.2421875,
+        "thresholds_evaluated": 103
+      },
+      "rate_budget_hz": null,
+      "rate_lsb_hz": null,
+      "rate_quantization": null,
+      "reasons": [],
+      "recorded_point_rate_hz": null,
+      "recorded_upper_rate_hz": null,
+      "sample_size": 100000,
+      "sample_size_requested": 100000,
+      "score_lsb": 0.00390625,
+      "score_quantization": {
+        "error_bound": 0.001953125,
+        "max_abs_error": 0.001953091442423338,
+        "n_scores": 100000,
+        "prequantized_acceptance_at_threshold": 0.00839,
+        "quantization_acceptance_delta": 0.0004399999999999994,
+        "saturation_count": 0,
+        "spec": {
+          "bits": 8,
+          "code_max": 255,
+          "code_min": 0,
+          "fractional_bits": 8,
+          "lsb": 0.00390625,
+          "rounding": "nearest_even",
+          "saturation": "error",
+          "signed": false
+        },
+        "threshold_value": 0.42578125
+      },
+      "selection_alpha": 0.00037037037037037035,
+      "status": "CERTIFIED",
+      "target_acceptance": 0.01,
+      "target_acceptance_requested": 0.01,
+      "threshold_code": 109,
+      "upper_acceptance": 0.00987273425125185,
+      "upper_rate_hz": null,
+      "warnings": [
+        "no live-time or input flux supplied: this certificate is an acceptance probability, not a detector Hz measurement"
+      ]
+    },
+    {
+      "alpha": 0.00037037037037037035,
+      "bits": 8,
+      "calibration_block_id": "lhco-rnd-cal-100000-b8",
+      "calibration_empirical_acceptance": 0.01843,
+      "calibration_selection_rule": "clopper_pearson_upper_bound",
+      "calibration_warnings": [
+        "threshold selected against a calibration Clopper-Pearson upper bound"
+      ],
+      "certified": true,
+      "confidence": 0.9996296296296296,
+      "count": 1812,
+      "deployment_block_id": "lhco-rnd-deploy-100000-b8",
+      "empirical_acceptance": 0.01812,
+      "input_rate_hz": null,
+      "point_rate_hz": null,
+      "prequantized_acceptance": 0.01719,
+      "prescale": 1,
+      "provenance": {
+        "calibration_event_id_sha256": "431dd814ddf3a6d864016868dd602f64f0fbcdc2afc83e5203d10a085fda9264",
+        "deployment_event_id_sha256": "46dab62a13254075160756b7097e9602a34edf0cd53efca096d2924969a49d05",
+        "public_data_mode": true,
+        "sample_prefix_n": 100000
+      },
+      "quantity": "background_acceptance_probability",
+      "quantization_acceptance_delta": 0.0009300000000000003,
+      "quantization_sweep": {
+        "max_abs_acceptance_delta": 0.05534,
+        "signed_acceptance_delta_at_max": 0.05534,
+        "threshold_code_at_max": 62,
+        "threshold_value_at_max": 0.2421875,
+        "thresholds_evaluated": 103
+      },
+      "rate_budget_hz": null,
+      "rate_lsb_hz": null,
+      "rate_quantization": null,
+      "reasons": [],
+      "recorded_point_rate_hz": null,
+      "recorded_upper_rate_hz": null,
+      "sample_size": 100000,
+      "sample_size_requested": 100000,
+      "score_lsb": 0.00390625,
+      "score_quantization": {
+        "error_bound": 0.001953125,
+        "max_abs_error": 0.001953091442423338,
+        "n_scores": 100000,
+        "prequantized_acceptance_at_threshold": 0.01719,
+        "quantization_acceptance_delta": 0.0009300000000000003,
+        "saturation_count": 0,
+        "spec": {
+          "bits": 8,
+          "code_max": 255,
+          "code_min": 0,
+          "fractional_bits": 8,
+          "lsb": 0.00390625,
+          "rounding": "nearest_even",
+          "saturation": "error",
+          "signed": false
+        },
+        "threshold_value": 0.39453125
+      },
+      "selection_alpha": 0.00037037037037037035,
+      "status": "CERTIFIED",
+      "target_acceptance": 0.02,
+      "target_acceptance_requested": 0.02,
+      "threshold_code": 101,
+      "upper_acceptance": 0.01958677330798163,
+      "upper_rate_hz": null,
+      "warnings": [
+        "no live-time or input flux supplied: this certificate is an acceptance probability, not a detector Hz measurement"
+      ]
+    },
+    {
+      "alpha": 0.00037037037037037035,
+      "bits": 10,
+      "calibration_block_id": "lhco-rnd-cal-10000-b10",
+      "calibration_empirical_acceptance": 0.0026,
+      "calibration_selection_rule": "clopper_pearson_upper_bound",
+      "calibration_warnings": [
+        "threshold selected against a calibration Clopper-Pearson upper bound"
+      ],
+      "certified": true,
+      "confidence": 0.9996296296296296,
+      "count": 24,
+      "deployment_block_id": "lhco-rnd-deploy-10000-b10",
+      "empirical_acceptance": 0.0024,
+      "input_rate_hz": null,
+      "point_rate_hz": null,
+      "prequantized_acceptance": 0.0024,
+      "prescale": 1,
+      "provenance": {
+        "calibration_event_id_sha256": "4bd08da00da9b0473d23e0c4d9d451e75901f9db805a833b9a658b032c41e84f",
+        "deployment_event_id_sha256": "48eaeceec3bf645d5b852aaa0bcb376ba21ec72a16262f7cb828ade4f8d2c5df",
+        "public_data_mode": true,
+        "sample_prefix_n": 10000
+      },
+      "quantity": "background_acceptance_probability",
+      "quantization_acceptance_delta": 0.0,
+      "quantization_sweep": {
+        "max_abs_acceptance_delta": 0.014,
+        "signed_acceptance_delta_at_max": 0.014,
+        "threshold_code_at_max": 247,
+        "threshold_value_at_max": 0.2412109375,
+        "thresholds_evaluated": 240
+      },
+      "rate_budget_hz": null,
+      "rate_lsb_hz": null,
+      "rate_quantization": null,
+      "reasons": [],
+      "recorded_point_rate_hz": null,
+      "recorded_upper_rate_hz": null,
+      "sample_size": 10000,
+      "sample_size_requested": 10000,
+      "score_lsb": 0.0009765625,
+      "score_quantization": {
+        "error_bound": 0.00048828125,
+        "max_abs_error": 0.00048819485599349566,
+        "n_scores": 10000,
+        "prequantized_acceptance_at_threshold": 0.0024,
+        "quantization_acceptance_delta": 0.0,
+        "saturation_count": 0,
+        "spec": {
+          "bits": 10,
+          "code_max": 1023,
+          "code_min": 0,
+          "fractional_bits": 10,
+          "lsb": 0.0009765625,
+          "rounding": "nearest_even",
+          "saturation": "error",
+          "signed": false
+        },
+        "threshold_value": 0.4814453125
+      },
+      "selection_alpha": 0.00037037037037037035,
+      "status": "CERTIFIED",
+      "target_acceptance": 0.005,
+      "target_acceptance_requested": 0.005,
+      "threshold_code": 493,
+      "upper_acceptance": 0.004534519616326681,
+      "upper_rate_hz": null,
+      "warnings": [
+        "no live-time or input flux supplied: this certificate is an acceptance probability, not a detector Hz measurement"
+      ]
+    },
+    {
+      "alpha": 0.00037037037037037035,
+      "bits": 10,
+      "calibration_block_id": "lhco-rnd-cal-10000-b10",
+      "calibration_empirical_acceptance": 0.0066,
+      "calibration_selection_rule": "clopper_pearson_upper_bound",
+      "calibration_warnings": [
+        "threshold selected against a calibration Clopper-Pearson upper bound"
+      ],
+      "certified": true,
+      "confidence": 0.9996296296296296,
+      "count": 65,
+      "deployment_block_id": "lhco-rnd-deploy-10000-b10",
+      "empirical_acceptance": 0.0065,
+      "input_rate_hz": null,
+      "point_rate_hz": null,
+      "prequantized_acceptance": 0.0065,
+      "prescale": 1,
+      "provenance": {
+        "calibration_event_id_sha256": "4bd08da00da9b0473d23e0c4d9d451e75901f9db805a833b9a658b032c41e84f",
+        "deployment_event_id_sha256": "48eaeceec3bf645d5b852aaa0bcb376ba21ec72a16262f7cb828ade4f8d2c5df",
+        "public_data_mode": true,
+        "sample_prefix_n": 10000
+      },
+      "quantity": "background_acceptance_probability",
+      "quantization_acceptance_delta": 0.0,
+      "quantization_sweep": {
+        "max_abs_acceptance_delta": 0.014,
+        "signed_acceptance_delta_at_max": 0.014,
+        "threshold_code_at_max": 247,
+        "threshold_value_at_max": 0.2412109375,
+        "thresholds_evaluated": 240
+      },
+      "rate_budget_hz": null,
+      "rate_lsb_hz": null,
+      "rate_quantization": null,
+      "reasons": [],
+      "recorded_point_rate_hz": null,
+      "recorded_upper_rate_hz": null,
+      "sample_size": 10000,
+      "sample_size_requested": 10000,
+      "score_lsb": 0.0009765625,
+      "score_quantization": {
+        "error_bound": 0.00048828125,
+        "max_abs_error": 0.00048819485599349566,
+        "n_scores": 10000,
+        "prequantized_acceptance_at_threshold": 0.0065,
+        "quantization_acceptance_delta": 0.0,
+        "saturation_count": 0,
+        "spec": {
+          "bits": 10,
+          "code_max": 1023,
+          "code_min": 0,
+          "fractional_bits": 10,
+          "lsb": 0.0009765625,
+          "rounding": "nearest_even",
+          "saturation": "error",
+          "signed": false
+        },
+        "threshold_value": 0.4375
+      },
+      "selection_alpha": 0.00037037037037037035,
+      "status": "CERTIFIED",
+      "target_acceptance": 0.01,
+      "target_acceptance_requested": 0.01,
+      "threshold_code": 448,
+      "upper_acceptance": 0.009676013844878132,
+      "upper_rate_hz": null,
+      "warnings": [
+        "no live-time or input flux supplied: this certificate is an acceptance probability, not a detector Hz measurement"
+      ]
+    },
+    {
+      "alpha": 0.00037037037037037035,
+      "bits": 10,
+      "calibration_block_id": "lhco-rnd-cal-10000-b10",
+      "calibration_empirical_acceptance": 0.0151,
+      "calibration_selection_rule": "clopper_pearson_upper_bound",
+      "calibration_warnings": [
+        "threshold selected against a calibration Clopper-Pearson upper bound"
+      ],
+      "certified": true,
+      "confidence": 0.9996296296296296,
+      "count": 138,
+      "deployment_block_id": "lhco-rnd-deploy-10000-b10",
+      "empirical_acceptance": 0.0138,
+      "input_rate_hz": null,
+      "point_rate_hz": null,
+      "prequantized_acceptance": 0.0138,
+      "prescale": 1,
+      "provenance": {
+        "calibration_event_id_sha256": "4bd08da00da9b0473d23e0c4d9d451e75901f9db805a833b9a658b032c41e84f",
+        "deployment_event_id_sha256": "48eaeceec3bf645d5b852aaa0bcb376ba21ec72a16262f7cb828ade4f8d2c5df",
+        "public_data_mode": true,
+        "sample_prefix_n": 10000
+      },
+      "quantity": "background_acceptance_probability",
+      "quantization_acceptance_delta": 0.0,
+      "quantization_sweep": {
+        "max_abs_acceptance_delta": 0.014,
+        "signed_acceptance_delta_at_max": 0.014,
+        "threshold_code_at_max": 247,
+        "threshold_value_at_max": 0.2412109375,
+        "thresholds_evaluated": 240
+      },
+      "rate_budget_hz": null,
+      "rate_lsb_hz": null,
+      "rate_quantization": null,
+      "reasons": [],
+      "recorded_point_rate_hz": null,
+      "recorded_upper_rate_hz": null,
+      "sample_size": 10000,
+      "sample_size_requested": 10000,
+      "score_lsb": 0.0009765625,
+      "score_quantization": {
+        "error_bound": 0.00048828125,
+        "max_abs_error": 0.00048819485599349566,
+        "n_scores": 10000,
+        "prequantized_acceptance_at_threshold": 0.0138,
+        "quantization_acceptance_delta": 0.0,
+        "saturation_count": 0,
+        "spec": {
+          "bits": 10,
+          "code_max": 1023,
+          "code_min": 0,
+          "fractional_bits": 10,
+          "lsb": 0.0009765625,
+          "rounding": "nearest_even",
+          "saturation": "error",
+          "signed": false
+        },
+        "threshold_value": 0.40234375
+      },
+      "selection_alpha": 0.00037037037037037035,
+      "status": "CERTIFIED",
+      "target_acceptance": 0.02,
+      "target_acceptance_requested": 0.02,
+      "threshold_code": 412,
+      "upper_acceptance": 0.018186746642582328,
+      "upper_rate_hz": null,
+      "warnings": [
+        "no live-time or input flux supplied: this certificate is an acceptance probability, not a detector Hz measurement"
+      ]
+    },
+    {
+      "alpha": 0.00037037037037037035,
+      "bits": 10,
+      "calibration_block_id": "lhco-rnd-cal-50000-b10",
+      "calibration_empirical_acceptance": 0.00396,
+      "calibration_selection_rule": "clopper_pearson_upper_bound",
+      "calibration_warnings": [
+        "threshold selected against a calibration Clopper-Pearson upper bound"
+      ],
+      "certified": false,
+      "confidence": 0.9996296296296296,
+      "count": 224,
+      "deployment_block_id": "lhco-rnd-deploy-50000-b10",
+      "empirical_acceptance": 0.00448,
+      "input_rate_hz": null,
+      "point_rate_hz": null,
+      "prequantized_acceptance": 0.00444,
+      "prescale": 1,
+      "provenance": {
+        "calibration_event_id_sha256": "c5e5e1b2db408aa7aa1f40b29847f8e7700fb68645a5b46dd41746992311ff4f",
+        "deployment_event_id_sha256": "0538b3e34223b1def94cec68453ed15f8311812d398cb8fc70c2bfa741a34347",
+        "public_data_mode": true,
+        "sample_prefix_n": 50000
+      },
+      "quantity": "background_acceptance_probability",
+      "quantization_acceptance_delta": 3.999999999999924e-05,
+      "quantization_sweep": {
+        "max_abs_acceptance_delta": 0.0146,
+        "signed_acceptance_delta_at_max": 0.0146,
+        "threshold_code_at_max": 247,
+        "threshold_value_at_max": 0.2412109375,
+        "thresholds_evaluated": 321
+      },
+      "rate_budget_hz": null,
+      "rate_lsb_hz": null,
+      "rate_quantization": null,
+      "reasons": [
+        "finite-sample upper acceptance exceeds target_acceptance"
+      ],
+      "recorded_point_rate_hz": null,
+      "recorded_upper_rate_hz": null,
+      "sample_size": 50000,
+      "sample_size_requested": 50000,
+      "score_lsb": 0.0009765625,
+      "score_quantization": {
+        "error_bound": 0.00048828125,
+        "max_abs_error": 0.0004882766160519414,
+        "n_scores": 50000,
+        "prequantized_acceptance_at_threshold": 0.00444,
+        "quantization_acceptance_delta": 3.999999999999924e-05,
+        "saturation_count": 0,
+        "spec": {
+          "bits": 10,
+          "code_max": 1023,
+          "code_min": 0,
+          "fractional_bits": 10,
+          "lsb": 0.0009765625,
+          "rounding": "nearest_even",
+          "saturation": "error",
+          "signed": false
+        },
+        "threshold_value": 0.4521484375
+      },
+      "selection_alpha": 0.00037037037037037035,
+      "status": "NOT_CERTIFIED",
+      "target_acceptance": 0.005,
+      "target_acceptance_requested": 0.005,
+      "threshold_code": 463,
+      "upper_acceptance": 0.005578861314483868,
+      "upper_rate_hz": null,
+      "warnings": [
+        "no live-time or input flux supplied: this certificate is an acceptance probability, not a detector Hz measurement"
+      ]
+    },
+    {
+      "alpha": 0.00037037037037037035,
+      "bits": 10,
+      "calibration_block_id": "lhco-rnd-cal-50000-b10",
+      "calibration_empirical_acceptance": 0.00844,
+      "calibration_selection_rule": "clopper_pearson_upper_bound",
+      "calibration_warnings": [
+        "threshold selected against a calibration Clopper-Pearson upper bound"
+      ],
+      "certified": true,
+      "confidence": 0.9996296296296296,
+      "count": 421,
+      "deployment_block_id": "lhco-rnd-deploy-50000-b10",
+      "empirical_acceptance": 0.00842,
+      "input_rate_hz": null,
+      "point_rate_hz": null,
+      "prequantized_acceptance": 0.0083,
+      "prescale": 1,
+      "provenance": {
+        "calibration_event_id_sha256": "c5e5e1b2db408aa7aa1f40b29847f8e7700fb68645a5b46dd41746992311ff4f",
+        "deployment_event_id_sha256": "0538b3e34223b1def94cec68453ed15f8311812d398cb8fc70c2bfa741a34347",
+        "public_data_mode": true,
+        "sample_prefix_n": 50000
+      },
+      "quantity": "background_acceptance_probability",
+      "quantization_acceptance_delta": 0.00012000000000000031,
+      "quantization_sweep": {
+        "max_abs_acceptance_delta": 0.0146,
+        "signed_acceptance_delta_at_max": 0.0146,
+        "threshold_code_at_max": 247,
+        "threshold_value_at_max": 0.2412109375,
+        "thresholds_evaluated": 321
+      },
+      "rate_budget_hz": null,
+      "rate_lsb_hz": null,
+      "rate_quantization": null,
+      "reasons": [],
+      "recorded_point_rate_hz": null,
+      "recorded_upper_rate_hz": null,
+      "sample_size": 50000,
+      "sample_size_requested": 50000,
+      "score_lsb": 0.0009765625,
+      "score_quantization": {
+        "error_bound": 0.00048828125,
+        "max_abs_error": 0.0004882766160519414,
+        "n_scores": 50000,
+        "prequantized_acceptance_at_threshold": 0.0083,
+        "quantization_acceptance_delta": 0.00012000000000000031,
+        "saturation_count": 0,
+        "spec": {
+          "bits": 10,
+          "code_max": 1023,
+          "code_min": 0,
+          "fractional_bits": 10,
+          "lsb": 0.0009765625,
+          "rounding": "nearest_even",
+          "saturation": "error",
+          "signed": false
+        },
+        "threshold_value": 0.4248046875
+      },
+      "selection_alpha": 0.00037037037037037035,
+      "status": "CERTIFIED",
+      "target_acceptance": 0.01,
+      "target_acceptance_requested": 0.01,
+      "threshold_code": 435,
+      "upper_acceptance": 0.00988852081195603,
+      "upper_rate_hz": null,
+      "warnings": [
+        "no live-time or input flux supplied: this certificate is an acceptance probability, not a detector Hz measurement"
+      ]
+    },
+    {
+      "alpha": 0.00037037037037037035,
+      "bits": 10,
+      "calibration_block_id": "lhco-rnd-cal-50000-b10",
+      "calibration_empirical_acceptance": 0.01772,
+      "calibration_selection_rule": "clopper_pearson_upper_bound",
+      "calibration_warnings": [
+        "threshold selected against a calibration Clopper-Pearson upper bound"
+      ],
+      "certified": true,
+      "confidence": 0.9996296296296296,
+      "count": 855,
+      "deployment_block_id": "lhco-rnd-deploy-50000-b10",
+      "empirical_acceptance": 0.0171,
+      "input_rate_hz": null,
+      "point_rate_hz": null,
+      "prequantized_acceptance": 0.01682,
+      "prescale": 1,
+      "provenance": {
+        "calibration_event_id_sha256": "c5e5e1b2db408aa7aa1f40b29847f8e7700fb68645a5b46dd41746992311ff4f",
+        "deployment_event_id_sha256": "0538b3e34223b1def94cec68453ed15f8311812d398cb8fc70c2bfa741a34347",
+        "public_data_mode": true,
+        "sample_prefix_n": 50000
+      },
+      "quantity": "background_acceptance_probability",
+      "quantization_acceptance_delta": 0.000279999999999999,
+      "quantization_sweep": {
+        "max_abs_acceptance_delta": 0.0146,
+        "signed_acceptance_delta_at_max": 0.0146,
+        "threshold_code_at_max": 247,
+        "threshold_value_at_max": 0.2412109375,
+        "thresholds_evaluated": 321
+      },
+      "rate_budget_hz": null,
+      "rate_lsb_hz": null,
+      "rate_quantization": null,
+      "reasons": [],
+      "recorded_point_rate_hz": null,
+      "recorded_upper_rate_hz": null,
+      "sample_size": 50000,
+      "sample_size_requested": 50000,
+      "score_lsb": 0.0009765625,
+      "score_quantization": {
+        "error_bound": 0.00048828125,
+        "max_abs_error": 0.0004882766160519414,
+        "n_scores": 50000,
+        "prequantized_acceptance_at_threshold": 0.01682,
+        "quantization_acceptance_delta": 0.000279999999999999,
+        "saturation_count": 0,
+        "spec": {
+          "bits": 10,
+          "code_max": 1023,
+          "code_min": 0,
+          "fractional_bits": 10,
+          "lsb": 0.0009765625,
+          "rounding": "nearest_even",
+          "saturation": "error",
+          "signed": false
+        },
+        "threshold_value": 0.39453125
+      },
+      "selection_alpha": 0.00037037037037037035,
+      "status": "CERTIFIED",
+      "target_acceptance": 0.02,
+      "target_acceptance_requested": 0.02,
+      "threshold_code": 404,
+      "upper_acceptance": 0.019143966351985408,
+      "upper_rate_hz": null,
+      "warnings": [
+        "no live-time or input flux supplied: this certificate is an acceptance probability, not a detector Hz measurement"
+      ]
+    },
+    {
+      "alpha": 0.00037037037037037035,
+      "bits": 10,
+      "calibration_block_id": "lhco-rnd-cal-100000-b10",
+      "calibration_empirical_acceptance": 0.00419,
+      "calibration_selection_rule": "clopper_pearson_upper_bound",
+      "calibration_warnings": [
+        "threshold selected against a calibration Clopper-Pearson upper bound"
+      ],
+      "certified": false,
+      "confidence": 0.9996296296296296,
+      "count": 450,
+      "deployment_block_id": "lhco-rnd-deploy-100000-b10",
+      "empirical_acceptance": 0.0045,
+      "input_rate_hz": null,
+      "point_rate_hz": null,
+      "prequantized_acceptance": 0.00443,
+      "prescale": 1,
+      "provenance": {
+        "calibration_event_id_sha256": "431dd814ddf3a6d864016868dd602f64f0fbcdc2afc83e5203d10a085fda9264",
+        "deployment_event_id_sha256": "46dab62a13254075160756b7097e9602a34edf0cd53efca096d2924969a49d05",
+        "public_data_mode": true,
+        "sample_prefix_n": 100000
+      },
+      "quantity": "background_acceptance_probability",
+      "quantization_acceptance_delta": 6.999999999999975e-05,
+      "quantization_sweep": {
+        "max_abs_acceptance_delta": 0.01452,
+        "signed_acceptance_delta_at_max": 0.01452,
+        "threshold_code_at_max": 247,
+        "threshold_value_at_max": 0.2412109375,
+        "thresholds_evaluated": 348
+      },
+      "rate_budget_hz": null,
+      "rate_lsb_hz": null,
+      "rate_quantization": null,
+      "reasons": [
+        "finite-sample upper acceptance exceeds target_acceptance"
+      ],
+      "recorded_point_rate_hz": null,
+      "recorded_upper_rate_hz": null,
+      "sample_size": 100000,
+      "sample_size_requested": 100000,
+      "score_lsb": 0.0009765625,
+      "score_quantization": {
+        "error_bound": 0.00048828125,
+        "max_abs_error": 0.00048827781214255683,
+        "n_scores": 100000,
+        "prequantized_acceptance_at_threshold": 0.00443,
+        "quantization_acceptance_delta": 6.999999999999975e-05,
+        "saturation_count": 0,
+        "spec": {
+          "bits": 10,
+          "code_max": 1023,
+          "code_min": 0,
+          "fractional_bits": 10,
+          "lsb": 0.0009765625,
+          "rounding": "nearest_even",
+          "saturation": "error",
+          "signed": false
+        },
+        "threshold_value": 0.453125
+      },
+      "selection_alpha": 0.00037037037037037035,
+      "status": "NOT_CERTIFIED",
+      "target_acceptance": 0.005,
+      "target_acceptance_requested": 0.005,
+      "threshold_code": 464,
+      "upper_acceptance": 0.005259327088959907,
+      "upper_rate_hz": null,
+      "warnings": [
+        "no live-time or input flux supplied: this certificate is an acceptance probability, not a detector Hz measurement"
+      ]
+    },
+    {
+      "alpha": 0.00037037037037037035,
+      "bits": 10,
+      "calibration_block_id": "lhco-rnd-cal-100000-b10",
+      "calibration_empirical_acceptance": 0.00887,
+      "calibration_selection_rule": "clopper_pearson_upper_bound",
+      "calibration_warnings": [
+        "threshold selected against a calibration Clopper-Pearson upper bound"
+      ],
+      "certified": false,
+      "confidence": 0.9996296296296296,
+      "count": 916,
+      "deployment_block_id": "lhco-rnd-deploy-100000-b10",
+      "empirical_acceptance": 0.00916,
+      "input_rate_hz": null,
+      "point_rate_hz": null,
+      "prequantized_acceptance": 0.00902,
+      "prescale": 1,
+      "provenance": {
+        "calibration_event_id_sha256": "431dd814ddf3a6d864016868dd602f64f0fbcdc2afc83e5203d10a085fda9264",
+        "deployment_event_id_sha256": "46dab62a13254075160756b7097e9602a34edf0cd53efca096d2924969a49d05",
+        "public_data_mode": true,
+        "sample_prefix_n": 100000
+      },
+      "quantity": "background_acceptance_probability",
+      "quantization_acceptance_delta": 0.0001399999999999995,
+      "quantization_sweep": {
+        "max_abs_acceptance_delta": 0.01452,
+        "signed_acceptance_delta_at_max": 0.01452,
+        "threshold_code_at_max": 247,
+        "threshold_value_at_max": 0.2412109375,
+        "thresholds_evaluated": 348
+      },
+      "rate_budget_hz": null,
+      "rate_lsb_hz": null,
+      "rate_quantization": null,
+      "reasons": [
+        "finite-sample upper acceptance exceeds target_acceptance"
+      ],
+      "recorded_point_rate_hz": null,
+      "recorded_upper_rate_hz": null,
+      "sample_size": 100000,
+      "sample_size_requested": 100000,
+      "score_lsb": 0.0009765625,
+      "score_quantization": {
+        "error_bound": 0.00048828125,
+        "max_abs_error": 0.00048827781214255683,
+        "n_scores": 100000,
+        "prequantized_acceptance_at_threshold": 0.00902,
+        "quantization_acceptance_delta": 0.0001399999999999995,
+        "saturation_count": 0,
+        "spec": {
+          "bits": 10,
+          "code_max": 1023,
+          "code_min": 0,
+          "fractional_bits": 10,
+          "lsb": 0.0009765625,
+          "rounding": "nearest_even",
+          "saturation": "error",
+          "signed": false
+        },
+        "threshold_value": 0.4228515625
+      },
+      "selection_alpha": 0.00037037037037037035,
+      "status": "NOT_CERTIFIED",
+      "target_acceptance": 0.01,
+      "target_acceptance_requested": 0.01,
+      "threshold_code": 433,
+      "upper_acceptance": 0.010221006387223827,
+      "upper_rate_hz": null,
+      "warnings": [
+        "no live-time or input flux supplied: this certificate is an acceptance probability, not a detector Hz measurement"
+      ]
+    },
+    {
+      "alpha": 0.00037037037037037035,
+      "bits": 10,
+      "calibration_block_id": "lhco-rnd-cal-100000-b10",
+      "calibration_empirical_acceptance": 0.01814,
+      "calibration_selection_rule": "clopper_pearson_upper_bound",
+      "calibration_warnings": [
+        "threshold selected against a calibration Clopper-Pearson upper bound"
+      ],
+      "certified": true,
+      "confidence": 0.9996296296296296,
+      "count": 1785,
+      "deployment_block_id": "lhco-rnd-deploy-100000-b10",
+      "empirical_acceptance": 0.01785,
+      "input_rate_hz": null,
+      "point_rate_hz": null,
+      "prequantized_acceptance": 0.01763,
+      "prescale": 1,
+      "provenance": {
+        "calibration_event_id_sha256": "431dd814ddf3a6d864016868dd602f64f0fbcdc2afc83e5203d10a085fda9264",
+        "deployment_event_id_sha256": "46dab62a13254075160756b7097e9602a34edf0cd53efca096d2924969a49d05",
+        "public_data_mode": true,
+        "sample_prefix_n": 100000
+      },
+      "quantity": "background_acceptance_probability",
+      "quantization_acceptance_delta": 0.00022000000000000144,
+      "quantization_sweep": {
+        "max_abs_acceptance_delta": 0.01452,
+        "signed_acceptance_delta_at_max": 0.01452,
+        "threshold_code_at_max": 247,
+        "threshold_value_at_max": 0.2412109375,
+        "thresholds_evaluated": 348
+      },
+      "rate_budget_hz": null,
+      "rate_lsb_hz": null,
+      "rate_quantization": null,
+      "reasons": [],
+      "recorded_point_rate_hz": null,
+      "recorded_upper_rate_hz": null,
+      "sample_size": 100000,
+      "sample_size_requested": 100000,
+      "score_lsb": 0.0009765625,
+      "score_quantization": {
+        "error_bound": 0.00048828125,
+        "max_abs_error": 0.00048827781214255683,
+        "n_scores": 100000,
+        "prequantized_acceptance_at_threshold": 0.01763,
+        "quantization_acceptance_delta": 0.00022000000000000144,
+        "saturation_count": 0,
+        "spec": {
+          "bits": 10,
+          "code_max": 1023,
+          "code_min": 0,
+          "fractional_bits": 10,
+          "lsb": 0.0009765625,
+          "rounding": "nearest_even",
+          "saturation": "error",
+          "signed": false
+        },
+        "threshold_value": 0.3935546875
+      },
+      "selection_alpha": 0.00037037037037037035,
+      "status": "CERTIFIED",
+      "target_acceptance": 0.02,
+      "target_acceptance_requested": 0.02,
+      "threshold_code": 403,
+      "upper_acceptance": 0.01930635014088138,
+      "upper_rate_hz": null,
+      "warnings": [
+        "no live-time or input flux supplied: this certificate is an acceptance probability, not a detector Hz measurement"
+      ]
+    },
+    {
+      "alpha": 0.00037037037037037035,
+      "bits": 12,
+      "calibration_block_id": "lhco-rnd-cal-10000-b12",
+      "calibration_empirical_acceptance": 0.0027,
+      "calibration_selection_rule": "clopper_pearson_upper_bound",
+      "calibration_warnings": [
+        "threshold selected against a calibration Clopper-Pearson upper bound"
+      ],
+      "certified": true,
+      "confidence": 0.9996296296296296,
+      "count": 24,
+      "deployment_block_id": "lhco-rnd-deploy-10000-b12",
+      "empirical_acceptance": 0.0024,
+      "input_rate_hz": null,
+      "point_rate_hz": null,
+      "prequantized_acceptance": 0.0024,
+      "prescale": 1,
+      "provenance": {
+        "calibration_event_id_sha256": "4bd08da00da9b0473d23e0c4d9d451e75901f9db805a833b9a658b032c41e84f",
+        "deployment_event_id_sha256": "48eaeceec3bf645d5b852aaa0bcb376ba21ec72a16262f7cb828ade4f8d2c5df",
+        "public_data_mode": true,
+        "sample_prefix_n": 10000
+      },
+      "quantity": "background_acceptance_probability",
+      "quantization_acceptance_delta": 0.0,
+      "quantization_sweep": {
+        "max_abs_acceptance_delta": 0.0048,
+        "signed_acceptance_delta_at_max": 0.0048,
+        "threshold_code_at_max": 997,
+        "threshold_value_at_max": 0.243408203125,
+        "thresholds_evaluated": 736
+      },
+      "rate_budget_hz": null,
+      "rate_lsb_hz": null,
+      "rate_quantization": null,
+      "reasons": [],
+      "recorded_point_rate_hz": null,
+      "recorded_upper_rate_hz": null,
+      "sample_size": 10000,
+      "sample_size_requested": 10000,
+      "score_lsb": 0.000244140625,
+      "score_quantization": {
+        "error_bound": 0.0001220703125,
+        "max_abs_error": 0.00012206277289517065,
+        "n_scores": 10000,
+        "prequantized_acceptance_at_threshold": 0.0024,
+        "quantization_acceptance_delta": 0.0,
+        "saturation_count": 0,
+        "spec": {
+          "bits": 12,
+          "code_max": 4095,
+          "code_min": 0,
+          "fractional_bits": 12,
+          "lsb": 0.000244140625,
+          "rounding": "nearest_even",
+          "saturation": "error",
+          "signed": false
+        },
+        "threshold_value": 0.480712890625
+      },
+      "selection_alpha": 0.00037037037037037035,
+      "status": "CERTIFIED",
+      "target_acceptance": 0.005,
+      "target_acceptance_requested": 0.005,
+      "threshold_code": 1969,
+      "upper_acceptance": 0.004534519616326681,
+      "upper_rate_hz": null,
+      "warnings": [
+        "no live-time or input flux supplied: this certificate is an acceptance probability, not a detector Hz measurement"
+      ]
+    },
+    {
+      "alpha": 0.00037037037037037035,
+      "bits": 12,
+      "calibration_block_id": "lhco-rnd-cal-10000-b12",
+      "calibration_empirical_acceptance": 0.0066,
+      "calibration_selection_rule": "clopper_pearson_upper_bound",
+      "calibration_warnings": [
+        "threshold selected against a calibration Clopper-Pearson upper bound"
+      ],
+      "certified": true,
+      "confidence": 0.9996296296296296,
+      "count": 65,
+      "deployment_block_id": "lhco-rnd-deploy-10000-b12",
+      "empirical_acceptance": 0.0065,
+      "input_rate_hz": null,
+      "point_rate_hz": null,
+      "prequantized_acceptance": 0.0065,
+      "prescale": 1,
+      "provenance": {
+        "calibration_event_id_sha256": "4bd08da00da9b0473d23e0c4d9d451e75901f9db805a833b9a658b032c41e84f",
+        "deployment_event_id_sha256": "48eaeceec3bf645d5b852aaa0bcb376ba21ec72a16262f7cb828ade4f8d2c5df",
+        "public_data_mode": true,
+        "sample_prefix_n": 10000
+      },
+      "quantity": "background_acceptance_probability",
+      "quantization_acceptance_delta": 0.0,
+      "quantization_sweep": {
+        "max_abs_acceptance_delta": 0.0048,
+        "signed_acceptance_delta_at_max": 0.0048,
+        "threshold_code_at_max": 997,
+        "threshold_value_at_max": 0.243408203125,
+        "thresholds_evaluated": 736
+      },
+      "rate_budget_hz": null,
+      "rate_lsb_hz": null,
+      "rate_quantization": null,
+      "reasons": [],
+      "recorded_point_rate_hz": null,
+      "recorded_upper_rate_hz": null,
+      "sample_size": 10000,
+      "sample_size_requested": 10000,
+      "score_lsb": 0.000244140625,
+      "score_quantization": {
+        "error_bound": 0.0001220703125,
+        "max_abs_error": 0.00012206277289517065,
+        "n_scores": 10000,
+        "prequantized_acceptance_at_threshold": 0.0065,
+        "quantization_acceptance_delta": 0.0,
+        "saturation_count": 0,
+        "spec": {
+          "bits": 12,
+          "code_max": 4095,
+          "code_min": 0,
+          "fractional_bits": 12,
+          "lsb": 0.000244140625,
+          "rounding": "nearest_even",
+          "saturation": "error",
+          "signed": false
+        },
+        "threshold_value": 0.437255859375
+      },
+      "selection_alpha": 0.00037037037037037035,
+      "status": "CERTIFIED",
+      "target_acceptance": 0.01,
+      "target_acceptance_requested": 0.01,
+      "threshold_code": 1791,
+      "upper_acceptance": 0.009676013844878132,
+      "upper_rate_hz": null,
+      "warnings": [
+        "no live-time or input flux supplied: this certificate is an acceptance probability, not a detector Hz measurement"
+      ]
+    },
+    {
+      "alpha": 0.00037037037037037035,
+      "bits": 12,
+      "calibration_block_id": "lhco-rnd-cal-10000-b12",
+      "calibration_empirical_acceptance": 0.0152,
+      "calibration_selection_rule": "clopper_pearson_upper_bound",
+      "calibration_warnings": [
+        "threshold selected against a calibration Clopper-Pearson upper bound"
+      ],
+      "certified": true,
+      "confidence": 0.9996296296296296,
+      "count": 138,
+      "deployment_block_id": "lhco-rnd-deploy-10000-b12",
+      "empirical_acceptance": 0.0138,
+      "input_rate_hz": null,
+      "point_rate_hz": null,
+      "prequantized_acceptance": 0.0138,
+      "prescale": 1,
+      "provenance": {
+        "calibration_event_id_sha256": "4bd08da00da9b0473d23e0c4d9d451e75901f9db805a833b9a658b032c41e84f",
+        "deployment_event_id_sha256": "48eaeceec3bf645d5b852aaa0bcb376ba21ec72a16262f7cb828ade4f8d2c5df",
+        "public_data_mode": true,
+        "sample_prefix_n": 10000
+      },
+      "quantity": "background_acceptance_probability",
+      "quantization_acceptance_delta": 0.0,
+      "quantization_sweep": {
+        "max_abs_acceptance_delta": 0.0048,
+        "signed_acceptance_delta_at_max": 0.0048,
+        "threshold_code_at_max": 997,
+        "threshold_value_at_max": 0.243408203125,
+        "thresholds_evaluated": 736
+      },
+      "rate_budget_hz": null,
+      "rate_lsb_hz": null,
+      "rate_quantization": null,
+      "reasons": [],
+      "recorded_point_rate_hz": null,
+      "recorded_upper_rate_hz": null,
+      "sample_size": 10000,
+      "sample_size_requested": 10000,
+      "score_lsb": 0.000244140625,
+      "score_quantization": {
+        "error_bound": 0.0001220703125,
+        "max_abs_error": 0.00012206277289517065,
+        "n_scores": 10000,
+        "prequantized_acceptance_at_threshold": 0.0138,
+        "quantization_acceptance_delta": 0.0,
+        "saturation_count": 0,
+        "spec": {
+          "bits": 12,
+          "code_max": 4095,
+          "code_min": 0,
+          "fractional_bits": 12,
+          "lsb": 0.000244140625,
+          "rounding": "nearest_even",
+          "saturation": "error",
+          "signed": false
+        },
+        "threshold_value": 0.40185546875
+      },
+      "selection_alpha": 0.00037037037037037035,
+      "status": "CERTIFIED",
+      "target_acceptance": 0.02,
+      "target_acceptance_requested": 0.02,
+      "threshold_code": 1646,
+      "upper_acceptance": 0.018186746642582328,
+      "upper_rate_hz": null,
+      "warnings": [
+        "no live-time or input flux supplied: this certificate is an acceptance probability, not a detector Hz measurement"
+      ]
+    },
+    {
+      "alpha": 0.00037037037037037035,
+      "bits": 12,
+      "calibration_block_id": "lhco-rnd-cal-50000-b12",
+      "calibration_empirical_acceptance": 0.00396,
+      "calibration_selection_rule": "clopper_pearson_upper_bound",
+      "calibration_warnings": [
+        "threshold selected against a calibration Clopper-Pearson upper bound"
+      ],
+      "certified": false,
+      "confidence": 0.9996296296296296,
+      "count": 224,
+      "deployment_block_id": "lhco-rnd-deploy-50000-b12",
+      "empirical_acceptance": 0.00448,
+      "input_rate_hz": null,
+      "point_rate_hz": null,
+      "prequantized_acceptance": 0.00444,
+      "prescale": 1,
+      "provenance": {
+        "calibration_event_id_sha256": "c5e5e1b2db408aa7aa1f40b29847f8e7700fb68645a5b46dd41746992311ff4f",
+        "deployment_event_id_sha256": "0538b3e34223b1def94cec68453ed15f8311812d398cb8fc70c2bfa741a34347",
+        "public_data_mode": true,
+        "sample_prefix_n": 50000
+      },
+      "quantity": "background_acceptance_probability",
+      "quantization_acceptance_delta": 3.999999999999924e-05,
+      "quantization_sweep": {
+        "max_abs_acceptance_delta": 0.0041,
+        "signed_acceptance_delta_at_max": 0.0041,
+        "threshold_code_at_max": 985,
+        "threshold_value_at_max": 0.240478515625,
+        "thresholds_evaluated": 1017
+      },
+      "rate_budget_hz": null,
+      "rate_lsb_hz": null,
+      "rate_quantization": null,
+      "reasons": [
+        "finite-sample upper acceptance exceeds target_acceptance"
+      ],
+      "recorded_point_rate_hz": null,
+      "recorded_upper_rate_hz": null,
+      "sample_size": 50000,
+      "sample_size_requested": 50000,
+      "score_lsb": 0.000244140625,
+      "score_quantization": {
+        "error_bound": 0.0001220703125,
+        "max_abs_error": 0.00012206419758462039,
+        "n_scores": 50000,
+        "prequantized_acceptance_at_threshold": 0.00444,
+        "quantization_acceptance_delta": 3.999999999999924e-05,
+        "saturation_count": 0,
+        "spec": {
+          "bits": 12,
+          "code_max": 4095,
+          "code_min": 0,
+          "fractional_bits": 12,
+          "lsb": 0.000244140625,
+          "rounding": "nearest_even",
+          "saturation": "error",
+          "signed": false
+        },
+        "threshold_value": 0.451904296875
+      },
+      "selection_alpha": 0.00037037037037037035,
+      "status": "NOT_CERTIFIED",
+      "target_acceptance": 0.005,
+      "target_acceptance_requested": 0.005,
+      "threshold_code": 1851,
+      "upper_acceptance": 0.005578861314483868,
+      "upper_rate_hz": null,
+      "warnings": [
+        "no live-time or input flux supplied: this certificate is an acceptance probability, not a detector Hz measurement"
+      ]
+    },
+    {
+      "alpha": 0.00037037037037037035,
+      "bits": 12,
+      "calibration_block_id": "lhco-rnd-cal-50000-b12",
+      "calibration_empirical_acceptance": 0.0085,
+      "calibration_selection_rule": "clopper_pearson_upper_bound",
+      "calibration_warnings": [
+        "threshold selected against a calibration Clopper-Pearson upper bound"
+      ],
+      "certified": true,
+      "confidence": 0.9996296296296296,
+      "count": 425,
+      "deployment_block_id": "lhco-rnd-deploy-50000-b12",
+      "empirical_acceptance": 0.0085,
+      "input_rate_hz": null,
+      "point_rate_hz": null,
+      "prequantized_acceptance": 0.00844,
+      "prescale": 1,
+      "provenance": {
+        "calibration_event_id_sha256": "c5e5e1b2db408aa7aa1f40b29847f8e7700fb68645a5b46dd41746992311ff4f",
+        "deployment_event_id_sha256": "0538b3e34223b1def94cec68453ed15f8311812d398cb8fc70c2bfa741a34347",
+        "public_data_mode": true,
+        "sample_prefix_n": 50000
+      },
+      "quantity": "background_acceptance_probability",
+      "quantization_acceptance_delta": 6.0000000000001025e-05,
+      "quantization_sweep": {
+        "max_abs_acceptance_delta": 0.0041,
+        "signed_acceptance_delta_at_max": 0.0041,
+        "threshold_code_at_max": 985,
+        "threshold_value_at_max": 0.240478515625,
+        "thresholds_evaluated": 1017
+      },
+      "rate_budget_hz": null,
+      "rate_lsb_hz": null,
+      "rate_quantization": null,
+      "reasons": [],
+      "recorded_point_rate_hz": null,
+      "recorded_upper_rate_hz": null,
+      "sample_size": 50000,
+      "sample_size_requested": 50000,
+      "score_lsb": 0.000244140625,
+      "score_quantization": {
+        "error_bound": 0.0001220703125,
+        "max_abs_error": 0.00012206419758462039,
+        "n_scores": 50000,
+        "prequantized_acceptance_at_threshold": 0.00844,
+        "quantization_acceptance_delta": 6.0000000000001025e-05,
+        "saturation_count": 0,
+        "spec": {
+          "bits": 12,
+          "code_max": 4095,
+          "code_min": 0,
+          "fractional_bits": 12,
+          "lsb": 0.000244140625,
+          "rounding": "nearest_even",
+          "saturation": "error",
+          "signed": false
+        },
+        "threshold_value": 0.424072265625
+      },
+      "selection_alpha": 0.00037037037037037035,
+      "status": "CERTIFIED",
+      "target_acceptance": 0.01,
+      "target_acceptance_requested": 0.01,
+      "threshold_code": 1737,
+      "upper_acceptance": 0.009974976636269828,
+      "upper_rate_hz": null,
+      "warnings": [
+        "no live-time or input flux supplied: this certificate is an acceptance probability, not a detector Hz measurement"
+      ]
+    },
+    {
+      "alpha": 0.00037037037037037035,
+      "bits": 12,
+      "calibration_block_id": "lhco-rnd-cal-50000-b12",
+      "calibration_empirical_acceptance": 0.0178,
+      "calibration_selection_rule": "clopper_pearson_upper_bound",
+      "calibration_warnings": [
+        "threshold selected against a calibration Clopper-Pearson upper bound"
+      ],
+      "certified": true,
+      "confidence": 0.9996296296296296,
+      "count": 858,
+      "deployment_block_id": "lhco-rnd-deploy-50000-b12",
+      "empirical_acceptance": 0.01716,
+      "input_rate_hz": null,
+      "point_rate_hz": null,
+      "prequantized_acceptance": 0.0171,
+      "prescale": 1,
+      "provenance": {
+        "calibration_event_id_sha256": "c5e5e1b2db408aa7aa1f40b29847f8e7700fb68645a5b46dd41746992311ff4f",
+        "deployment_event_id_sha256": "0538b3e34223b1def94cec68453ed15f8311812d398cb8fc70c2bfa741a34347",
+        "public_data_mode": true,
+        "sample_prefix_n": 50000
+      },
+      "quantity": "background_acceptance_probability",
+      "quantization_acceptance_delta": 6.0000000000001025e-05,
+      "quantization_sweep": {
+        "max_abs_acceptance_delta": 0.0041,
+        "signed_acceptance_delta_at_max": 0.0041,
+        "threshold_code_at_max": 985,
+        "threshold_value_at_max": 0.240478515625,
+        "thresholds_evaluated": 1017
+      },
+      "rate_budget_hz": null,
+      "rate_lsb_hz": null,
+      "rate_quantization": null,
+      "reasons": [],
+      "recorded_point_rate_hz": null,
+      "recorded_upper_rate_hz": null,
+      "sample_size": 50000,
+      "sample_size_requested": 50000,
+      "score_lsb": 0.000244140625,
+      "score_quantization": {
+        "error_bound": 0.0001220703125,
+        "max_abs_error": 0.00012206419758462039,
+        "n_scores": 50000,
+        "prequantized_acceptance_at_threshold": 0.0171,
+        "quantization_acceptance_delta": 6.0000000000001025e-05,
+        "saturation_count": 0,
+        "spec": {
+          "bits": 12,
+          "code_max": 4095,
+          "code_min": 0,
+          "fractional_bits": 12,
+          "lsb": 0.000244140625,
+          "rounding": "nearest_even",
+          "saturation": "error",
+          "signed": false
+        },
+        "threshold_value": 0.39404296875
+      },
+      "selection_alpha": 0.00037037037037037035,
+      "status": "CERTIFIED",
+      "target_acceptance": 0.02,
+      "target_acceptance_requested": 0.02,
+      "threshold_code": 1614,
+      "upper_acceptance": 0.019207323206355743,
+      "upper_rate_hz": null,
+      "warnings": [
+        "no live-time or input flux supplied: this certificate is an acceptance probability, not a detector Hz measurement"
+      ]
+    },
+    {
+      "alpha": 0.00037037037037037035,
+      "bits": 12,
+      "calibration_block_id": "lhco-rnd-cal-100000-b12",
+      "calibration_empirical_acceptance": 0.00422,
+      "calibration_selection_rule": "clopper_pearson_upper_bound",
+      "calibration_warnings": [
+        "threshold selected against a calibration Clopper-Pearson upper bound"
+      ],
+      "certified": false,
+      "confidence": 0.9996296296296296,
+      "count": 455,
+      "deployment_block_id": "lhco-rnd-deploy-100000-b12",
+      "empirical_acceptance": 0.00455,
+      "input_rate_hz": null,
+      "point_rate_hz": null,
+      "prequantized_acceptance": 0.00453,
+      "prescale": 1,
+      "provenance": {
+        "calibration_event_id_sha256": "431dd814ddf3a6d864016868dd602f64f0fbcdc2afc83e5203d10a085fda9264",
+        "deployment_event_id_sha256": "46dab62a13254075160756b7097e9602a34edf0cd53efca096d2924969a49d05",
+        "public_data_mode": true,
+        "sample_prefix_n": 100000
+      },
+      "quantity": "background_acceptance_probability",
+      "quantization_acceptance_delta": 2.0000000000000052e-05,
+      "quantization_sweep": {
+        "max_abs_acceptance_delta": 0.00388,
+        "signed_acceptance_delta_at_max": 0.00388,
+        "threshold_code_at_max": 987,
+        "threshold_value_at_max": 0.240966796875,
+        "thresholds_evaluated": 1153
+      },
+      "rate_budget_hz": null,
+      "rate_lsb_hz": null,
+      "rate_quantization": null,
+      "reasons": [
+        "finite-sample upper acceptance exceeds target_acceptance"
+      ],
+      "recorded_point_rate_hz": null,
+      "recorded_upper_rate_hz": null,
+      "sample_size": 100000,
+      "sample_size_requested": 100000,
+      "score_lsb": 0.000244140625,
+      "score_quantization": {
+        "error_bound": 0.0001220703125,
+        "max_abs_error": 0.0001220700882537118,
+        "n_scores": 100000,
+        "prequantized_acceptance_at_threshold": 0.00453,
+        "quantization_acceptance_delta": 2.0000000000000052e-05,
+        "saturation_count": 0,
+        "spec": {
+          "bits": 12,
+          "code_max": 4095,
+          "code_min": 0,
+          "fractional_bits": 12,
+          "lsb": 0.000244140625,
+          "rounding": "nearest_even",
+          "saturation": "error",
+          "signed": false
+        },
+        "threshold_value": 0.4521484375
+      },
+      "selection_alpha": 0.00037037037037037035,
+      "status": "NOT_CERTIFIED",
+      "target_acceptance": 0.005,
+      "target_acceptance_requested": 0.005,
+      "threshold_code": 1852,
+      "upper_acceptance": 0.00531325602442278,
+      "upper_rate_hz": null,
+      "warnings": [
+        "no live-time or input flux supplied: this certificate is an acceptance probability, not a detector Hz measurement"
+      ]
+    },
+    {
+      "alpha": 0.00037037037037037035,
+      "bits": 12,
+      "calibration_block_id": "lhco-rnd-cal-100000-b12",
+      "calibration_empirical_acceptance": 0.00895,
+      "calibration_selection_rule": "clopper_pearson_upper_bound",
+      "calibration_warnings": [
+        "threshold selected against a calibration Clopper-Pearson upper bound"
+      ],
+      "certified": false,
+      "confidence": 0.9996296296296296,
+      "count": 927,
+      "deployment_block_id": "lhco-rnd-deploy-100000-b12",
+      "empirical_acceptance": 0.00927,
+      "input_rate_hz": null,
+      "point_rate_hz": null,
+      "prequantized_acceptance": 0.00924,
+      "prescale": 1,
+      "provenance": {
+        "calibration_event_id_sha256": "431dd814ddf3a6d864016868dd602f64f0fbcdc2afc83e5203d10a085fda9264",
+        "deployment_event_id_sha256": "46dab62a13254075160756b7097e9602a34edf0cd53efca096d2924969a49d05",
+        "public_data_mode": true,
+        "sample_prefix_n": 100000
+      },
+      "quantity": "background_acceptance_probability",
+      "quantization_acceptance_delta": 3.0000000000000512e-05,
+      "quantization_sweep": {
+        "max_abs_acceptance_delta": 0.00388,
+        "signed_acceptance_delta_at_max": 0.00388,
+        "threshold_code_at_max": 987,
+        "threshold_value_at_max": 0.240966796875,
+        "thresholds_evaluated": 1153
+      },
+      "rate_budget_hz": null,
+      "rate_lsb_hz": null,
+      "rate_quantization": null,
+      "reasons": [
+        "finite-sample upper acceptance exceeds target_acceptance"
+      ],
+      "recorded_point_rate_hz": null,
+      "recorded_upper_rate_hz": null,
+      "sample_size": 100000,
+      "sample_size_requested": 100000,
+      "score_lsb": 0.000244140625,
+      "score_quantization": {
+        "error_bound": 0.0001220703125,
+        "max_abs_error": 0.0001220700882537118,
+        "n_scores": 100000,
+        "prequantized_acceptance_at_threshold": 0.00924,
+        "quantization_acceptance_delta": 3.0000000000000512e-05,
+        "saturation_count": 0,
+        "spec": {
+          "bits": 12,
+          "code_max": 4095,
+          "code_min": 0,
+          "fractional_bits": 12,
+          "lsb": 0.000244140625,
+          "rounding": "nearest_even",
+          "saturation": "error",
+          "signed": false
+        },
+        "threshold_value": 0.422119140625
+      },
+      "selection_alpha": 0.00037037037037037035,
+      "status": "NOT_CERTIFIED",
+      "target_acceptance": 0.01,
+      "target_acceptance_requested": 0.01,
+      "threshold_code": 1729,
+      "upper_acceptance": 0.010337021685412525,
+      "upper_rate_hz": null,
+      "warnings": [
+        "no live-time or input flux supplied: this certificate is an acceptance probability, not a detector Hz measurement"
+      ]
+    },
+    {
+      "alpha": 0.00037037037037037035,
+      "bits": 12,
+      "calibration_block_id": "lhco-rnd-cal-100000-b12",
+      "calibration_empirical_acceptance": 0.01849,
+      "calibration_selection_rule": "clopper_pearson_upper_bound",
+      "calibration_warnings": [
+        "threshold selected against a calibration Clopper-Pearson upper bound"
+      ],
+      "certified": true,
+      "confidence": 0.9996296296296296,
+      "count": 1816,
+      "deployment_block_id": "lhco-rnd-deploy-100000-b12",
+      "empirical_acceptance": 0.01816,
+      "input_rate_hz": null,
+      "point_rate_hz": null,
+      "prequantized_acceptance": 0.01812,
+      "prescale": 1,
+      "provenance": {
+        "calibration_event_id_sha256": "431dd814ddf3a6d864016868dd602f64f0fbcdc2afc83e5203d10a085fda9264",
+        "deployment_event_id_sha256": "46dab62a13254075160756b7097e9602a34edf0cd53efca096d2924969a49d05",
+        "public_data_mode": true,
+        "sample_prefix_n": 100000
+      },
+      "quantity": "background_acceptance_probability",
+      "quantization_acceptance_delta": 3.999999999999837e-05,
+      "quantization_sweep": {
+        "max_abs_acceptance_delta": 0.00388,
+        "signed_acceptance_delta_at_max": 0.00388,
+        "threshold_code_at_max": 987,
+        "threshold_value_at_max": 0.240966796875,
+        "thresholds_evaluated": 1153
+      },
+      "rate_budget_hz": null,
+      "rate_lsb_hz": null,
+      "rate_quantization": null,
+      "reasons": [],
+      "recorded_point_rate_hz": null,
+      "recorded_upper_rate_hz": null,
+      "sample_size": 100000,
+      "sample_size_requested": 100000,
+      "score_lsb": 0.000244140625,
+      "score_quantization": {
+        "error_bound": 0.0001220703125,
+        "max_abs_error": 0.0001220700882537118,
+        "n_scores": 100000,
+        "prequantized_acceptance_at_threshold": 0.01812,
+        "quantization_acceptance_delta": 3.999999999999837e-05,
+        "saturation_count": 0,
+        "spec": {
+          "bits": 12,
+          "code_max": 4095,
+          "code_min": 0,
+          "fractional_bits": 12,
+          "lsb": 0.000244140625,
+          "rounding": "nearest_even",
+          "saturation": "error",
+          "signed": false
+        },
+        "threshold_value": 0.392578125
+      },
+      "selection_alpha": 0.00037037037037037035,
+      "status": "CERTIFIED",
+      "target_acceptance": 0.02,
+      "target_acceptance_requested": 0.02,
+      "threshold_code": 1608,
+      "upper_acceptance": 0.019628310475543455,
+      "upper_rate_hz": null,
+      "warnings": [
+        "no live-time or input flux supplied: this certificate is an acceptance probability, not a detector Hz measurement"
+      ]
+    }
+  ],
+  "familywise_alpha": 0.01,
+  "familywise_cells": 27,
+  "interpretation": {
+    "absolute_rate_hz": false,
+    "comparison_note": "each cell has a valid per-cell binomial bound; familywise alpha controls the displayed sweep",
+    "primary_quantity": "background_acceptance_probability",
+    "reason": "the LHCO release is a selected simulation sample without live time or representative input flux",
+    "shared_prefixes": true
+  },
+  "per_cell_alpha": 0.00037037037037037035,
+  "provenance": {
+    "calibration_event_id_sha256": "431dd814ddf3a6d864016868dd602f64f0fbcdc2afc83e5203d10a085fda9264",
+    "calibration_n": 100000,
+    "deployment_event_id_sha256": "46dab62a13254075160756b7097e9602a34edf0cd53efca096d2924969a49d05",
+    "deployment_n": 100000,
+    "event_id_disjoint": true,
+    "independence_claim": "declared by the recorded split; independence is a caller/data assumption, not proven by the adapter",
+    "n_background": 1000000,
+    "n_signal": 100000,
+    "n_total": 1100000,
+    "score_definition": "leading-jet pT = hypot(pxj1, pyj1), divided by 5000 GeV",
+    "score_normalization": 5000.0,
+    "source_doi": "10.5281/zenodo.6466204",
+    "source_license": "CC-BY-4.0",
+    "source_md5": "271cf5e71fc756b2a8d2b32730689bdb",
+    "source_path": "E:\\123\\ratecert_hep\\data\\public\\lhco_rnd\\events_anomalydetection_v2.features.full.h5",
+    "source_record": "https://zenodo.org/records/6466204",
+    "source_selection": "label == 0 (QCD background); released sample already has pT-trigger selection",
+    "source_sha256": "933b1f11d7b66e6dae0ee2878723f8f5d7ab0f38399806f2d067c5cfd9a502b1",
+    "split_rule": "seeded permutation without replacement",
+    "split_seed": 20260912
+  },
+  "score_contract": {
+    "definition": "leading-jet pT = hypot(pxj1, pyj1), divided by 5000 GeV",
+    "fixed_point": "unsigned bits=fractional_bits, nearest_even, no saturation expected",
+    "normalization_GeV": 5000.0
+  },
+  "study": "RateCert-HEP public LHCO finite-sample acceptance sweep"
+}

@@ -1,0 +1,55 @@
+{
+  "interpretation": "Monte-Carlo implementation diagnostic; exact coverage comes from Clopper-Pearson theorem",
+  "rows": [
+    {
+      "alpha": 0.00037037037037037,
+      "coverage": 1.0,
+      "coverage_mc_95_high": 0.9999999999999999,
+      "coverage_mc_95_low": 0.9998079639438954,
+      "covered": 20000,
+      "min_upper": 0.007869876138251809,
+      "n_events": 1000,
+      "nominal_coverage": 0.9996296296296296,
+      "repeats": 20000,
+      "true_acceptance": 0.005
+    },
+    {
+      "alpha": 0.00037037037037037,
+      "coverage": 0.99965,
+      "coverage_mc_95_high": 0.9998304468224045,
+      "coverage_mc_95_low": 0.9992776515467302,
+      "covered": 19993,
+      "min_upper": 0.004667621991294811,
+      "n_events": 10000,
+      "nominal_coverage": 0.9996296296296296,
+      "repeats": 20000,
+      "true_acceptance": 0.005
+    },
+    {
+      "alpha": 0.00037037037037037,
+      "coverage": 0.99965,
+      "coverage_mc_95_high": 0.9998304468224045,
+      "coverage_mc_95_low": 0.9992776515467302,
+      "covered": 19993,
+      "min_upper": 0.009434801566634607,
+      "n_events": 10000,
+      "nominal_coverage": 0.9996296296296296,
+      "repeats": 20000,
+      "true_acceptance": 0.01
+    },
+    {
+      "alpha": 0.00037037037037037,
+      "coverage": 0.99945,
+      "coverage_mc_95_high": 0.9996928514180666,
+      "coverage_mc_95_low": 0.9990153237654903,
+      "covered": 19989,
+      "min_upper": 0.009841055880778413,
+      "n_events": 100000,
+      "nominal_coverage": 0.9996296296296296,
+      "repeats": 20000,
+      "true_acceptance": 0.01
+    }
+  ],
+  "seed": 20260915,
+  "study": "RateCert-HEP binomial upper-bound coverage stress"
+}

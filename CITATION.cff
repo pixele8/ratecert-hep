@@ -1,0 +1,34 @@
+cff-version: 1.2.0
+message: "If you use RateCert-HEP, please cite the accompanying Computer Physics Communications article and the versioned code release."
+title: "RateCert-HEP: a program for finite-sample certification of fixed-point trigger rates"
+version: 0.1.0
+date-released: 2026-09-12
+type: software
+license: MIT
+repository-code: "https://github.com/pixele8/ratecert-hep"
+url: "https://github.com/pixele8/ratecert-hep"
+authors:
+  - given-names: Jiahui
+    family-names: Wu
+    affiliation: School of Materials Science and Engineering, Hebei University of Technology
+  - given-names: Chong
+    family-names: Liu
+    affiliation: Hongyang Display (Xianyang) Technology Co., Ltd.
+  - given-names: Tuo
+    family-names: Li
+    affiliation: Hongyang Display (Xianyang) Technology Co., Ltd.
+  - given-names: Lei
+    family-names: Lv
+    affiliation: Hongyang Display (Xianyang) Technology Co., Ltd.
+  - given-names: Pengjie
+    family-names: Guo
+    affiliation: Hongyang Display (Xianyang) Technology Co., Ltd.
+  - given-names: Guoquan
+    family-names: Zhang
+    affiliation: Hongyang Display (Xianyang) Technology Co., Ltd.
+  - given-names: Jianfeng
+    family-names: Sun
+    affiliation: School of Materials Science and Engineering, Hebei University of Technology
+contact:
+  - name: Jianfeng Sun
+    email: sunjianfeng10@hebut.edu.cn

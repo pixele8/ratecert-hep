@@ -1,0 +1,47 @@
+{
+  "alpha": 0.01,
+  "exposure_s": 10.0,
+  "interpretation": "The stationary Poisson row is a reference. The burst and mixed-rate rows intentionally violate the fixed-rate Poisson assumption; their coverage is a refusal-boundary diagnostic, not a guarantee.",
+  "repeats": 50000,
+  "rows": [
+    {
+      "coverage": 0.99108,
+      "covered": 49554,
+      "max_upper_rate_hz": 14.80500606620151,
+      "mean_count": 79.98626,
+      "mean_rate_hz": 7.998626,
+      "min_upper_rate_hz": 6.440162445480709,
+      "model": "N ~ Poisson(8 Hz * 10 s)",
+      "nominal_coverage": 0.99,
+      "repeats": 50000,
+      "scenario": "stationary_poisson"
+    },
+    {
+      "coverage": 0.19386,
+      "covered": 9693,
+      "max_upper_rate_hz": 52.40068402464898,
+      "mean_count": 77.52318,
+      "mean_rate_hz": 7.752318,
+      "min_upper_rate_hz": 0.4605170185988091,
+      "model": "window rate is 0 Hz (80%) or 40 Hz (20%); nominal mean 8 Hz",
+      "nominal_coverage": 0.99,
+      "repeats": 50000,
+      "scenario": "two_state_burst"
+    },
+    {
+      "coverage": 0.56002,
+      "covered": 28001,
+      "max_upper_rate_hz": 57.5565758888021,
+      "mean_count": 80.29088,
+      "mean_rate_hz": 8.029088,
+      "min_upper_rate_hz": 0.4605170185988091,
+      "model": "window rate ~ Gamma(shape=2, scale=4 Hz); nominal mean 8 Hz",
+      "nominal_coverage": 0.99,
+      "repeats": 50000,
+      "scenario": "gamma_mixed_rate"
+    }
+  ],
+  "seed": 20260918,
+  "study": "RateCert-HEP Poisson assumption-boundary stress",
+  "true_rate_hz": 8.0
+}
