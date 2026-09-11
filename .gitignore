@@ -21,7 +21,10 @@ venv/
 
 # External public data: not versioned, fetched from Zenodo.
 # See README "External data" for the DOI and verification hashes.
-data/
+# Anchored to the repository root ONLY: a bare "data/" would also match
+# examples/data/, silently excluding the sample input required for the
+# documented worked example and for a CPC program submission.
+/data/
 
 # Generated figures and compiled manuscripts: reproducible from source.
 # NOTE: paper_cpc/figures/*.pdf are deliberately NOT ignored below, so that the

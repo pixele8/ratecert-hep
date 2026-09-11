@@ -1,0 +1,21 @@
+{
+  "score": {
+    "bits": 10,
+    "fractional_bits": 8,
+    "signed": false,
+    "rounding": "nearest_even",
+    "saturation": "error"
+  },
+  "certification": {
+    "alpha": 0.01,
+    "rate_budget_hz": 12.0,
+    "prescale": 4,
+    "rate_lsb_hz": 0.05,
+    "rate_rounding": "nearest_even",
+    "rate_counter_bits": 32
+  },
+  "blocks": {
+    "calibration": "worked-example-cal",
+    "deployment": "worked-example-deploy"
+  }
+}

@@ -1,22 +1,22 @@
 {
-  "certified": true,
-  "status": "CERTIFIED",
-  "deployment_block_id": "synthetic-deploy-v1",
-  "calibration_block_id": "synthetic-cal-v1",
-  "threshold_code": 252,
-  "count": 72,
+  "certified": false,
+  "status": "NOT_CERTIFIED",
+  "deployment_block_id": "worked-example-deploy",
+  "calibration_block_id": "worked-example-cal",
+  "threshold_code": 249,
+  "count": 205,
   "exposure_s": 20.0,
-  "point_rate_hz": 3.6,
-  "recorded_point_rate_hz": 0.9,
-  "upper_rate_hz": 4.71665990411954,
-  "recorded_upper_rate_hz": 1.179164976029885,
+  "point_rate_hz": 10.25,
+  "recorded_point_rate_hz": 2.5625,
+  "upper_rate_hz": 12.042611026576285,
+  "recorded_upper_rate_hz": 3.0106527566440713,
   "alpha": 0.01,
   "rate_budget_hz": 12.0,
   "rate_resolution_hz": 0.05,
   "observed_rate_step_hz": 0.049999999999954525,
   "quantization_margin_hz": 0.025,
-  "deployment_margin_hz": 7.25834009588046,
-  "deployment_score": 0.6048616746567049,
+  "deployment_margin_hz": -0.06761102657628512,
+  "deployment_score": -0.005634252214690427,
   "prescale": 4,
   "fixed_point": {
     "saturation_count": 0,
@@ -43,7 +43,9 @@
       "max_rate_hz": 214748364.75
     }
   },
-  "reasons": [],
+  "reasons": [
+    "finite-sample upper rate plus fixed-point margin exceeds budget"
+  ],
   "warnings": [
     "observed threshold step is diagnostic; deterministic rate LSB is used for certification"
   ]

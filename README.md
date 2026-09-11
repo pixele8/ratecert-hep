@@ -12,9 +12,9 @@ rate-register resolution, and the observed score-quantization diagnostic.
 - **Version:** 0.1.0
 - **Requirements:** Python >= 3.10, NumPy, SciPy
 
-This is the first executable test of the proposed contribution: a finite-sample
-upper bound for a deployed trigger rate composed with an explicit fixed-point
-score contract and an empirical rate-resolution margin.
+This is a reference implementation: a finite-sample upper bound for a deployed
+trigger rate composed with an explicit fixed-point score contract and a declared
+rate-resolution margin.
 
 It intentionally contains no neural network, no web service, and no detector
 claim. The score stream is supplied by the caller. The minimum experiment is:
@@ -25,8 +25,14 @@ py -m pytest
 $env:PYTHONPATH = "src"
 py examples/minimal_certification.py
 py examples/validation_pilot.py
-py -m ratecert --config configs/minimal_synthetic.json --scores examples/data/scores.csv --exposure-s 20 --threshold-code 252 --output reports/cli_certificate.json
+py -m ratecert --config configs/worked_example.json --scores examples/data/scores.csv --exposure-s 20 --threshold-code 250 --output reports/cli_certificate.json
 ```
+
+That command must print `CERTIFIED`. It is the first of three fully specified
+cases with checked-in expected output; see
+[`examples/expected/README.md`](examples/expected/README.md) for the other two,
+which document the exact numbers the certificate must contain and include a
+worked refusal on the counter range.
 
 The JSON report separates the raw trigger rate from the prescaled recorded rate,
 states the Poisson confidence level, records the fixed-point format, and returns
@@ -191,7 +197,7 @@ measurements and do not represent detector or firmware latency.
 | Path | Contents |
 | --- | --- |
 | `src/ratecert/` | Core package: `core.py`, `acceptance.py`, `public_data.py`, `cli.py`, `io.py` |
-| `tests/` | 23-test suite asserting scientific invariants |
+| `tests/` | 30-test suite asserting scientific invariants, including the worked example |
 | `examples/` | Benchmark, figure, coverage-stress, and replay-table scripts |
 | `configs/` | Example configuration files |
 | `reports/` | Checked-in JSON reports and generated figures |

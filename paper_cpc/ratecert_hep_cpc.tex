@@ -208,18 +208,25 @@ The practical setting is the one familiar from collider trigger menus.  A
 level-1 or high-level trigger stage has a fixed output rate allocation, and each
 trigger signature consumes part of it.  Once a menu entry is accepted, its
 threshold is committed to firmware, where the score is carried in a fixed-point
-format of a few bits to meet latency and resource constraints.  The rate that
-finally appears in the counter is therefore the composition of a statistic
-evaluated on a finite sample, a quantization of the score, and a rounding of
-the recorded rate.  Prior work in this journal has addressed the statistical
-half of this problem well: POLE 1.0~\cite{Conrad2004POLE} and
+format of a few bits to meet latency and resource constraints; the same
+constraint has motivated a continuing line of FPGA and high-level-synthesis work
+reported in this journal, from integer-arithmetic implementations to recent
+HLS-based HEP algorithm acceleration~\cite{Wojenski2024HLS} and deep-learning
+triggers~\cite{Tyson2023CLAS12}.  The rate that finally appears in the counter
+is therefore the composition of a statistic evaluated on a finite sample, a
+quantization of the score, and a rounding of the recorded rate.
+
+Prior work in this journal has addressed the statistical half of this problem
+well, and over a long period: POLE 1.0~\cite{Conrad2004POLE} and
 TRolke 2.0~\cite{Lundberg2010TRolke} provide exact confidence intervals and
-upper limits for a Poisson process, including systematic uncertainties, and the
-Bayesian analysis toolkit~\cite{BAT2009} generalises this to a full Bayesian
-treatment.  These programs, however, return a number for a statistic.  They do
-not know whether the threshold that produced the observed count was selected on
-the same data that now certify it, and they say nothing about the finite
-resolution of the register in which the resulting rate will be stored.
+upper limits for a Poisson process, including systematic uncertainties;
+Aguilar-Saavedra~\cite{AguilarSaavedra2000} and Barlow~\cite{Barlow2002}
+supply dedicated interval calculators; and the Bayesian analysis
+toolkit~\cite{BAT2009} generalises the treatment to a full posterior.  These
+programs, however, return a number for a statistic.  They do not know whether
+the threshold that produced the observed count was selected on the same data
+that now certify it, and they say nothing about the finite resolution of the
+register in which the resulting rate will be stored.
 
 That composition is the subject of this paper.  RateCert-HEP addresses this
 interface as a software contract.  The package is deliberately model-agnostic:
@@ -901,10 +908,20 @@ ship the exact construction rather than Wilson is not superior coverage but
 non-negotiability.  Clopper--Pearson is an inversion of the exact discrete
 sampling tail, so its coverage is guaranteed at every $(n,p)$ rather than
 asymptotically, and the guarantee is what a rate-budget pass is supposed to
-mean.  The price is visible in Table~\ref{tab:baseline}: two cells that Wilson
-would certify are refused here.  We regard refusing a marginal cell as the
-correct behaviour for a certification tool, and the refusal is retained with
-its reason rather than dropped.
+mean.  This is a deliberate choice against a well-documented body of advice:
+Wilson and Agresti--Coull intervals are often recommended in preference to
+``exact'' intervals because they are shorter at equal nominal coverage and
+avoid the conservatism of the discrete inversion~\cite{Agresti1998,Brown2001}.
+That trade is the right one for estimation, where a shorter interval is
+strictly more informative.  It is the wrong trade for a pass/fail deployment
+predicate, because there the interval is being used as a guarantee and the
+cost of over-coverage is a refused configuration whereas the cost of
+under-coverage is an unsafe one accepted.  The price is visible in
+Table~\ref{tab:baseline}: two cells that Wilson would certify are refused here.
+We regard refusing a marginal cell as the correct behaviour for a certification
+tool, and the refusal is retained with its reason rather than dropped.  For the
+same reason the Poisson path follows the classical
+Garwood construction~\cite{Garwood1936} rather than a normal approximation.
 
 \subsection{Evidence-chain summary}
 
@@ -1032,6 +1049,56 @@ its quantity as a background acceptance probability and leaves the absolute-rate
 fields empty until an external input flux, budget, and rate specification are
 provided together.
 
+\subsection{Worked example with checked-in expected output}
+\label{sec:worked}
+
+The distribution contains a self-contained test run that requires no external
+data, together with the exact output it must produce.  The input is a
+deterministic 16{,}000-event score stream generated at seed 20260912; the
+fixed-point specification is 10 bits with 8 fractional bits, so the score LSB is
+$2^{-8}$ and integer code $q$ corresponds to score $q/256$.  The declared rate
+register has a 0.05 Hz LSB with nearest-even rounding, a prescale of 4, and a
+32-bit counter; the budget is 12 Hz at $\alpha=0.01$ over a 20 s exposure.
+
+At threshold code 250 the deployment block returns $K=145$, and the certificate
+contains
+\begin{center}\small
+\begin{tabular}{@{}lr@{}}
+\toprule
+Field & Value \\
+\midrule
+\texttt{threshold\_code} & 250 \\
+\texttt{count} & 145 \\
+\texttt{point\_rate\_hz} & 7.25 \\
+\texttt{upper\_rate\_hz} & 8.778530889551678 \\
+\texttt{quantization\_margin\_hz} & 0.025 \\
+\texttt{deployment\_margin\_hz} & 3.1964691104483216 \\
+\texttt{recorded\_point\_rate\_hz} & 1.8125 \\
+\texttt{saturation\_count} & 0 \\
+\bottomrule
+\end{tabular}
+\end{center}
+The decision illustrates the point of the contract.  The point estimate
+$7.25$~Hz is not the certified quantity.  The pass predicate evaluates
+$8.778530889551678 + 0.025 = 8.80353 \le 12$, so the configuration is certified
+with a remaining margin of $3.1965$~Hz.  The recorded rate is reported
+separately as $1.8125$~Hz for $P=4$ and does not enter the predicate, since a
+prescale does not reduce the raw rate the budget constrains.
+
+Moving the threshold by one code to 249 raises the count to 205 and the upper
+rate to $12.04261$~Hz.  The predicate then gives
+$12.04261 + 0.025 = 12.06761 > 12$, and the configuration is refused by
+$0.068$~Hz with the single reason
+\textit{finite-sample upper rate plus fixed-point margin exceeds budget}.  The
+refusal is returned as a valid structured object, not as an error.  A third
+case keeps code 250 but declares a 4-bit counter, whose full scale is
+$(2^4-1)\times0.05 = 0.75$~Hz.  It is refused with two independent reasons,
+\textit{rate counter overflow: count 145 exceeds 15} and \textit{finite-sample
+upper rate exceeds the declared rate-counter full scale}; the predicates are
+reported separately because they call for different remedies.  All three runs
+use the same code path, so a reviewer can confirm that only the statistical
+bound and the register margin enter the pass condition.
+
 \subsection{Reproducibility contract}
 
 The repository stores configuration, source scripts, reports, and figure
@@ -1051,7 +1118,7 @@ who does not have the public file can still run the synthetic certificate and
 all core tests, while the public-data result is correctly unavailable rather
 than silently replaced by synthetic rows.
 
-The current run produces 23 passing tests, the 27-cell public report, and the
+The current run produces 30 passing tests, the 27-cell public report, and the
 36-cell explicit-rate report.  It also produces the architecture diagram,
 three diagnostic figures plus the assumption-boundary stress figure (each in
 300 dpi PNG and vector PDF form), a reviewer replay table, a timing report,
@@ -1168,7 +1235,7 @@ adapter can reuse the cumulative-code and JSON layers while replacing the
 independent-block assumption with a declared sequential confidence procedure.
 
 The distributed release includes a compact verification checklist: install the
-core extra, run the synthetic certificate, run the 23-test suite, replay the
+core extra, run the synthetic certificate, run the 30-test suite, replay the
 public-data command when the 74 MB file is available, inspect the JSON refusal
 reasons, and regenerate both figure formats.  Each step has a checked-in input
 or a precise external-data hash, so a failure can be localized to dependencies,
@@ -1233,7 +1300,7 @@ the contribution on the reference platform:
 
 \begin{enumerate}
 \item Install the package with the core and development extras, then run the
-      23-test suite.
+      30-test suite.
 \item Run the minimal synthetic example and inspect the separate raw and
       prescaled rates in its JSON output.
 \item When the LHCO file is available, run the public acceptance command and
