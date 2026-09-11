@@ -1,0 +1,243 @@
+{
+  "study": "RateCert-HEP quantization certificate",
+  "seed": 20260912,
+  "part_a": {
+    "n": 200000,
+    "identity_all_ok": true,
+    "cells_identity": [
+      {
+        "q": 64,
+        "bits": 8,
+        "delta": 0.00390625,
+        "p_quantized": 0.537945,
+        "p_unquantized": 0.533495,
+        "signed_change": 0.004449999999999954,
+        "abs_change": 0.004449999999999954,
+        "boundary_mass": 0.00897,
+        "identity_holds": true
+      },
+      {
+        "q": 128,
+        "bits": 8,
+        "delta": 0.00390625,
+        "p_quantized": 0.11111,
+        "p_unquantized": 0.10936,
+        "signed_change": 0.0017500000000000016,
+        "abs_change": 0.0017500000000000016,
+        "boundary_mass": 0.00362,
+        "identity_holds": true
+      },
+      {
+        "q": 192,
+        "bits": 8,
+        "delta": 0.00390625,
+        "p_quantized": 0.005,
+        "p_unquantized": 0.00484,
+        "signed_change": 0.00016000000000000042,
+        "abs_change": 0.00016000000000000042,
+        "boundary_mass": 0.000345,
+        "identity_holds": true
+      },
+      {
+        "q": 64,
+        "bits": 10,
+        "delta": 0.0009765625,
+        "p_quantized": 0.9506,
+        "p_unquantized": 0.94995,
+        "signed_change": 0.0006500000000000394,
+        "abs_change": 0.0006500000000000394,
+        "boundary_mass": 0.00123,
+        "identity_holds": true
+      },
+      {
+        "q": 128,
+        "bits": 10,
+        "delta": 0.0009765625,
+        "p_quantized": 0.83266,
+        "p_unquantized": 0.831535,
+        "signed_change": 0.0011249999999999316,
+        "abs_change": 0.0011249999999999316,
+        "boundary_mass": 0.00231,
+        "identity_holds": true
+      },
+      {
+        "q": 192,
+        "bits": 10,
+        "delta": 0.0009765625,
+        "p_quantized": 0.68604,
+        "p_unquantized": 0.684755,
+        "signed_change": 0.0012849999999999806,
+        "abs_change": 0.0012849999999999806,
+        "boundary_mass": 0.00247,
+        "identity_holds": true
+      },
+      {
+        "q": 64,
+        "bits": 12,
+        "delta": 0.000244140625,
+        "p_quantized": 0.996335,
+        "p_unquantized": 0.99629,
+        "signed_change": 4.499999999996174e-05,
+        "abs_change": 4.499999999996174e-05,
+        "boundary_mass": 0.00013,
+        "identity_holds": true
+      },
+      {
+        "q": 128,
+        "bits": 12,
+        "delta": 0.000244140625,
+        "p_quantized": 0.98657,
+        "p_unquantized": 0.986455,
+        "signed_change": 0.00011499999999997623,
+        "abs_change": 0.00011499999999997623,
+        "boundary_mass": 0.000265,
+        "identity_holds": true
+      },
+      {
+        "q": 192,
+        "bits": 12,
+        "delta": 0.000244140625,
+        "p_quantized": 0.97073,
+        "p_unquantized": 0.97063,
+        "signed_change": 9.999999999998899e-05,
+        "abs_change": 9.999999999998899e-05,
+        "boundary_mass": 0.00025,
+        "identity_holds": true
+      },
+      {
+        "q": 64,
+        "bits": 14,
+        "delta": 6.103515625e-05,
+        "p_quantized": 0.999735,
+        "p_unquantized": 0.999735,
+        "signed_change": 0.0,
+        "abs_change": 0.0,
+        "boundary_mass": 5e-06,
+        "identity_holds": true
+      },
+      {
+        "q": 128,
+        "bits": 14,
+        "delta": 6.103515625e-05,
+        "p_quantized": 0.999035,
+        "p_unquantized": 0.999035,
+        "signed_change": 0.0,
+        "abs_change": 0.0,
+        "boundary_mass": 1e-05,
+        "identity_holds": true
+      },
+      {
+        "q": 192,
+        "bits": 14,
+        "delta": 6.103515625e-05,
+        "p_quantized": 0.997895,
+        "p_unquantized": 0.99788,
+        "signed_change": 1.4999999999987246e-05,
+        "abs_change": 1.4999999999987246e-05,
+        "boundary_mass": 4.5e-05,
+        "identity_holds": true
+      }
+    ],
+    "scaling": [
+      {
+        "bits": 8,
+        "boundary": 0.00362,
+        "L_delta": 0.0037040625000000008,
+        "ratio": 0.9773053235467812,
+        "L": 0.9482400000000002
+      },
+      {
+        "bits": 10,
+        "boundary": 0.00231,
+        "L_delta": 0.0021393750000000007,
+        "ratio": 1.0797546012269936,
+        "L": 2.1907200000000007
+      },
+      {
+        "bits": 12,
+        "boundary": 0.000265,
+        "L_delta": 0.00020343750000000006,
+        "ratio": 1.3026113671274957,
+        "L": 0.8332800000000002
+      }
+    ],
+    "certificate_rows": [
+      {
+        "n": 10000,
+        "q": 128,
+        "abs_change": 0.0009000000000000119,
+        "ecdf_mass": 0.0022000000000000075,
+        "epsilon": 0.013581015157406196,
+        "certified_upper": 0.0293620303148124,
+        "covers": true
+      },
+      {
+        "n": 10000,
+        "q": 192,
+        "abs_change": 0.0020000000000000018,
+        "ecdf_mass": 0.00269999999999998,
+        "epsilon": 0.013581015157406196,
+        "certified_upper": 0.029862030314812372,
+        "covers": true
+      },
+      {
+        "n": 50000,
+        "q": 128,
+        "abs_change": 0.0011199999999998989,
+        "ecdf_mass": 0.00248000000000001,
+        "epsilon": 0.006073614619083051,
+        "certified_upper": 0.014627229238166112,
+        "covers": true
+      },
+      {
+        "n": 50000,
+        "q": 192,
+        "abs_change": 0.0014399999999999968,
+        "ecdf_mass": 0.0026800000000000157,
+        "epsilon": 0.006073614619083051,
+        "certified_upper": 0.014827229238166118,
+        "covers": true
+      },
+      {
+        "n": 200000,
+        "q": 128,
+        "abs_change": 0.0011249999999999316,
+        "ecdf_mass": 0.0023100000000000065,
+        "epsilon": 0.0030368073095415255,
+        "certified_upper": 0.008383614619083057,
+        "covers": true
+      },
+      {
+        "n": 200000,
+        "q": 192,
+        "abs_change": 0.0012849999999999806,
+        "ecdf_mass": 0.0024699999999999722,
+        "epsilon": 0.0030368073095415255,
+        "certified_upper": 0.008543614619083022,
+        "covers": true
+      }
+    ],
+    "certificate_all_cover": true
+  },
+  "part_b_lhco": {
+    "observed_change": {
+      "8": 0.0559,
+      "10": 0.0146,
+      "12": 0.0048
+    },
+    "lsb": {
+      "8": 0.00390625,
+      "10": 0.0009765625,
+      "12": 0.000244140625
+    },
+    "change_per_lsb": {
+      "8": 14.3104,
+      "10": 14.9504,
+      "12": 19.6608
+    },
+    "ratio_8_10": 3.828767123287671,
+    "ratio_10_12": 3.041666666666667,
+    "implied_sup_density": 14.367507692307692,
+    "r_squared": 0.9986105547635956
+  }
+}

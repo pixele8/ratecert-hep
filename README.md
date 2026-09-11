@@ -131,6 +131,47 @@ acceptance probability. The results are that the empirical tail certifies all
 0.9996, and that the normal bound under-covers at small counts yet certifies
 more cells than the exact bound. Both facts are reported rather than hidden.
 
+## Quantization certificate
+
+Score quantization is usually reported as a descriptive diagnostic. Under a
+Lipschitz condition on the score CDF it becomes a bound, and the exact identity
+holds for *every* distribution:
+
+```
+| P(Q_b(S) >= q) - P(S >= q*Delta_s) |  <=  P( q*Delta_s - Delta_s/2 < S < q*Delta_s + Delta_s/2 )
+```
+
+```powershell
+py examples/quantization_certificate.py
+```
+
+The script verifies the identity on a controlled distribution (12/12 cells),
+measures the linear scaling `boundary mass ~ L * Delta_s` (Lipschitz form), and
+applies a Dvoretzky-Kiefer-Wolfowitz band to turn the boundary mass into a
+finite-sample certificate (6/6 cells covered). It then tests the scaling law
+against the real 8/10/12-bit LHCO results, where a fit through the origin gives
+R^2 = 0.9986.
+
+The DKW route is rigorous but loose at small samples (2*eps ~ 0.027 at
+n = 1e4); the script reports that cost rather than presenting only the
+favourable numbers.
+
+## Comparison with external limit-setting software
+
+```powershell
+py -m pip install pyhf
+py examples/tool_comparison.py
+```
+
+Compares three constructions on identical counting-experiment inputs: this
+work's exact one-sided Poisson limit, the TRolke 2.0 profile-likelihood
+construction reimplemented from its publication (ROOT has no Windows wheel), and
+the CLs upper limit from pyhf. The published profile-likelihood limit converges
+to our exact limit (23.1% difference at N=1, 1.17% at N=50), which is an
+independent check that our implementation computes the right quantity. CLs sits
+systematically below both, which is expected for an exclusion criterion, and the
+script says so rather than presenting it as agreement.
+
 Generate the paper-facing static figure and its data manifest with:
 
 ```powershell

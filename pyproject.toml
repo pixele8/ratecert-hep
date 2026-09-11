@@ -30,6 +30,8 @@ ratecert-hep = "ratecert.cli:main"
 dev = ["pytest>=8"]
 public-data = ["pandas>=2.0", "tables>=3.8"]
 figures = ["matplotlib>=3.8"]
+# External-tool comparison: CLs upper limits via the published pyhf package.
+comparison = ["pyhf>=0.7"]
 
 [tool.setuptools]
 package-dir = {"" = "src"}
