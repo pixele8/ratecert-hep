@@ -23,6 +23,21 @@ except ImportError:  # pragma: no cover - module execution from repository root
     from examples.public_lhco_acceptance import run as run_public
 
 
+def _write_text_lf(path, text: str) -> None:
+    """Write text with LF line endings on every platform.
+
+    Path.write_text would translate "\n" to os.linesep, so the same command
+    produced CRLF on Windows and LF on Linux.  Checked-in reports must be
+    byte-reproducible, and they must diff cleanly in git, so newline="\n" is
+    forced explicitly here.
+    """
+    from pathlib import Path as _Path
+    p = _Path(path)
+    p.parent.mkdir(parents=True, exist_ok=True)
+    with p.open("w", encoding="utf-8", newline="\n") as handle:
+        handle.write(text)
+
+
 def _rate_coverage(exposure_s: float, alpha: float, true_rate_hz: float, repeats: int, rng: np.random.Generator) -> dict:
     counts = rng.poisson(true_rate_hz * exposure_s, size=repeats)
     upper = 0.5 * chi2.isf(alpha, 2 * (counts + 1)) / exposure_s
@@ -127,7 +142,7 @@ def run(public_input: str | Path, output_path: str | Path) -> dict:
             "Neither section is a detector-hardware deployment measurement."
         ),
     }
-    destination.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    _write_text_lf(destination, json.dumps(report, indent=2, sort_keys=True) + "\n")
     return report
 
 

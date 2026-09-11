@@ -50,6 +50,10 @@ def _style() -> None:
     plt.rcParams.update(
         {
             "font.family": "DejaVu Sans",
+            # Embed TrueType (Type 42) rather than the default Type 3
+            # bitmap fonts; Elsevier production treats Type 3 as a defect.
+            "pdf.fonttype": 42,
+            "ps.fonttype": 42,
             "font.size": 9.5,
             "axes.linewidth": 1.1,
             "axes.spines.top": False,

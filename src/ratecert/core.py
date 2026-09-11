@@ -38,6 +38,19 @@ class FixedPointSpec:
     def __post_init__(self) -> None:
         if self.bits < 1:
             raise ValueError("bits must be >= 1")
+        # Codes are stored in an int64 array, so the widest representable format
+        # is 63 unsigned (or 63 signed) bits.  Without this bound an unsigned
+        # 64-bit spec declares code_max = 2**64 - 1, which exceeds int64: the
+        # range test then compares in float64 and passes, and the subsequent
+        # .astype(np.int64) silently WRAPS to INT64_MIN.  That produced codes of
+        # -9223372036854775808 for ordinary scores and a false CERTIFIED with
+        # count 0.  Rejecting the declaration up front is the correct behaviour,
+        # because such a format cannot be honoured by this implementation.
+        if self.bits > 63:
+            raise ValueError(
+                "bits must be <= 63: codes are held in int64, so a wider "
+                "fixed-point format cannot be represented without wrapping"
+            )
         if not 0 <= self.fractional_bits <= self.bits - int(self.signed):
             raise ValueError("fractional_bits is incompatible with bits/signed")
         if self.rounding not in {"nearest_even", "floor", "trunc"}:
@@ -86,6 +99,15 @@ class RateQuantizationSpec:
         if self.counter_bits is not None:
             if self.counter_bits < 1:
                 raise ValueError("counter_bits must be >= 1")
+            # max_count * lsb_hz is evaluated in float64 and is expected to be
+            # finite; a 1024-bit counter raises an uncaught OverflowError rather
+            # than reporting a clean input error.  63 bits matches the widest
+            # score format and keeps the full-scale rate finite.
+            if self.counter_bits > 63:
+                raise ValueError(
+                    "counter_bits must be <= 63: a wider counter has no finite "
+                    "float full-scale rate"
+                )
             if self.signed:
                 raise ValueError("rate counters must be unsigned")
 

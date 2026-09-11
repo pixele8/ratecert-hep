@@ -8,6 +8,11 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 from matplotlib.patches import FancyBboxPatch, FancyArrowPatch
 
+# Embed TrueType (Type 42) rather than the default Type 3 bitmap fonts; Elsevier
+# production treats Type 3 as a defect.
+plt.rcParams["pdf.fonttype"] = 42
+plt.rcParams["ps.fonttype"] = 42
+
 
 def _box(ax, x: float, y: float, w: float, h: float, title: str, body: str, color: str) -> None:
     patch = FancyBboxPatch(

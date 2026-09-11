@@ -25,6 +25,7 @@
     "observed_rate_step_hz": 0.09999999999999432,
     "quantization_margin_hz": 0.05,
     "deployment_margin_hz": -2.075227994799012,
+    "deployment_score": -0.2075227994799012,
     "prescale": 1,
     "fixed_point": {
       "saturation_count": 0,
@@ -44,7 +45,11 @@
       "rate_spec": {
         "lsb_hz": 0.1,
         "rounding": "nearest_even",
-        "error_bound_hz": 0.05
+        "error_bound_hz": 0.05,
+        "counter_bits": null,
+        "signed": false,
+        "max_count": null,
+        "max_rate_hz": null
       }
     },
     "reasons": [

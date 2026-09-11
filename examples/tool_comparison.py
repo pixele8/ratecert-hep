@@ -48,6 +48,21 @@ REPO = Path(__file__).resolve().parents[1]
 # --------------------------------------------------------------------------
 # our method
 # --------------------------------------------------------------------------
+def _write_text_lf(path, text: str) -> None:
+    """Write text with LF line endings on every platform.
+
+    Path.write_text would translate "\n" to os.linesep, so the same command
+    produced CRLF on Windows and LF on Linux.  Checked-in reports must be
+    byte-reproducible, and they must diff cleanly in git, so newline="\n" is
+    forced explicitly here.
+    """
+    from pathlib import Path as _Path
+    p = _Path(path)
+    p.parent.mkdir(parents=True, exist_ok=True)
+    with p.open("w", encoding="utf-8", newline="\n") as handle:
+        handle.write(text)
+
+
 def exact_one_sided_poisson(n_obs: int, exposure: float, alpha: float) -> float:
     """Exact one-sided Poisson upper limit on the rate lambda."""
     return float(chi2.isf(alpha, 2 * (n_obs + 1)) / (2.0 * exposure))
@@ -56,6 +71,22 @@ def exact_one_sided_poisson(n_obs: int, exposure: float, alpha: float) -> float:
 # --------------------------------------------------------------------------
 # TRolke-style profile likelihood, for a Poisson count with no background
 # --------------------------------------------------------------------------
+def _pyhf_version() -> str | None:
+    """Version of pyhf, or None when it is not installed.
+
+    Must never raise: the whole point of the optional `comparison` extra is that
+    the CLs column degrades to "n/a" without pyhf, and the report is still
+    written.  An unconditional __import__ here would crash the script after the
+    graceful degradation in cls_upper_background_rate had already run, so the
+    report would never be produced at all.
+    """
+    try:
+        import pyhf
+        return pyhf.__version__
+    except Exception:
+        return None
+
+
 def profile_likelihood_upper(n_obs: int, exposure: float, alpha: float) -> float | None:
     """Upper limit on the rate from the profile-likelihood ratio (PDG form).
 
@@ -208,7 +239,7 @@ def main() -> int:
             "profile_likelihood": "TRolke 2.0 construction, reimplemented from the publication",
             "cls": "pyhf upper_limit, level=alpha, explicit scan",
         },
-        "pyhf_version": __import__("pyhf").__version__,
+        "pyhf_version": _pyhf_version(),
         "cls_signal_scale": CLS_SIGNAL_SCALE,
         "rows": rows,
         "rel_diff_exact_vs_profile": {
@@ -222,7 +253,7 @@ def main() -> int:
     }
     out = REPO / "reports" / "tool_comparison.json"
     out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(json.dumps(report, indent=2), encoding="utf-8")
+    _write_text_lf(out, json.dumps(report, indent=2) + "\n")
     print("\nwrote", out)
     return 0
 

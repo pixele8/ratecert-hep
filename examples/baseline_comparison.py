@@ -37,6 +37,21 @@ REPO = Path(__file__).resolve().parents[1]
 # --------------------------------------------------------------------------
 # Upper-bound constructions
 # --------------------------------------------------------------------------
+def _write_text_lf(path, text: str) -> None:
+    """Write text with LF line endings on every platform.
+
+    Path.write_text would translate "\n" to os.linesep, so the same command
+    produced CRLF on Windows and LF on Linux.  Checked-in reports must be
+    byte-reproducible, and they must diff cleanly in git, so newline="\n" is
+    forced explicitly here.
+    """
+    from pathlib import Path as _Path
+    p = _Path(path)
+    p.parent.mkdir(parents=True, exist_ok=True)
+    with p.open("w", encoding="utf-8", newline="\n") as handle:
+        handle.write(text)
+
+
 def upper_naive_empirical(k: int, n: int, alpha: float) -> float:
     """Empirical tail reported as if it were the true acceptance probability."""
     return k / n
@@ -169,7 +184,7 @@ def main() -> int:
     out_dir = REPO / "reports"
     out_dir.mkdir(parents=True, exist_ok=True)
     out = out_dir / "baseline_comparison.json"
-    out.write_text(json.dumps(report, indent=2), encoding="utf-8")
+    _write_text_lf(out, json.dumps(report, indent=2) + "\n")
 
     # ---- console summary -------------------------------------------------
     a = report["part_a_public_cells"]

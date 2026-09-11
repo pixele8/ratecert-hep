@@ -1,7 +1,16 @@
-# Normalise line endings so the repository is consistent across platforms.
+# Line-ending policy.
+#
+# Generated JSON/CSV reports are TEXT, not binary.  They were previously marked
+# `binary` here, which sets -text -diff and makes `git diff` report
+# "Binary files ... differ" instead of a real diff.  That actively blocked the
+# primary verification workflow -- comparing a regenerated report against the
+# committed one -- so a reviewer could not tell real numerical drift from
+# line-ending noise.  Everything textual is now normalised to LF instead.
+
 * text=auto
 
-# Shell / Python sources: LF
+# Sources and documents: LF everywhere, so a regenerated artefact is
+# byte-identical on Linux, macOS and Windows.
 *.py   text eol=lf
 *.sh   text eol=lf
 *.toml text eol=lf
@@ -9,10 +18,20 @@
 *.md   text eol=lf
 *.yml  text eol=lf
 *.yaml text eol=lf
+*.tex  text eol=lf
+*.bib  text eol=lf
+*.bst  text eol=lf
+*.cls  text eol=lf
+*.gitignore     text eol=lf
+*.gitattributes text eol=lf
 
-# Binary and generated artefacts: never touch
-*.pdf  binary
-*.png  binary
-*.h5   binary
-*.json binary
-*.csv  binary
+# Checked-in evidence: plain text, diffable.
+*.json text eol=lf
+*.csv  text eol=lf
+
+# Genuinely binary artefacts.
+*.pdf binary
+*.png binary
+*.h5  binary
+*.npy binary
+*.pyc binary

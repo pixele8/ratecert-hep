@@ -393,6 +393,25 @@ def certify_acceptance(
             recorded_point = point_rate / prescale_i
             recorded_upper = upper_rate / prescale_i
         if rate_spec is not None and math.isfinite(upper_rate):
+            # The documented contract is that the NUMERICAL quantity enters the
+            # pass condition, which means the counter RANGE as well as the
+            # rounding margin.  This path previously applied only the budget
+            # clause, so the same physics could be certified here and refused by
+            # certify_rate: a 4-bit counter at a 0.1 Hz LSB has a full scale of
+            # 1.5 Hz, yet an upper rate of 6.2e4 Hz came back CERTIFIED with an
+            # empty reason list.  Both entry points must agree, so the counter
+            # full-scale and count-overflow clauses are applied here in the same
+            # form as in certify_rate.
+            if (n_events > 0 and rate_spec.max_count is not None
+                    and count > rate_spec.max_count):
+                reasons.append(
+                    f"rate counter overflow: count {count} exceeds {rate_spec.max_count}"
+                )
+            if (rate_spec.max_rate_hz is not None
+                    and upper_rate > rate_spec.max_rate_hz):
+                reasons.append(
+                    "finite-sample upper rate exceeds the declared rate-counter full scale"
+                )
             if budget + 1e-15 < upper_rate + rate_spec.error_bound_hz:
                 reasons.append("finite-sample upper rate plus fixed-point rate margin exceeds budget")
     elif rate_spec is not None and input_rate_hz is None:

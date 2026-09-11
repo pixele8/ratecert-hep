@@ -22,6 +22,21 @@ import numpy as np
 REPO = Path(__file__).resolve().parents[1]
 
 
+def _write_text_lf(path, text: str) -> None:
+    """Write text with LF line endings on every platform.
+
+    Path.write_text would translate "\n" to os.linesep, so the same command
+    produced CRLF on Windows and LF on Linux.  Checked-in reports must be
+    byte-reproducible, and they must diff cleanly in git, so newline="\n" is
+    forced explicitly here.
+    """
+    from pathlib import Path as _Path
+    p = _Path(path)
+    p.parent.mkdir(parents=True, exist_ok=True)
+    with p.open("w", encoding="utf-8", newline="\n") as handle:
+        handle.write(text)
+
+
 def dkw_eps(n: int, alpha: float = 0.05) -> float:
     """DKW half-width: P(sup|F_hat - F| > eps) <= 2 exp(-2 n eps^2)."""
     return math.sqrt(math.log(2.0 / alpha) / (2.0 * n))
@@ -30,14 +45,22 @@ def dkw_eps(n: int, alpha: float = 0.05) -> float:
 def quantization_change(values: np.ndarray, q: int, bits: int) -> dict:
     """Exact quantized-minus-unquantized acceptance change at code threshold q.
 
-    Under round-to-nearest, the scores that round UP to code q are exactly those
-    in the half-cell (b - D/2, b), so for non-integer b/D the change EQUALS the
-    mass of that half-cell.  It is not merely bounded by the full cell: the
-    symmetric full-cell form P(b - D/2 < S < b + D/2) is valid but loose by
-    about a factor of two, and the Lipschitz consequence is L*D/2, not L*D.
+    THE TIE RULE MATTERS, and getting it wrong makes an "exact identity" false.
+    For round-to-nearest with ties-to-even (numpy.rint), the value s = b - D/2
+    has s/D = q - 0.5 exactly, and ties go to the EVEN neighbour:
 
-    Both forms are checked here so that the looser one cannot silently be
-    presented as the exact one.
+        q even  ->  q - 0.5 rounds UP to q    -> endpoint is INCLUDED
+        q odd   ->  q - 0.5 rounds DOWN to q-1 -> endpoint is EXCLUDED
+
+    so the exact set of scores that round to >= q is the half-open
+    [b - D/2, b) when q is even, and the open (b - D/2, b) when q is odd.
+    A blanket "half-open" statement is therefore wrong for odd q, and a blanket
+    "strict" statement is wrong for even q.  Both were tried and both failed
+    roughly half the time.
+
+    The SYMMETRIC form, P(b - D/2 <= S < b + D/2), is valid for every parity and
+    every tie rule, and is what the paper relies on; it is looser by about a
+    factor of two but needs no caveat.
     """
     delta = 2.0 ** (-bits)
     b = q * delta
@@ -46,40 +69,51 @@ def quantization_change(values: np.ndarray, q: int, bits: int) -> dict:
     p_unquant = float((values >= b).mean())
     change = p_quant - p_unquant
 
-    half_cell = float(((values > b - delta / 2.0) & (values < b)).mean())
-    full_cell = float(((values > b - delta / 2.0) & (values < b + delta / 2.0)).mean())
-    integer_threshold = abs(b / delta - round(b / delta)) < 1e-12
+    in_halfcell = (values > b - delta / 2.0) & (values < b)
+    if q % 2 == 0:
+        in_halfcell = in_halfcell | (values == b - delta / 2.0)
+    half_cell = float(in_halfcell.mean())
+
+    # symmetric form: valid for all parities and tie rules
+    full_cell = float(((values >= b - delta / 2.0)
+                       & (values < b + delta / 2.0)).mean())
 
     return {
-        "q": q, "bits": bits, "delta": delta, "b": b,
+        "q": q, "bits": bits, "delta": delta, "b": b, "q_even": (q % 2 == 0),
         "p_quantized": p_quant, "p_unquantized": p_unquant,
         "signed_change": change, "abs_change": abs(change),
         "half_cell_mass": half_cell,
         "full_cell_mass": full_cell,
-        "integer_threshold": integer_threshold,
-        # exact identity: |change| equals the half-cell mass
-        "identity_exact": (abs(abs(change) - half_cell) < 1e-12
-                           if not integer_threshold else abs(change) < 1e-15),
-        # the cruder symmetric bound must hold too
+        # exact identity: |change| equals the parity-appropriate half-cell mass
+        "identity_exact": abs(abs(change) - half_cell) < 1e-12,
+        # the symmetric bound must hold regardless of parity
         "bound_holds": abs(change) <= full_cell + 1e-15,
     }
 
 
 def adversarial_identity_check(repeats: int = 300, seed: int = 12345) -> dict:
-    """Verify both forms on deliberately awkward score distributions.
+    """Verify the identity on deliberately awkward score distributions.
 
-    Uniform, U-shaped Beta, discretised (atom-laden), point-mass, narrow-spike
-    and coarse-grid scores are all included: the identity must hold for every
-    distribution, and a smooth density is precisely the case that would hide a
-    bug in the half-cell bookkeeping.
+    Two families are exercised:
+
+    * randomised ones -- uniform, U-shaped Beta, discretised (atom-laden), point
+      mass, narrow spike, coarse grid -- over 4..12 bit widths, because the
+      identity must hold for every distribution and a smooth density is exactly
+      the case that would hide a bug in the half-cell bookkeeping;
+    * a deterministic endpoint family that places an ATOM exactly at
+      ``b - D/2``, which is the configuration that distinguishes the half-open
+      interval from the strict one.  The randomised family provably cannot reach
+      it (it would need a non-integer code), so without this second family the
+      earlier, wrong strict form passed the suite unnoticed.
     """
     rng = np.random.default_rng(seed)
     worst_excess = 0.0
     violations = 0
     exact_failures = 0
     tested = 0
-    integer_cells = 0
     worst_exact_gap = 0.0
+    parity_mismatches = 0
+    endpoint_cases = 0
 
     for t in range(repeats):
         n = int(rng.integers(300, 4000))
@@ -103,8 +137,6 @@ def adversarial_identity_check(repeats: int = 300, seed: int = 12345) -> dict:
         r = quantization_change(s, q, bits)
 
         tested += 1
-        if r["integer_threshold"]:
-            integer_cells += 1
         if not r["bound_holds"]:
             violations += 1
             worst_excess = max(worst_excess, r["abs_change"] - r["full_cell_mass"])
@@ -113,26 +145,54 @@ def adversarial_identity_check(repeats: int = 300, seed: int = 12345) -> dict:
             worst_exact_gap = max(worst_exact_gap,
                                   abs(r["abs_change"] - r["half_cell_mass"]))
 
+    # deterministic endpoint family: atom exactly at the left endpoint, where the
+    # tie rule decides whether it rounds up (q even) or down (q odd)
+    for bits in range(3, 13):
+        D = 2.0 ** (-bits)
+        for q in range(1, 40):
+            if q >= 1.0 / D:
+                continue
+            b = q * D
+            s = np.array([b - D / 2.0] * 1000)
+            r = quantization_change(s, q, bits)
+            tested += 1
+            endpoint_cases += 1
+            if not r["identity_exact"]:
+                exact_failures += 1
+                parity_mismatches += 1
+                worst_exact_gap = max(worst_exact_gap,
+                                      abs(r["abs_change"] - r["half_cell_mass"]))
+
     return {
         "repeats": repeats, "tested": tested,
         "bound_violations": violations, "worst_excess": worst_excess,
         "identity_exact_failures": exact_failures,
         "worst_exact_gap": worst_exact_gap,
-        "integer_threshold_cells": integer_cells,
+        "endpoint_cases": endpoint_cases,
+        "parity_mismatches": parity_mismatches,
     }
 
 
 def certified_mass(values: np.ndarray, q: int, bits: int, alpha: float = 0.05) -> dict:
-    """DKW-certified upper bound on the half-cell mass."""
+    """DKW-certified upper bound on the half-cell mass.
+
+    The interval is the HALF-OPEN [b - D/2, b).  ``side="left"`` counts the
+    endpoint b - D/2 as included, matching the identity; using the strict
+    interval here would under-count an atom sitting exactly on the endpoint and
+    the certificate would not cover the true change.
+    """
     delta = 2.0 ** (-bits)
     b = q * delta
     n = values.size
     srt = np.sort(values)
-    f_lo = float(np.searchsorted(srt, b - delta / 2.0, side="right")) / n
-    f_hi = float(np.searchsorted(srt, b, side="right")) / n
+    # number of observations < b - delta/2  (side="left" => insert before equals)
+    n_below = float(np.searchsorted(srt, b - delta / 2.0, side="left")) / n
+    # number of observations < b
+    n_strictly_below = float(np.searchsorted(srt, b, side="left")) / n
+    ecdf_mass = n_strictly_below - n_below
     eps = dkw_eps(n, alpha)
-    return {"ecdf_mass": f_hi - f_lo, "epsilon": eps,
-            "certified_upper": (f_hi - f_lo) + 2.0 * eps}
+    return {"ecdf_mass": ecdf_mass, "epsilon": eps,
+            "certified_upper": ecdf_mass + 2.0 * eps}
 
 
 def main() -> int:
@@ -144,7 +204,7 @@ def main() -> int:
     s = rng.beta(2.0, 5.0, size=n)
     a_cells = [quantization_change(s, q, b) for b in (8, 10, 12, 14) for q in (64, 128, 192)]
     print("=" * 78)
-    print("PART A (i) EXACT identity: |change| == half-cell mass P(b-D/2 < S < b)")
+    print("PART A (i) EXACT identity: |change| == half-cell mass P(b-D/2 <= S < b)")
     print("=" * 78)
     print("%4s %5s %13s %14s %14s %s"
           % ("bits", "q", "|change|", "half cell", "full cell", "exact?"))
@@ -167,7 +227,11 @@ def main() -> int:
           % (adv["identity_exact_failures"], adv["worst_exact_gap"]))
     print("  symmetric-bound violations   : %d  (worst excess %.2e)"
           % (adv["bound_violations"], adv["worst_excess"]))
-    print("  integer-threshold cells seen : %d" % adv["integer_threshold_cells"])
+    print("  endpoint cases (atom at b-D/2): %d" % adv["endpoint_cases"])
+    print("  parity-handling mismatches   : %d" % adv["parity_mismatches"])
+    print("  -> the tie rule decides the endpoint: for round-half-to-EVEN the atom")
+    print("     at b-D/2 rounds up when q is even and down when q is odd, so the")
+    print("     half-cell interval is [b-D/2,b) for even q and (b-D/2,b) for odd q.")
 
     print()
     print("=" * 78)
@@ -229,19 +293,38 @@ def main() -> int:
     ss_res = float(((y - pred) ** 2).sum())
     ss_tot = float(((y - y.mean()) ** 2).sum())
     r2fit = 1 - ss_res / ss_tot
-    print("\nlinear fit through the origin:  implied sup|f| = %.3f   R^2 = %.6f"
+    ratio = {b: obs[b] / (lsb[b] / 2.0) for b in obs}
+    L_eff = max(ratio.values())
+
+    print("\nleast-squares fit through the origin:  L_bar = %.3f   R^2 = %.6f"
           % (slope, r2fit))
-    print("   per-width residuals: " + "  ".join(
-        "%d bit %.1f%%" % (b, 100 * (obs[b] / p - 1)) for b, p in zip((8, 10, 12), pred)))
-    print("\nInterpretation: the law |change| <= L*Delta/2 holds to better than 5% at")
-    print("8 and 10 bits. The 12-bit point sits above the fit, which is the expected")
-    print("dilution of the local density at a deeper tail, not a violation: the law")
-    print("is an upper bound with a locally evaluated L, and L is smaller there.")
+    print("  per-width ratios change/(Delta/2): "
+          + "  ".join("%d bit %.2f" % (b, ratio[b]) for b in (8, 10, 12)))
+    print()
+    print("  IMPORTANT: a least-squares fit is a TREND LINE, NOT A BOUND.")
+    print("  L_bar = %.2f fails to bound its own data:" % slope)
+    for b in (8, 10, 12):
+        bound = slope * (lsb[b] / 2.0)
+        print("    %2d bit: change=%.4f  L_bar*(Delta/2)=%.4f  %s"
+              % (b, obs[b], bound, "ok" if obs[b] <= bound else "NOT BOUNDED"))
+    print()
+    print("  bound-consistent constant: L_eff = max(change/(Delta/2)) = %.3f" % L_eff)
+    print("  this bounds all three points:")
+    for b in (8, 10, 12):
+        bound = L_eff * (lsb[b] / 2.0)
+        print("    %2d bit: change=%.4f  L_eff*(Delta/2)=%.4f  %s"
+              % (b, obs[b], bound, "ok" if obs[b] <= bound else "NOT BOUNDED"))
     print()
     print("NOTE ON THE FACTOR: the proportionality is to Delta/2, the HALF cell, not")
     print("to the full LSB. Round-to-nearest places the decision boundary at a cell")
     print("centre, so the effective threshold moves by at most half a cell. Quoting")
     print("the bound as L*Delta overstates it by exactly two.")
+    print()
+    print("The three ratios are not constant (%.2f, %.2f, %.2f), so L is a LOCAL"
+          % (ratio[8], ratio[10], ratio[12]))
+    print("quantity and should be re-estimated near the operating threshold rather")
+    print("than transferred from a fit at another width. The 12-bit point is the")
+    print("outlier that drives L_eff above the fitted value.")
 
     report.update({
         "part_a": {
@@ -255,11 +338,17 @@ def main() -> int:
             "lsb": {str(k): v for k, v in lsb.items()},
             "change_per_half_lsb": {str(b): obs[b] / (lsb[b] / 2.0) for b in obs},
             "ratio_8_10": r1, "ratio_10_12": r2,
+            # A least-squares fit is a trend line, NOT a bound: L_bar lies below
+            # two of the three measurements.  L_eff = max(change/(Delta/2)) is the
+            # smallest constant that actually satisfies the Lipschitz bound on
+            # this sample, and is what the paper quotes.
+            "L_bar_least_squares": slope,
+            "L_eff_bound_consistent": L_eff,
             "implied_sup_density": slope, "r_squared": r2fit,
         },
     })
     out = REPO / "reports" / "quantization_certificate.json"
-    out.write_text(json.dumps(report, indent=2), encoding="utf-8")
+    _write_text_lf(out, json.dumps(report, indent=2) + "\n")
     print("\nwrote", out)
     return 0
 

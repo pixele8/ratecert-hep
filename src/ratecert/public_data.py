@@ -175,7 +175,14 @@ def load_lhco_background_split(
         deployment_scores=scores[dep_idx],
         calibration_event_ids=calibration_event_ids,
         deployment_event_ids=deployment_event_ids,
-        source_path=str(Path(path).resolve()),
+        # Record the path as supplied, NOT .resolve().  Resolving bakes the
+        # author's absolute filesystem layout into the published provenance
+        # (e.g. "E:\\123\\ratecert_hep\\data\\..."), which is both a needless
+        # disclosure and useless to a reader on another machine.  The
+        # authoritative identifiers are the SHA-256/MD5 hashes and the DOI;
+        # the path is a human-readable locality hint and is kept relative when
+        # the caller supplied a relative path.
+        source_path=str(path),
         source_sha256=sha256,
         source_md5=md5,
         source_record=LHCO_ZENODO_RECORD,

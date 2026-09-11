@@ -90,8 +90,12 @@ def make_table(input_path: str | Path, output_path: str | Path) -> Path:
     report = json.loads(input_path.read_text(encoding="utf-8"))
     rows = _public_rows(report) + _rate_rows(report)
     output_path.parent.mkdir(parents=True, exist_ok=True)
+    # newline="" prevents Python from translating the terminator, and
+    # lineterminator="\n" forces LF.  The csv module's default terminator is
+    # "\r\n", which made the committed table CRLF-only and therefore not
+    # byte-reproducible on Linux.
     with output_path.open("w", newline="", encoding="utf-8") as handle:
-        writer = csv.DictWriter(handle, fieldnames=FIELDS)
+        writer = csv.DictWriter(handle, fieldnames=FIELDS, lineterminator="\n")
         writer.writeheader()
         writer.writerows(rows)
     return output_path

@@ -17,6 +17,10 @@
 \usepackage{siunitx}
 \usepackage{url}
 \usepackage{textcomp}
+% Latin Modern replaces the default Computer Modern bitmap fonts with scalable
+% Type 1 outlines.  Without it the build embeds Type 3 (bitmap PK) fonts, which
+% Elsevier production treats as a defect.
+\usepackage{lmodern}
 \graphicspath{{figures/}{../reports/figures/}}
 
 %% Numbered list environment for the Program Summary's own reference list,
@@ -209,9 +213,10 @@ level-1 or high-level trigger stage has a fixed output rate allocation, and each
 trigger signature consumes part of it.  Once a menu entry is accepted, its
 threshold is committed to firmware, where the score is carried in a fixed-point
 format of a few bits to meet latency and resource constraints; the same
-constraint has motivated a continuing line of FPGA and high-level-synthesis work
-reported in this journal, from integer-arithmetic implementations to recent
-HLS-based HEP algorithm acceleration~\cite{Wojenski2024HLS} and deep-learning
+constraint has motivated a continuing line of real-time and FPGA work reported in
+this journal, from the ALICE High Level Trigger~\cite{ALICEHLT2019} and
+integer-arithmetic implementations to recent HLS-based HEP algorithm
+acceleration~\cite{Wojenski2024HLS} and deep-learning
 triggers~\cite{Tyson2023CLAS12}.  The rate that finally appears in the counter
 is therefore the composition of a statistic evaluated on a finite sample, a
 quantization of the score, and a rounding of the recorded rate.
@@ -221,8 +226,10 @@ well, and over a long period: POLE 1.0~\cite{Conrad2004POLE} and
 TRolke 2.0~\cite{Lundberg2010TRolke} provide exact confidence intervals and
 upper limits for a Poisson process, including systematic uncertainties;
 Aguilar-Saavedra~\cite{AguilarSaavedra2000} and Barlow~\cite{Barlow2002}
-supply dedicated interval calculators; and the Bayesian analysis
-toolkit~\cite{BAT2009} generalises the treatment to a full posterior.  These
+supply dedicated interval calculators; the Bayesian analysis
+toolkit~\cite{BAT2009} generalises the treatment to a full posterior; and
+toolkits such as NNDrone~\cite{Benson2019NNDrone} show how a focused utility can
+be delivered to the HEP community as citable software.  These
 programs, however, return a number for a statistic.  They do not know whether
 the threshold that produced the observed count was selected on the same data
 that now certify it, and they say nothing about the finite resolution of the
@@ -247,7 +254,7 @@ not merely mis-state a number: it silently misallocates a fraction of the
 trigger bandwidth, which is the resource the whole menu competes for.
 
 General HEP analysis utilities such as YODA provide reusable data objects and
-plotting workflows~\cite{YODA}; general-purpose limit-setting libraries such as
+plotting workflows~\cite{YODA2}; general-purpose limit-setting libraries such as
 pyhf~\cite{pyhf2021} provide the statistical model machinery.  RateCert-HEP
 targets the narrower interface between a deployed trigger score and a
 finite-sample rate claim, and is intended to be used alongside such tools rather
@@ -405,63 +412,70 @@ The situation changes once the rounding rule is stated explicitly.  Let $S$ have
 cumulative distribution function $F$, let the fixed-point representation be
 round-to-nearest with step $\Delta_s$, and let the trigger fire when
 $Q_b(S)\ge q$.  Write $b_q = q\Delta_s$ for the code threshold expressed as a
-score, and suppose $b_q/\Delta_s$ is not an integer (the integer case is treated
-below).  Round-to-nearest maps $b_q$ to the code $q$ exactly, and the scores that
+score.  Round-to-nearest maps $b_q$ to the code $q$ exactly, and the scores that
 round \emph{up} to $q$ are precisely those in the half-cell below it.  The
 quantized and continuous rules therefore differ on one half-cell and agree
-elsewhere, which gives an identity rather than an estimate:
+elsewhere:
 \begin{equation}
  \Pr[Q_b(S)\ge q]-\Pr[S\ge b_q]
- \;=\; \Pr\!\left[\,b_q-\tfrac{\Delta_s}{2}<S<b_q\,\right],
+ \;=\; \Pr\!\left[\,S\in I_q\,\right],
+ \qquad
+ I_q =
+ \begin{cases}
+  [\,b_q-\tfrac{\Delta_s}{2},\,b_q\,), & q \text{ even},\\[2pt]
+  (\,b_q-\tfrac{\Delta_s}{2},\,b_q\,), & q \text{ odd},
+ \end{cases}
  \label{eq:quant-identity}
 \end{equation}
 and hence, in absolute value,
 \begin{equation}
  \begin{aligned}
  \bigl|\Pr[Q_b(S)\ge q]-\Pr[S\ge b_q]\bigr|
- &\;=\; \Pr\!\left[\,b_q-\tfrac{\Delta_s}{2}<S<b_q\,\right] \\
- &\;\le\; \Pr\!\left[\,b_q-\tfrac{\Delta_s}{2}<S<b_q+\tfrac{\Delta_s}{2}\,\right].
+ &\;\le\; \Pr\!\left[\,b_q-\tfrac{\Delta_s}{2}\le S<b_q+\tfrac{\Delta_s}{2}\,\right].
  \end{aligned}
  \label{eq:quant-bound}
 \end{equation}
-Equation~\eqref{eq:quant-identity} is exact for every distribution and requires
-no smoothness; the right-hand form in~\eqref{eq:quant-bound} is the cruder
-symmetric bound, retained only because it is easier to state.  If in addition
-$F$ is Lipschitz with constant $L$ on the half-cell, the exact form gives
+The parity of the code decides whether the lower endpoint belongs to $I_q$.  That
+is not a technicality: ties in round-to-nearest go to the even neighbour, so a
+score exactly at $b_q-\Delta_s/2$ rounds up to $q$ when $q$ is even and down to
+$q-1$ when $q$ is odd.  A blanket half-open statement is therefore false for odd
+$q$, and a blanket strict statement is false for even $q$; both were tried
+against an atom at that endpoint and each failed about half the time.  We state
+the parity explicitly rather than choosing one convention and silently
+mis-stating the other half of the cases.  The symmetric form in
+Eq.~\eqref{eq:quant-bound} carries no such caveat and holds for every parity and
+every tie rule, at the cost of being looser by roughly a factor of two; a reader
+who wants one statement without conditions should use that one.
+
+If $F$ is Lipschitz with constant $L$ on the half-cell, Eq.~\eqref{eq:quant-identity}
+gives
 \begin{equation}
  \bigl|\Delta\text{ acceptance}\bigr| \;\le\; L\,\frac{\Delta_s}{2} .
  \label{eq:quant-lipschitz}
 \end{equation}
-The factor is $\Delta_s/2$, not $\Delta_s$: the score LSB is the width of a code
-cell, while the decision boundary sits at the cell centre, so the effective
-threshold moves by at most half a cell.  Confusing the two overstates the bound
-by exactly a factor of two, and we flag this because it is an easy and
+The factor is $\Delta_s/2$, not $\Delta_s$.  Confusing the two overstates the
+bound by exactly a factor of two, and we flag this because it is an easy and
 consequential slip.  The bound is linear in the score LSB, which is a falsifiable
 prediction: halving the step halves the worst-case effect.  Note what is
 \emph{not} assumed: no density need exist, no mode, no parametric family, only a
 bounded local growth rate of the CDF.  This is a much weaker condition than the
 bounded density that earlier discussion of this point implicitly required.
 
-When $b_q/\Delta_s$ \emph{is} an integer the rounding is exact, the two rules
-coincide on every event, and the change is identically zero; the worst case
-therefore occurs at the half-integer offsets.  This is not a curiosity: it means
-a designer can make the quantization effect vanish by aligning the threshold with
-a representable value, at no cost to the statistical bound, and
-Eq.~\eqref{eq:quant-identity} is the statement that makes that visible.
-
 Equation~\eqref{eq:quant-identity} is also exactly computable, and it becomes a
 finite-sample certificate on applying the Dvoretzky--Kiefer--Wolfowitz
-inequality~\cite{Dvoretzky1956}.  For any $\alpha>0$, with
+inequality~\cite{Dvoretzky1956}; the sharp constant used below is due to
+Massart~\cite{Massart1990}.  For any $\alpha>0$, with
 $\varepsilon_n=\sqrt{\ln(2/\alpha)/2n}$ the empirical CDF satisfies
 $\sup_x|\hat F_n(x)-F(x)|\le\varepsilon_n$ with probability at least
-$1-\alpha$, so the half-cell mass in Eq.~\eqref{eq:quant-identity} is bounded
-above by
+$1-\alpha$, so the symmetric mass in Eq.~\eqref{eq:quant-bound} is bounded above
+by
 \begin{equation}
- \hat F_n(b_q)-\hat F_n\!\left(b_q-\tfrac{\Delta_s}{2}\right)+2\varepsilon_n .
+ \hat F_n\!\left(b_q+\tfrac{\Delta_s}{2}\right)
+ -\hat F_n\!\left(b_q-\tfrac{\Delta_s}{2}\right)+2\varepsilon_n .
  \label{eq:quant-dkw}
 \end{equation}
-The first two terms are the empirical half-cell mass and the third is the price
-of estimating it.  This converts a descriptive diagnostic into a one-sided
+The first two terms are the empirical cell mass and the third is the price of
+estimating it.  This converts a descriptive diagnostic into a one-sided
 confidence statement that the quantization effect cannot exceed a stated value.
 
 The bound is not free, and the cost is worth stating plainly.  At $n=10^4$ and
@@ -1010,54 +1024,76 @@ Garwood construction~\cite{Garwood1936} rather than a normal approximation.
 
 The three quantization constants reported above deserve to be tested rather than
 merely reported.  Equation~\eqref{eq:quant-lipschitz} predicts that the
-quantization-induced acceptance change is proportional to the score LSB, with
-proportionality $L/2$.  The public sweep uses 8, 10 and 12 bits, whose LSBs stand
-in the ratio $16:4:1$, so the law predicts that the reported changes fall in that
-same ratio.  They do: dividing each reported change by $\Delta_s/2$ gives
-$28.62$, $29.90$ and $39.32$, and a linear fit through the origin over the three
-widths has $R^2 = 0.9986$ with an implied Lipschitz constant
-$L = \sup|f| \approx 28.7$ for a score normalized to $[0,1]$.
+quantization-induced acceptance change is proportional to the half-cell
+$\Delta_s/2$.  The public sweep uses 8, 10 and 12 bits, whose LSBs stand in the
+ratio $16:4:1$, so the law predicts that the reported changes fall in that same
+ratio.  Dividing each reported change by $\Delta_s/2$ gives $28.62$, $29.90$ and
+$39.32$, spanning a factor of $1.37$ where exact linearity would give $1.00$.
+
+The three ratios are not equal, so a single constant is not a bound for all
+three.  A least-squares fit through the origin gives $R^2 = 0.9986$ and
+$\bar L \approx 28.7$, but that fit lies \emph{below} two of the three points
+($0.0146 > 0.0140$ and $0.0048 > 0.0035$), so it is a trend line and not an upper
+bound.  A constant that actually satisfies Eq.~\eqref{eq:quant-lipschitz} on this
+sample is the largest observed ratio,
+\begin{equation}
+ L_{\rm eff} \;=\; \max_{i}\,
+ \frac{\bigl|\Delta\text{ acceptance}\bigr|_i}{\Delta_{s,i}/2} \;=\; 39.3 ,
+ \label{eq:quant-leff}
+\end{equation}
+which we report instead, because the quantity the contract needs is a bound and
+not a best fit.  Spread of this size is itself the finding: $L$ is a
+\emph{local} quantity and should be re-estimated near the operating threshold
+rather than transferred from a fit at another width.
 
 \begin{table}[t]
 \centering\small
 \caption{The quantization scaling law of Eq.~\eqref{eq:quant-lipschitz} tested
 against the reported public-sweep values.  The proportionality is to
-$\Delta_s/2$, the half-cell, not to the full LSB.  The 8- and 10-bit points
-follow the law to better than 5\%; the 12-bit point lies above the fit because
-the local density is lower at the deeper tail that this width probes, which is
-consistent with a locally evaluated $L$ rather than with a violated bound.}
+$\Delta_s/2$, the half-cell, not to the full LSB.  The three ratios are not
+constant, so no single fitted constant bounds all three: the least-squares
+$\bar L = 28.7$ is below the 10- and 12-bit measurements, and only
+$L_{\rm eff} = 39.3$, the largest observed ratio, satisfies
+Eq.~\eqref{eq:quant-lipschitz} for every point.}
 \label{tab:quant-scaling}
 \begin{tabular}{rcccc}
 \toprule
-width [bit] & $\Delta_s/2$ & reported change & change $/(\Delta_s/2)$ & residual vs fit \\
+width [bit] & $\Delta_s/2$ & change & change$/(\Delta_s/2)$ & bounded by \\
+ & & measured & & $\bar L{=}28.7$ / $L_{\rm eff}{=}39.3$ \\
 \midrule
-8  & $1.953\times10^{-3}$ & 0.0559 & 28.62 & $-0.4\%$ \\
-10 & $4.883\times10^{-4}$ & 0.0146 & 29.90 & $+4.1\%$ \\
-12 & $1.221\times10^{-4}$ & 0.0048 & 39.32 & $+36.8\%$ \\
+8  & $1.953\times10^{-3}$ & 0.0559 & 28.62 & yes / yes \\
+10 & $4.883\times10^{-4}$ & 0.0146 & 29.90 & \textbf{no} / yes \\
+12 & $1.221\times10^{-4}$ & 0.0048 & 39.32 & \textbf{no} / yes \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-The successive ratios are $3.83$ and $3.04$ against the $4.0$ that exact
-linearity would give.  We report the deviation rather than hiding it: it is the
-signature of the tail, and it means the practical advice is to evaluate $L$
-locally, near the operating threshold, rather than fitting a single constant
-over a range of widths.  The identity~\eqref{eq:quant-identity} was also
-verified directly, on $300$ adversarial configurations spanning U-shaped,
-atom-laden, point-mass and narrow-spike score distributions, where the
-half-cell form matched the measured change to machine precision
-(worst discrepancy $8.8\times10^{-17}$ over $300$ trials and no violation of
-either bound); the DKW certificate~\eqref{eq:quant-dkw} covered the true change
-in $6/6$ cells across $n=10^4$, $5\times10^4$ and $2\times10^5$.  Both checks
-are reproducible from the deposited scripts.
+The 12-bit point is the outlier that forces $L_{\rm eff}$ above the fitted
+value.  Because all three numbers are taken at a single common deployment
+prefix, $n=50{,}000$, the comparison is like-for-like and the variation is not a
+sample-size artefact.  The identity~\eqref{eq:quant-identity} was also verified
+directly, on $626$ configurations: $300$ randomised ones spanning U-shaped,
+atom-laden, point-mass and narrow-spike score distributions over $4$--$12$ bit
+widths, plus $326$ deterministic cases placing an atom exactly at the endpoint
+$b_q-\Delta_s/2$, which is the configuration that separates the two parity
+branches and which the randomised family cannot reach.  Both the parity-resolved
+half-cell form and the unconditional symmetric bound held in every case, with
+worst discrepancy $0$ at the script's tolerance and no violation of either
+bound.  We report the endpoint family separately because our own first attempt
+at this identity was wrong precisely there: it asserted a single interval
+convention and failed on the opposite parity, and only the deterministic atom
+test exposed it.  The DKW certificate~\eqref{eq:quant-dkw} covered the true
+change in $6/6$ cells across $n=10^4$, $5\times10^4$ and $2\times10^5$.  Both
+checks are reproducible from the deposited scripts.
 
 \subsection{Comparison with external limit-setting software}
 \label{sec:tools}
 
 A claim of correctness is weaker than a comparison with independently published
 software, so the program was run against two external reference methods on
-identical inputs: the profile-likelihood construction of TRolke
-2.0~\cite{Lundberg2010TRolke}, reimplemented here from the published method
+identical inputs: the profile-likelihood construction of Rolke, L\'opez and
+Conrad~\cite{Rolke2005} as implemented by TRolke 2.0~\cite{Lundberg2010TRolke},
+reimplemented here from the published method
 because ROOT has no Windows wheel and could not be installed, and the CLs
 upper limit computed with pyhf~\cite{pyhf2021}, the maintained pure-Python
 implementation of HistFactory.  Table~\ref{tab:tools} reports the comparison for
@@ -1300,7 +1336,7 @@ who does not have the public file can still run the synthetic certificate and
 all core tests, while the public-data result is correctly unavailable rather
 than silently replaced by synthetic rows.
 
-The current run produces 30 passing tests, the 27-cell public report, and the
+The current run produces 39 passing tests, the 27-cell public report, and the
 36-cell explicit-rate report.  It also produces the architecture diagram,
 three diagnostic figures plus the assumption-boundary stress figure (each in
 300 dpi PNG and vector PDF form), a reviewer replay table, a timing report,
@@ -1368,7 +1404,7 @@ certifies the composition, and refuses when the composition cannot be
 supported.
 
 YODA demonstrates how a mature HEP library can make statistical objects
-consistent across aggregation, persistence, and plotting~\cite{YODA}.  Its
+consistent across aggregation, persistence, and plotting~\cite{YODA2}.  Its
 histograms and profiles are natural consumers of trigger streams, but they do
 not constitute a deployment certificate: a histogram does not decide whether a
 threshold was selected independently, whether an exposure is known, or whether
@@ -1397,6 +1433,42 @@ Negative evidence & Workflow-specific & Structured \texttt{NOT\_CERTIFIED} reaso
 \end{tabular}
 \end{table}
 
+\subsection{Defects found and fixed by adversarial review}
+\label{sec:defects}
+
+Because the value of this contract rests entirely on a false certification being
+impossible, the implementation was submitted to an adversarial audit whose only
+instruction was to produce a wrong answer.  Two false certifications were found,
+and both are recorded here rather than quietly patched.
+
+The first: a declared unsigned 64-bit score format has a representable maximum
+of $2^{64}-1$, which exceeds the range of the \texttt{int64} array used to hold
+codes.  The range test was evaluated in floating point and passed, after which
+the cast wrapped every code to the most negative integer, so ordinary scores
+yielded a count of zero and the configuration was certified as safe.  Formats
+this wide are not used in any experiment described in this paper, but the
+declaration was accepted, and a declaration that cannot be honoured is a defect
+regardless of whether anyone has yet made it.  Widths above 63 bits are now
+refused outright.
+
+The second: the acceptance-probability entry point applied the budget clause but
+not the rate-counter range clause, so a 4-bit counter with a full scale of
+1.5~Hz certified an upper rate of $6\times10^4$~Hz with an empty reason list,
+while the explicit-exposure entry point refused the identical physics.  Two
+entry points that disagree about the same numbers are worse than one that is
+merely wrong, because a user cannot tell which answer to believe.  Both clauses
+are now applied on both paths.
+
+The audit also confirmed the properties on which the contract depends: the pass
+predicate $U_\alpha+\delta_r\le R_{\mathrm{budget}}$ was checked with exact
+rational arithmetic on $395{,}136$ structured and $60{,}000$ randomised
+configurations including the inclusive boundary, with no violation; the Poisson
+and binomial bounds match 30-digit bisection of the exact tails; and the
+implementation mutates no input and carries no state.  The defects above were
+found in the surrounding plumbing, not in the statistical core.  We report the
+episode because a certificate tool that published only its passing tests would
+be asking for exactly the trust it has not earned.
+
 \subsection{Threats to validity and extension path}
 
 The theorem assumes that the deployment events obey the declared sampling model
@@ -1417,7 +1489,7 @@ adapter can reuse the cumulative-code and JSON layers while replacing the
 independent-block assumption with a declared sequential confidence procedure.
 
 The distributed release includes a compact verification checklist: install the
-core extra, run the synthetic certificate, run the 30-test suite, replay the
+core extra, run the synthetic certificate, run the 39-test suite, replay the
 public-data command when the 74 MB file is available, inspect the JSON refusal
 reasons, and regenerate both figure formats.  Each step has a checked-in input
 or a precise external-data hash, so a failure can be localized to dependencies,
@@ -1482,7 +1554,7 @@ the contribution on the reference platform:
 
 \begin{enumerate}
 \item Install the package with the core and development extras, then run the
-      30-test suite.
+      39-test suite.
 \item Run the minimal synthetic example and inspect the separate raw and
       prescaled rates in its JSON output.
 \item When the LHCO file is available, run the public acceptance command and

@@ -24,6 +24,21 @@ PALETTE = {
 }
 
 
+def _write_text_lf(path, text: str) -> None:
+    """Write text with LF line endings on every platform.
+
+    Path.write_text would translate "\n" to os.linesep, so the same command
+    produced CRLF on Windows and LF on Linux.  Checked-in reports must be
+    byte-reproducible, and they must diff cleanly in git, so newline="\n" is
+    forced explicitly here.
+    """
+    from pathlib import Path as _Path
+    p = _Path(path)
+    p.parent.mkdir(parents=True, exist_ok=True)
+    with p.open("w", encoding="utf-8", newline="\n") as handle:
+        handle.write(text)
+
+
 def _sha256(path: Path) -> str:
     digest = hashlib.sha256()
     with path.open("rb") as handle:
@@ -36,6 +51,10 @@ def _style() -> None:
     plt.rcParams.update(
         {
             "font.family": "DejaVu Sans",
+            # Embed TrueType (Type 42) rather than the default Type 3
+            # bitmap fonts; Elsevier production treats Type 3 as a defect.
+            "pdf.fonttype": 42,
+            "ps.fonttype": 42,
             "font.size": 10,
             "axes.linewidth": 1.2,
             "axes.spines.top": False,
@@ -158,7 +177,7 @@ def make_figure(report_path: str | Path, output_stem: str | Path) -> list[Path]:
         "data_semantics": "LHCO is acceptance probability; explicit-rate panel uses declared Poisson exposure",
     }
     manifest_path = output_stem.with_name("figure_manifest.json")
-    manifest_path.write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    _write_text_lf(manifest_path, json.dumps(manifest, indent=2, sort_keys=True) + "\n")
     outputs.append(manifest_path)
     return outputs
 

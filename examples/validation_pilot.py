@@ -10,6 +10,21 @@ import numpy as np
 from ratecert import FixedPointSpec, RateQuantizationSpec, certify_rate, poisson_upper_rate
 
 
+def _write_text_lf(path, text: str) -> None:
+    """Write text with LF line endings on every platform.
+
+    Path.write_text would translate "\n" to os.linesep, so the same command
+    produced CRLF on Windows and LF on Linux.  Checked-in reports must be
+    byte-reproducible, and they must diff cleanly in git, so newline="\n" is
+    forced explicitly here.
+    """
+    from pathlib import Path as _Path
+    p = _Path(path)
+    p.parent.mkdir(parents=True, exist_ok=True)
+    with p.open("w", encoding="utf-8", newline="\n") as handle:
+        handle.write(text)
+
+
 def main() -> None:
     rng = np.random.default_rng(20260914)
     true_rate_hz = 8.0
@@ -50,7 +65,7 @@ def main() -> None:
     }
     out = Path(__file__).resolve().parents[1] / "reports"
     out.mkdir(exist_ok=True)
-    (out / "validation_pilot.json").write_text(json.dumps(result, indent=2), encoding="utf-8")
+    _write_text_lf(out / "validation_pilot.json", json.dumps(result, indent=2) + "\n")
     print(json.dumps(result, indent=2))
 
 

@@ -4467,7 +4467,7 @@
       "source_doi": "10.5281/zenodo.6466204",
       "source_license": "CC-BY-4.0",
       "source_md5": "271cf5e71fc756b2a8d2b32730689bdb",
-      "source_path": "E:\\123\\ratecert_hep\\data\\public\\lhco_rnd\\events_anomalydetection_v2.features.full.h5",
+      "source_path": "data/public/lhco_rnd/events_anomalydetection_v2.features.full.h5",
       "source_record": "https://zenodo.org/records/6466204",
       "source_selection": "label == 0 (QCD background); released sample already has pT-trigger selection",
       "source_sha256": "933b1f11d7b66e6dae0ee2878723f8f5d7ab0f38399806f2d067c5cfd9a502b1",

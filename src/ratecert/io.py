@@ -34,9 +34,20 @@ def load_scores(path: str | Path) -> np.ndarray:
 
 
 def write_json(path: str | Path, payload: dict[str, Any]) -> None:
+    """Write a JSON report with LF line endings on every platform.
+
+    ``Path.write_text`` translates "\\n" to the platform line separator, so the
+    same command produced different bytes on Windows and Linux.  That made
+    checked-in reports non-reproducible: a reviewer on either platform would see
+    spurious drift, and the committed evidence files ended up with mixed
+    endings.  Writing explicitly with newline="\\n" fixes the bytes and keeps a
+    regenerated report byte-identical to the committed one.
+    """
     destination = Path(path)
     destination.parent.mkdir(parents=True, exist_ok=True)
-    destination.write_text(json.dumps(payload, indent=2, allow_nan=False), encoding="utf-8")
+    text = json.dumps(payload, indent=2, allow_nan=False)
+    with destination.open("w", encoding="utf-8", newline="\n") as handle:
+        handle.write(text)
 
 
 def read_json(path: str | Path) -> dict[str, Any]:

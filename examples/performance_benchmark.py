@@ -27,6 +27,21 @@ from ratecert import (
 ROOT = Path(__file__).resolve().parents[1]
 
 
+def _write_text_lf(path, text: str) -> None:
+    """Write text with LF line endings on every platform.
+
+    Path.write_text would translate "\n" to os.linesep, so the same command
+    produced CRLF on Windows and LF on Linux.  Checked-in reports must be
+    byte-reproducible, and they must diff cleanly in git, so newline="\n" is
+    forced explicitly here.
+    """
+    from pathlib import Path as _Path
+    p = _Path(path)
+    p.parent.mkdir(parents=True, exist_ok=True)
+    with p.open("w", encoding="utf-8", newline="\n") as handle:
+        handle.write(text)
+
+
 def _measure(function, repeats: int) -> dict[str, float | int]:
     samples_ms: list[float] = []
     for _ in range(repeats):
@@ -93,7 +108,7 @@ def main() -> int:
     report = run()
     output = ROOT / "reports" / "performance_benchmark.json"
     output.parent.mkdir(parents=True, exist_ok=True)
-    output.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
+    _write_text_lf(output, json.dumps(report, indent=2) + "\n")
     print(json.dumps(report, indent=2))
     return 0
 
