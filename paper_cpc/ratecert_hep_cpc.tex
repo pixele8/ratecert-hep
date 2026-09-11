@@ -19,6 +19,23 @@
 \usepackage{textcomp}
 \graphicspath{{figures/}{../reports/figures/}}
 
+%% Numbered list environment for the Program Summary's own reference list,
+%% taken from the official CPC CPiP template (cpc-cpip-template.tex).
+\newcounter{bla}
+\newenvironment{refnummer}{%
+\list{[\arabic{bla}]}%
+{\usecounter{bla}%
+ \setlength{\itemindent}{0pt}%
+ \setlength{\topsep}{0pt}%
+ \setlength{\itemsep}{0pt}%
+ \setlength{\labelsep}{2pt}%
+ \setlength{\listparindent}{0pt}%
+ \settowidth{\labelwidth}{[9]}%
+ \setlength{\leftmargin}{\labelwidth}%
+ \addtolength{\leftmargin}{\labelsep}%
+ \setlength{\rightmargin}{0pt}}}
+ {\endlist}
+
 \journal{Computer Physics Communications}
 
 \begin{document}
@@ -69,6 +86,101 @@ counts yet certifies more cells than the exact construction, which is exactly
 backwards.  RateCert-HEP provides a reproducible statistical contract
 conditional on the declared sampling model; it is not a detector-hardware
 timing or live-rate measurement.
+
+% ---------------------------------------------------------------------------
+% PROGRAM SUMMARY -- mandatory for CPC Computer Programs in Physics (CPiP)
+% articles.  Placed immediately following the abstract, inside the abstract
+% environment, exactly as required by the official CPC CPiP LaTeX template.
+% Fields follow the current official template; the legacy fields used by older
+% CPC papers (e.g. TRolke 2.0, 2010) are no longer part of it.
+% ---------------------------------------------------------------------------
+\vspace{6pt}
+\noindent\rule{\textwidth}{0.4pt}
+\vspace{4pt}
+
+\noindent\textbf{PROGRAM SUMMARY}
+
+\begin{small}
+\noindent
+{\em Program Title:} RateCert-HEP \\
+{\em CPC Library link to program files:} (to be added by Technical Editor) \\
+{\em Developer's repository link:} \url{https://github.com/pixele8/ratecert-hep} \\
+{\em Licensing provisions (please choose one):} MIT \\
+{\em Programming language:} Python 3 \\
+{\em Supplementary material:} None.  The manuscript, test suite, benchmark
+scripts and pre-generated figure files are contained in the repository above. \\
+{\em Nature of problem (approx.\ 50--250 words):}
+A real-time trigger must be configured against a rate budget, but the number
+that appears in the firmware is not the number that was statistically
+certified.  Three distinct quantities are routinely conflated: (i) the
+threshold is chosen from a finite calibration sample, so the empirical tail is
+not a probability; (ii) the deployment rate is observed over a finite exposure
+or a fixed-size event sample, so the observed count is not the true rate; and
+(iii) the rate is stored in a counter or register of finite resolution, so a
+register least-significant bit (LSB) is a representation step and not a bound on
+the change induced in the rate by score quantization.  Treating any one of
+these as exact can make a trigger menu appear to satisfy its budget while
+leaving no statistical or numerical margin.  Existing limit-setting programs
+return a confidence interval for a count, but they are not attached to the
+provenance of that count, to the identity of the sample that selected the
+threshold, or to the finite resolution of the register that will store the
+result. \\
+{\em Solution method (approx.\ 50--250 words):}
+Exact frequentist tail inversion.  The three quantities are kept as
+independently declared objects joined by a single pass predicate.  Threshold
+selection consumes only the calibration block; the selected integer code is
+frozen and the deployment block is evaluated afterwards.  With a known exposure
+$T$ and observed count $N$ the program returns the exact one-sided Poisson
+upper limit $U_\alpha(N,T)=\chi^2_{1-\alpha,2(N+1)}/2T$; with only a fixed-size
+sample of $n$ events of which $K$ pass, it returns the exact one-sided
+Clopper--Pearson binomial limit
+$U_\alpha(K,n)=\mathrm{Beta}^{-1}(1-\alpha;K+1,n-K)$ [1].  Both are evaluated
+through survival functions (\texttt{chi2.isf}, \texttt{beta.isf}) rather than by
+forming an inverse cumulative distribution at $1-\alpha$, which preserves
+precision after a family-wise alpha split.  The rate-register declaration
+contributes a deterministic rounding margin ($\Delta_r/2$ for nearest-even,
+$\Delta_r$ for floor or truncation) and a counter full-scale range predicate,
+both kept strictly separate from the statistical bound.  Score quantization is
+audited by a distribution-specific diagnostic that is never promoted to a
+universal error bound.  The qualifying configuration satisfies
+$U_\alpha+\delta_r\le R_{\mathrm{budget}}$; a configuration that fails is
+retained as a valid structured \texttt{NOT\_CERTIFIED} record with explicit
+reasons rather than discarded. \\
+{\em Additional comments including restrictions and unusual features
+(approx.\ 50--250 words):}
+The program is model-agnostic: it accepts a caller-supplied score stream and
+does not train, replace, or benchmark a classifier.  It does not choose a
+physics observable, estimate a detector cross section, infer live time from the
+row count of a Monte Carlo file, or synthesize an FPGA design.  When only a
+public fixed-size sample is available it deliberately refuses to emit an
+absolute Hz field unless an external input flux and rate budget are supplied
+together.  The finite-sample guarantee is conditional on the declared sampling
+model; the program ships an executable demonstration of this boundary in which
+bursty and mixed-rate windows with the same nominal mean are correctly refused.
+The program is a reference implementation: on the reference platform it
+requires 2.4\,ms to quantize and 2.8\,ms to certify a $10^5$-event acceptance
+certificate, and 7.2\,ms for an explicit-exposure rate certificate including
+the attainable threshold curve.  These are CPython throughput measurements and
+do not represent detector or firmware latency.  Core dependencies are NumPy and
+SciPy; pandas/PyTables are required only for the HDF5 public-data adapter and
+Matplotlib only for the figure scripts.
+
+\vspace{2pt}
+\begin{refnummer}
+\item C.~J. Clopper and E.~S. Pearson, \textit{The use of confidence or
+fiducial limits illustrated in the case of the binomial}, Biometrika
+\textbf{26} (1934) 404--413.
+\item J.~Lundberg, J.~Conrad, W.~Rolke and A.~Lopez, \textit{Limits, discovery
+and cut optimization for a Poisson process with uncertainty in background and
+signal efficiency: TRolke 2.0}, Comput.\ Phys.\ Commun.\ \textbf{181} (2010)
+683--686.
+\item J.~Conrad, \textit{A program for confidence interval calculations for a
+Poisson process with background including systematic uncertainties: POLE 1.0},
+Comput.\ Phys.\ Commun.\ \textbf{158} (2004) 117--123.
+\end{refnummer}
+\end{small}
+
+\vspace{4pt}
 \end{abstract}
 
 \begin{keyword}
@@ -77,100 +189,6 @@ Poisson upper limit
 \end{keyword}
 
 \end{frontmatter}
-
-% ---------------------------------------------------------------------------
-% Program Summary (mandatory for CPC/Computer Programs in Physics submissions)
-% ---------------------------------------------------------------------------
-\noindent\textbf{Program Summary}
-
-\noindent\textit{Program Title:} RateCert-HEP
-
-\noindent\textit{Program available from:} CPC Program Library (DOI assigned on
-deposit); developer's repository \url{https://github.com/pixele8/ratecert-hep}
-
-\noindent\textit{Licensing provisions:} MIT
-
-\noindent\textit{Computer for which the program is designed:} Any platform
-supporting CPython 3.10 or later with NumPy and SciPy
-
-\noindent\textit{Operating systems under which the program has been tested:}
-Windows 10 (build 19045), tested with CPython 3.10.7, NumPy 1.26.4 and SciPy
-1.15.3
-
-\noindent\textit{Programming language used:} Python 3
-
-\noindent\textit{Memory required to execute with typical data:} A few tens of
-MB for a $10^5$-event score array; the core path holds the score stream,
-its fixed-point codes, and $O(u)$ cumulative state for $u$ distinct codes
-
-\noindent\textit{No.\ of bytes in distributed program, including
-initialization files, etc.:} $\approx 2.8\times10^{5}$ bytes (source, tests,
-example scripts and configuration)
-
-\noindent\textit{Distribution format:} tar file / Git repository
-
-\noindent\textit{Keywords:} trigger rate, fixed-point arithmetic, finite-sample
-confidence bound, Poisson upper limit
-
-\noindent\textit{Nature of the physical problem:} A real-time trigger must be
-configured against a rate budget, but the number that appears in the firmware
-is not the number that was statistically certified.  Three distinct quantities
-are routinely conflated: (i) the threshold is chosen from a finite calibration
-sample, so the empirical tail is not a probability; (ii) the deployment rate is
-observed over a finite exposure or a fixed-size event sample, so the observed
-count is not the true rate; and (iii) the rate is stored in a counter or
-register of finite resolution, so a register least-significant bit (LSB) is a
-representation step and not a bound on the change induced in the rate by score
-quantization.  Treating any one of these as exact can make a trigger menu
-appear to satisfy its budget while leaving no statistical or numerical margin.
-
-\noindent\textit{Method of solution:} Exact frequentist tail inversion.  The
-three quantities are kept as independently declared objects joined by a single
-pass predicate.  Threshold selection consumes only the calibration block; the
-selected integer code is frozen and the deployment block is evaluated
-afterwards.  With a known exposure $T$ and observed count $N$ the program
-returns the exact one-sided Poisson upper limit
-$U_\alpha(N,T)=\chi^2_{1-\alpha,2(N+1)}/2T$; with only a fixed-size sample of $n$
-events of which $K$ pass, it returns the exact one-sided Clopper--Pearson
-binomial limit $U_\alpha(K,n)=\mathrm{Beta}^{-1}(1-\alpha;K+1,n-K)$.  Both are
-evaluated through survival functions (\texttt{chi2.isf}, \texttt{beta.isf})
-rather than by forming an inverse cumulative distribution at $1-\alpha$, which
-preserves precision after a family-wise alpha split.  The rate-register
-declaration contributes a deterministic rounding margin ($\Delta_r/2$ for
-nearest-even, $\Delta_r$ for floor or truncation) and a counter full-scale range
-predicate, both kept strictly separate from the statistical bound.  Score
-quantization is audited by a distribution-specific diagnostic that is never
-promoted to a universal error bound.  The qualifying configuration satisfies
-$U_\alpha+\delta_r\le R_{\mathrm{budget}}$.  A configuration that fails is
-retained as a valid structured \texttt{NOT\_CERTIFIED} record with explicit
-reasons rather than discarded.
-
-\noindent\textit{Typical running time:} $2.4$~ms to quantize and $2.8$~ms to
-certify a $10^5$-event acceptance certificate; $7.2$~ms for an
-explicit-exposure rate certificate including the attainable threshold curve
-(median of 20 repeats, Windows 10, CPython 3.10.7).
-
-\noindent\textit{Restrictions and unusual features:} The program is
-model-agnostic: it accepts a caller-supplied score stream and does not train,
-replace, or benchmark a classifier.  It does not choose a physics observable,
-estimate a detector cross section, infer live time from the row count of a
-Monte Carlo file, or synthesize an FPGA design.  When only a public fixed-size
-sample is available it deliberately refuses to emit an absolute Hz field unless
-an external input flux and rate budget are supplied together.  The finite-sample
-guarantee is conditional on the declared sampling model; the program ships an
-executable demonstration of this boundary in which bursty and mixed-rate windows
-with the same nominal mean are correctly refused.  The timing figures are Python
-throughput measurements and do not represent detector or firmware latency.
-Core dependencies are NumPy and SciPy; pandas/PyTables are required only for the
-HDF5 public-data adapter and Matplotlib only for the figure scripts.
-
-\noindent\textit{References:} Clopper and Pearson (1934)~\cite{Clopper1934};
-prior limit-setting programs POLE 1.0~\cite{Conrad2004POLE} and
-TRolke 2.0~\cite{Lundberg2010TRolke}.
-
-\vspace{6pt}
-\noindent\rule{\textwidth}{0.4pt}
-\vspace{6pt}
 
 % ---------------------------------------------------------------------------
 \section{Introduction}
@@ -209,6 +227,17 @@ it accepts a caller-supplied score stream and does not train, replace, or
 benchmark a neural architecture.  Its central object is a certificate for a
 fixed integer threshold, a declared fixed-point score format, an independent
 deployment block, and an explicit rate definition.
+
+The significance is that the sign of the error decides whether physics is lost
+either way.  A trigger menu entry that is certified too optimistically passes
+review at a rate that later has to be recovered by raising its threshold or
+increasing its prescale, and every such correction discards signal events at
+the analysis stage.  An entry that is refused too pessimistically is removed,
+or run at a needlessly tight threshold, and the corresponding search loses reach
+that the detector could in fact have afforded.  Because a rate certificate is
+taken as the evidence for the deployment decision, an unsound certificate does
+not merely mis-state a number: it silently misallocates a fraction of the
+trigger bandwidth, which is the resource the whole menu competes for.
 
 General HEP analysis utilities such as YODA provide reusable data objects and
 plotting workflows~\cite{YODA}; general-purpose limit-setting libraries such as

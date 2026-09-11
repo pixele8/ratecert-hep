@@ -286,36 +286,58 @@ arXiv preprints and analysed directly:
 
 ### The canonical Program Summary field set (now matched exactly)
 
-The initial revision used a generic field template. The **actual** published
-Program Summary of TRolke 2.0 uses this bulleted set, which differs materially:
+> **Correction.** An earlier revision of this document concluded, from the
+> 2010 TRolke 2.0 Program Summary, that the required field set included
+> legacy fields such as "Computer for which the program is designed",
+> "Operating Systems under which the program has been tested", "Memory
+> required to execute with typical data", "Distribution Format" and
+> "Typical Running Time". **That conclusion was wrong.** Those fields belong
+> to the older CPC house style. The *current* template has a different field
+> set, and the manuscript has since been corrected to match it. See
+> `cpc_submission_checklist.md` for the authoritative comparison.
+
+The current, authoritative field set is taken from the **official CPiP LaTeX
+template** (`https://legacyfileshare.elsevier.com/promis_misc/cpc-cpip-template.tex`)
+and the **official Guide for Authors** (archived 2025-08-02):
 
 ```
-Title of Program
-Program available from
-Licensing provisions
-Computer for which the program is designed
-Operating Systems under which the program has been tested
-Programming Language used
-Memory required to execute with typical data
-No. of bytes in distributed program, including initialization file, etc.
-Distribution Format
-Keywords
-Nature of the Physical Problem
-Method of solution
-Typical Running Time
+Program Title:
+CPC Library link to program files:   (to be added by Technical Editor)
+Developer's repository link:         (if available)
+Licensing provisions (please choose one):  <closed list>
+Programming language:
+Supplementary material:
+Journal reference of previous version:*      (new versions only)
+Does the new version supersede…?:*           (new versions only)
+Reasons for the new version:*                (new versions only)
+Summary of revisions:*                       (new versions only)
+Nature of problem (approx. 50-250 words):
+Solution method (approx. 50-250 words):
+Additional comments including Restrictions and Unusual features (approx. 50-250 words):
+References:
 ```
 
-Six of these were absent from the first revision and have now been added with
-real values: platform, tested operating systems, memory, distributed size,
-distribution format, and **Typical Running Time** (drawn from the checked-in
-`reports/performance_benchmark.json`). The field names "Nature of the Physical
-Problem", "Method of solution" and "Typical Running Time" replace the generic
-"Nature of problem"/"Solution method" wording.
+Three structural requirements in the template are easy to miss:
 
-Note also that the arXiv preprints **omit** their Program Summary — it is added
-by the publisher. Searching a preprint for those fields will wrongly suggest
-they are not required. This is why the published version had to be recovered
-from the v2 preprint of TRolke, which retains it.
+1. The Program Summary is placed **inside the `abstract` environment**, so it
+   lands on the article landing page rather than in an appendix.
+2. It carries its **own reference list**, typed in text as `[1]`, `[2]`, which
+   is *"different from the bibliography at the end of the Long Write-Up"* and
+   should list only items cited inside the summary.
+3. The three narrative fields have a **50–250 word** range each.
+
+Because the summary's reference list is separate, its citations must **not**
+use the manuscript's `\cite` mechanism; the manuscript uses explicit numbered
+items instead.
+
+### Why the earlier mistake happened — a real trap worth recording
+
+arXiv preprints of CPC papers **omit the Program Summary**: the publisher adds
+it. Searching a preprint for these fields therefore wrongly suggests they are
+optional. The 2010 TRolke 2.0 v2 preprint was an exception that *retained* it,
+which is why that (older) style was recoverable at all — and also why it
+misled the first revision. The current template had to be fetched from
+Elsevier's own file share to settle the question.
 
 ### Other gaps found and closed
 
@@ -324,17 +346,15 @@ from the v2 preprint of TRolke, which retains it.
   procedure, and the four bound constructions compared in the baseline study.
 - **No quantitative baseline existed.** Three competitors (empirical tail,
   normal/Wald, Wilson) are now evaluated on the identical 27 cells and against
-  a known ground truth. This is the single largest addition and is what the
-  table of contents of any comparable paper would lead with.
+  a known ground truth. This is the single largest addition.
 - **Keyword count.** TRolke uses four keywords; the first revision listed
   seven. Trimmed to four.
 
-### Section-count position
+### Section-count and length position
 
 NNDrone (a 6-page published CPC tool paper) uses 5 top-level sections. The
-revision uses 8 plus two appendices with 30 pages total, i.e. substantially
-more structure and more evidence than the published comparators, which is the
-intended direction.
+revision uses 8 plus two appendices at 30 pages, inside the ~20–35 pp. norm of
+comparable CPiP papers (EDIpack 32 pp., Rivet manual 17 pp., ALICE HLT 24 pp.).
 
 ---
 
