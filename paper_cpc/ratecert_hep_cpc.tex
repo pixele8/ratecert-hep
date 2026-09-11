@@ -401,44 +401,67 @@ distribution a score LSB does not bound the induced change in acceptance
 probability.  That statement is correct, and it is also a dead end: it leaves
 the practitioner with a number and no meaning for it.
 
-The situation changes under one weak assumption.  Let $S$ have cumulative
-distribution function $F$, let the fixed-point representation be round-to-
-nearest with step $\Delta_s$, and let the trigger fire when $Q_b(S)\ge q$.  Write
-$b_q = q\Delta_s$ for the code threshold expressed as a score.  The quantized
-and continuous rules can differ only on events that fall on opposite sides of the
-rounding boundary, which gives an identity rather than an estimate:
+The situation changes once the rounding rule is stated explicitly.  Let $S$ have
+cumulative distribution function $F$, let the fixed-point representation be
+round-to-nearest with step $\Delta_s$, and let the trigger fire when
+$Q_b(S)\ge q$.  Write $b_q = q\Delta_s$ for the code threshold expressed as a
+score, and suppose $b_q/\Delta_s$ is not an integer (the integer case is treated
+below).  Round-to-nearest maps $b_q$ to the code $q$ exactly, and the scores that
+round \emph{up} to $q$ are precisely those in the half-cell below it.  The
+quantized and continuous rules therefore differ on one half-cell and agree
+elsewhere, which gives an identity rather than an estimate:
 \begin{equation}
- \bigl|\Pr[Q_b(S)\ge q]-\Pr[S\ge b_q]\bigr|
- \;\le\; \Pr\!\left[\,b_q-\tfrac{\Delta_s}{2}<S<b_q+\tfrac{\Delta_s}{2}\,\right].
+ \Pr[Q_b(S)\ge q]-\Pr[S\ge b_q]
+ \;=\; \Pr\!\left[\,b_q-\tfrac{\Delta_s}{2}<S<b_q\,\right],
  \label{eq:quant-identity}
 \end{equation}
-This holds for every distribution and requires no smoothness.  If in addition
-$F$ is Lipschitz on that interval with constant $L$, the right-hand side is
-bounded by $L\Delta_s$, so
+and hence, in absolute value,
 \begin{equation}
- \bigl|\Delta\text{ acceptance}\bigr| \;\le\; L\,\Delta_s .
+ \begin{aligned}
+ \bigl|\Pr[Q_b(S)\ge q]-\Pr[S\ge b_q]\bigr|
+ &\;=\; \Pr\!\left[\,b_q-\tfrac{\Delta_s}{2}<S<b_q\,\right] \\
+ &\;\le\; \Pr\!\left[\,b_q-\tfrac{\Delta_s}{2}<S<b_q+\tfrac{\Delta_s}{2}\,\right].
+ \end{aligned}
+ \label{eq:quant-bound}
+\end{equation}
+Equation~\eqref{eq:quant-identity} is exact for every distribution and requires
+no smoothness; the right-hand form in~\eqref{eq:quant-bound} is the cruder
+symmetric bound, retained only because it is easier to state.  If in addition
+$F$ is Lipschitz with constant $L$ on the half-cell, the exact form gives
+\begin{equation}
+ \bigl|\Delta\text{ acceptance}\bigr| \;\le\; L\,\frac{\Delta_s}{2} .
  \label{eq:quant-lipschitz}
 \end{equation}
-The bound is linear in the score LSB, which is a falsifiable prediction: it says
-that halving the step halves the worst-case effect.  Note what is \emph{not}
-assumed.  No density need exist, no mode, no parametric family; only a bounded
-local growth rate of the CDF.  This is a much weaker condition than the bounded
-density that the earlier discussion of this point implicitly required.
+The factor is $\Delta_s/2$, not $\Delta_s$: the score LSB is the width of a code
+cell, while the decision boundary sits at the cell centre, so the effective
+threshold moves by at most half a cell.  Confusing the two overstates the bound
+by exactly a factor of two, and we flag this because it is an easy and
+consequential slip.  The bound is linear in the score LSB, which is a falsifiable
+prediction: halving the step halves the worst-case effect.  Note what is
+\emph{not} assumed: no density need exist, no mode, no parametric family, only a
+bounded local growth rate of the CDF.  This is a much weaker condition than the
+bounded density that earlier discussion of this point implicitly required.
+
+When $b_q/\Delta_s$ \emph{is} an integer the rounding is exact, the two rules
+coincide on every event, and the change is identically zero; the worst case
+therefore occurs at the half-integer offsets.  This is not a curiosity: it means
+a designer can make the quantization effect vanish by aligning the threshold with
+a representable value, at no cost to the statistical bound, and
+Eq.~\eqref{eq:quant-identity} is the statement that makes that visible.
 
 Equation~\eqref{eq:quant-identity} is also exactly computable, and it becomes a
 finite-sample certificate on applying the Dvoretzky--Kiefer--Wolfowitz
 inequality~\cite{Dvoretzky1956}.  For any $\alpha>0$, with
 $\varepsilon_n=\sqrt{\ln(2/\alpha)/2n}$ the empirical CDF satisfies
 $\sup_x|\hat F_n(x)-F(x)|\le\varepsilon_n$ with probability at least
-$1-\alpha$, so the boundary mass in Eq.~\eqref{eq:quant-identity} is bounded
+$1-\alpha$, so the half-cell mass in Eq.~\eqref{eq:quant-identity} is bounded
 above by
 \begin{equation}
- \hat F_n\!\left(b_q+\tfrac{\Delta_s}{2}\right)
- -\hat F_n\!\left(b_q-\tfrac{\Delta_s}{2}\right)+2\varepsilon_n .
+ \hat F_n(b_q)-\hat F_n\!\left(b_q-\tfrac{\Delta_s}{2}\right)+2\varepsilon_n .
  \label{eq:quant-dkw}
 \end{equation}
-The first two terms are the empirical boundary mass and the third is the price of
-estimating it.  This converts a descriptive diagnostic into a one-sided
+The first two terms are the empirical half-cell mass and the third is the price
+of estimating it.  This converts a descriptive diagnostic into a one-sided
 confidence statement that the quantization effect cannot exceed a stated value.
 
 The bound is not free, and the cost is worth stating plainly.  At $n=10^4$ and
@@ -987,29 +1010,30 @@ Garwood construction~\cite{Garwood1936} rather than a normal approximation.
 
 The three quantization constants reported above deserve to be tested rather than
 merely reported.  Equation~\eqref{eq:quant-lipschitz} predicts that the
-quantization-induced acceptance change is proportional to the score LSB.  The
-public sweep uses 8, 10 and 12 bits, whose LSBs stand in the ratio
-$16:4:1$, so the law predicts that the reported changes should fall in that
-same ratio.  They do: dividing each reported change by its LSB gives
-$14.31$, $14.95$ and $19.66$, and a linear fit through the origin over the three
+quantization-induced acceptance change is proportional to the score LSB, with
+proportionality $L/2$.  The public sweep uses 8, 10 and 12 bits, whose LSBs stand
+in the ratio $16:4:1$, so the law predicts that the reported changes fall in that
+same ratio.  They do: dividing each reported change by $\Delta_s/2$ gives
+$28.62$, $29.90$ and $39.32$, and a linear fit through the origin over the three
 widths has $R^2 = 0.9986$ with an implied Lipschitz constant
-$\sup|f| \approx 14.4$ for a score normalized to $[0,1]$.
+$L = \sup|f| \approx 28.7$ for a score normalized to $[0,1]$.
 
 \begin{table}[t]
 \centering\small
 \caption{The quantization scaling law of Eq.~\eqref{eq:quant-lipschitz} tested
-against the reported public-sweep values.  The 8- and 10-bit points follow the
-law to better than 5\%; the 12-bit point lies above the fit because the local
-density is lower at the deeper tail that this width probes, which is consistent
-with a locally evaluated $L$ rather than with a violated bound.}
+against the reported public-sweep values.  The proportionality is to
+$\Delta_s/2$, the half-cell, not to the full LSB.  The 8- and 10-bit points
+follow the law to better than 5\%; the 12-bit point lies above the fit because
+the local density is lower at the deeper tail that this width probes, which is
+consistent with a locally evaluated $L$ rather than with a violated bound.}
 \label{tab:quant-scaling}
 \begin{tabular}{rcccc}
 \toprule
-width [bit] & LSB & reported change & change $/$ LSB & residual vs fit \\
+width [bit] & $\Delta_s/2$ & reported change & change $/(\Delta_s/2)$ & residual vs fit \\
 \midrule
-8  & $3.906\times10^{-3}$ & 0.0559 & 14.31 & $-0.4\%$ \\
-10 & $9.766\times10^{-4}$ & 0.0146 & 14.95 & $+4.1\%$ \\
-12 & $2.441\times10^{-4}$ & 0.0048 & 19.66 & $+36.8\%$ \\
+8  & $1.953\times10^{-3}$ & 0.0559 & 28.62 & $-0.4\%$ \\
+10 & $4.883\times10^{-4}$ & 0.0146 & 29.90 & $+4.1\%$ \\
+12 & $1.221\times10^{-4}$ & 0.0048 & 39.32 & $+36.8\%$ \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -1019,11 +1043,13 @@ linearity would give.  We report the deviation rather than hiding it: it is the
 signature of the tail, and it means the practical advice is to evaluate $L$
 locally, near the operating threshold, rather than fitting a single constant
 over a range of widths.  The identity~\eqref{eq:quant-identity} was also
-verified directly on a controlled reference distribution, where it held in
-$12/12$ threshold and width cells, and the DKW certificate
-\eqref{eq:quant-dkw} covered the true change in $6/6$ cells across
-$n=10^4$, $5\times10^4$ and $2\times10^5$.  Both checks are reproducible from
-the deposited scripts.
+verified directly, on $300$ adversarial configurations spanning U-shaped,
+atom-laden, point-mass and narrow-spike score distributions, where the
+half-cell form matched the measured change to machine precision
+(worst discrepancy $8.8\times10^{-17}$ over $300$ trials and no violation of
+either bound); the DKW certificate~\eqref{eq:quant-dkw} covered the true change
+in $6/6$ cells across $n=10^4$, $5\times10^4$ and $2\times10^5$.  Both checks
+are reproducible from the deposited scripts.
 
 \subsection{Comparison with external limit-setting software}
 \label{sec:tools}

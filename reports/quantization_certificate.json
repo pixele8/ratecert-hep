@@ -3,162 +3,210 @@
   "seed": 20260912,
   "part_a": {
     "n": 200000,
-    "identity_all_ok": true,
+    "identity_all_ok": false,
     "cells_identity": [
       {
         "q": 64,
         "bits": 8,
         "delta": 0.00390625,
+        "b": 0.25,
         "p_quantized": 0.537945,
         "p_unquantized": 0.533495,
         "signed_change": 0.004449999999999954,
         "abs_change": 0.004449999999999954,
-        "boundary_mass": 0.00897,
-        "identity_holds": true
+        "half_cell_mass": 0.00445,
+        "full_cell_mass": 0.00897,
+        "integer_threshold": true,
+        "identity_exact": false,
+        "bound_holds": true
       },
       {
         "q": 128,
         "bits": 8,
         "delta": 0.00390625,
+        "b": 0.5,
         "p_quantized": 0.11111,
         "p_unquantized": 0.10936,
         "signed_change": 0.0017500000000000016,
         "abs_change": 0.0017500000000000016,
-        "boundary_mass": 0.00362,
-        "identity_holds": true
+        "half_cell_mass": 0.00175,
+        "full_cell_mass": 0.00362,
+        "integer_threshold": true,
+        "identity_exact": false,
+        "bound_holds": true
       },
       {
         "q": 192,
         "bits": 8,
         "delta": 0.00390625,
+        "b": 0.75,
         "p_quantized": 0.005,
         "p_unquantized": 0.00484,
         "signed_change": 0.00016000000000000042,
         "abs_change": 0.00016000000000000042,
-        "boundary_mass": 0.000345,
-        "identity_holds": true
+        "half_cell_mass": 0.00016,
+        "full_cell_mass": 0.000345,
+        "integer_threshold": true,
+        "identity_exact": false,
+        "bound_holds": true
       },
       {
         "q": 64,
         "bits": 10,
         "delta": 0.0009765625,
+        "b": 0.0625,
         "p_quantized": 0.9506,
         "p_unquantized": 0.94995,
         "signed_change": 0.0006500000000000394,
         "abs_change": 0.0006500000000000394,
-        "boundary_mass": 0.00123,
-        "identity_holds": true
+        "half_cell_mass": 0.00065,
+        "full_cell_mass": 0.00123,
+        "integer_threshold": true,
+        "identity_exact": false,
+        "bound_holds": true
       },
       {
         "q": 128,
         "bits": 10,
         "delta": 0.0009765625,
+        "b": 0.125,
         "p_quantized": 0.83266,
         "p_unquantized": 0.831535,
         "signed_change": 0.0011249999999999316,
         "abs_change": 0.0011249999999999316,
-        "boundary_mass": 0.00231,
-        "identity_holds": true
+        "half_cell_mass": 0.001125,
+        "full_cell_mass": 0.00231,
+        "integer_threshold": true,
+        "identity_exact": false,
+        "bound_holds": true
       },
       {
         "q": 192,
         "bits": 10,
         "delta": 0.0009765625,
+        "b": 0.1875,
         "p_quantized": 0.68604,
         "p_unquantized": 0.684755,
         "signed_change": 0.0012849999999999806,
         "abs_change": 0.0012849999999999806,
-        "boundary_mass": 0.00247,
-        "identity_holds": true
+        "half_cell_mass": 0.001285,
+        "full_cell_mass": 0.00247,
+        "integer_threshold": true,
+        "identity_exact": false,
+        "bound_holds": true
       },
       {
         "q": 64,
         "bits": 12,
         "delta": 0.000244140625,
+        "b": 0.015625,
         "p_quantized": 0.996335,
         "p_unquantized": 0.99629,
         "signed_change": 4.499999999996174e-05,
         "abs_change": 4.499999999996174e-05,
-        "boundary_mass": 0.00013,
-        "identity_holds": true
+        "half_cell_mass": 4.5e-05,
+        "full_cell_mass": 0.00013,
+        "integer_threshold": true,
+        "identity_exact": false,
+        "bound_holds": true
       },
       {
         "q": 128,
         "bits": 12,
         "delta": 0.000244140625,
+        "b": 0.03125,
         "p_quantized": 0.98657,
         "p_unquantized": 0.986455,
         "signed_change": 0.00011499999999997623,
         "abs_change": 0.00011499999999997623,
-        "boundary_mass": 0.000265,
-        "identity_holds": true
+        "half_cell_mass": 0.000115,
+        "full_cell_mass": 0.000265,
+        "integer_threshold": true,
+        "identity_exact": false,
+        "bound_holds": true
       },
       {
         "q": 192,
         "bits": 12,
         "delta": 0.000244140625,
+        "b": 0.046875,
         "p_quantized": 0.97073,
         "p_unquantized": 0.97063,
         "signed_change": 9.999999999998899e-05,
         "abs_change": 9.999999999998899e-05,
-        "boundary_mass": 0.00025,
-        "identity_holds": true
+        "half_cell_mass": 0.0001,
+        "full_cell_mass": 0.00025,
+        "integer_threshold": true,
+        "identity_exact": false,
+        "bound_holds": true
       },
       {
         "q": 64,
         "bits": 14,
         "delta": 6.103515625e-05,
+        "b": 0.00390625,
         "p_quantized": 0.999735,
         "p_unquantized": 0.999735,
         "signed_change": 0.0,
         "abs_change": 0.0,
-        "boundary_mass": 5e-06,
-        "identity_holds": true
+        "half_cell_mass": 0.0,
+        "full_cell_mass": 5e-06,
+        "integer_threshold": true,
+        "identity_exact": true,
+        "bound_holds": true
       },
       {
         "q": 128,
         "bits": 14,
         "delta": 6.103515625e-05,
+        "b": 0.0078125,
         "p_quantized": 0.999035,
         "p_unquantized": 0.999035,
         "signed_change": 0.0,
         "abs_change": 0.0,
-        "boundary_mass": 1e-05,
-        "identity_holds": true
+        "half_cell_mass": 0.0,
+        "full_cell_mass": 1e-05,
+        "integer_threshold": true,
+        "identity_exact": true,
+        "bound_holds": true
       },
       {
         "q": 192,
         "bits": 14,
         "delta": 6.103515625e-05,
+        "b": 0.01171875,
         "p_quantized": 0.997895,
         "p_unquantized": 0.99788,
         "signed_change": 1.4999999999987246e-05,
         "abs_change": 1.4999999999987246e-05,
-        "boundary_mass": 4.5e-05,
-        "identity_holds": true
+        "half_cell_mass": 1.5e-05,
+        "full_cell_mass": 4.5e-05,
+        "integer_threshold": true,
+        "identity_exact": false,
+        "bound_holds": true
       }
     ],
     "scaling": [
       {
         "bits": 8,
-        "boundary": 0.00362,
-        "L_delta": 0.0037040625000000008,
-        "ratio": 0.9773053235467812,
-        "L": 0.9482400000000002
+        "half_cell": 0.00175,
+        "L_delta_half": 0.0020346875,
+        "ratio": 0.8600829365688835,
+        "L": 1.04176
       },
       {
         "bits": 10,
-        "boundary": 0.00231,
-        "L_delta": 0.0021393750000000007,
-        "ratio": 1.0797546012269936,
-        "L": 2.1907200000000007
+        "half_cell": 0.001125,
+        "L_delta_half": 0.0010706250000000004,
+        "ratio": 1.0507880910683007,
+        "L": 2.192640000000001
       },
       {
         "bits": 12,
-        "boundary": 0.000265,
-        "L_delta": 0.00020343750000000006,
-        "ratio": 1.3026113671274957,
-        "L": 0.8332800000000002
+        "half_cell": 0.000115,
+        "L_delta_half": 0.00010031250000000003,
+        "ratio": 1.1464174454828657,
+        "L": 0.8217600000000003
       }
     ],
     "certificate_rows": [
@@ -166,58 +214,67 @@
         "n": 10000,
         "q": 128,
         "abs_change": 0.0009000000000000119,
-        "ecdf_mass": 0.0022000000000000075,
+        "ecdf_mass": 0.0008999999999999841,
         "epsilon": 0.013581015157406196,
-        "certified_upper": 0.0293620303148124,
+        "certified_upper": 0.028062030314812376,
         "covers": true
       },
       {
         "n": 10000,
         "q": 192,
         "abs_change": 0.0020000000000000018,
-        "ecdf_mass": 0.00269999999999998,
+        "ecdf_mass": 0.0020000000000000018,
         "epsilon": 0.013581015157406196,
-        "certified_upper": 0.029862030314812372,
+        "certified_upper": 0.029162030314812393,
         "covers": true
       },
       {
         "n": 50000,
         "q": 128,
         "abs_change": 0.0011199999999998989,
-        "ecdf_mass": 0.00248000000000001,
+        "ecdf_mass": 0.0011200000000000099,
         "epsilon": 0.006073614619083051,
-        "certified_upper": 0.014627229238166112,
+        "certified_upper": 0.013267229238166112,
         "covers": true
       },
       {
         "n": 50000,
         "q": 192,
         "abs_change": 0.0014399999999999968,
-        "ecdf_mass": 0.0026800000000000157,
+        "ecdf_mass": 0.0014399999999999968,
         "epsilon": 0.006073614619083051,
-        "certified_upper": 0.014827229238166118,
+        "certified_upper": 0.013587229238166099,
         "covers": true
       },
       {
         "n": 200000,
         "q": 128,
         "abs_change": 0.0011249999999999316,
-        "ecdf_mass": 0.0023100000000000065,
+        "ecdf_mass": 0.0011250000000000149,
         "epsilon": 0.0030368073095415255,
-        "certified_upper": 0.008383614619083057,
+        "certified_upper": 0.007198614619083066,
         "covers": true
       },
       {
         "n": 200000,
         "q": 192,
         "abs_change": 0.0012849999999999806,
-        "ecdf_mass": 0.0024699999999999722,
+        "ecdf_mass": 0.0012849999999999806,
         "epsilon": 0.0030368073095415255,
-        "certified_upper": 0.008543614619083022,
+        "certified_upper": 0.007358614619083032,
         "covers": true
       }
     ],
-    "certificate_all_cover": true
+    "certificate_all_cover": true,
+    "adversarial_identity": {
+      "repeats": 300,
+      "tested": 300,
+      "bound_violations": 0,
+      "worst_excess": 0.0,
+      "identity_exact_failures": 147,
+      "worst_exact_gap": 9.194034422677078e-17,
+      "integer_threshold_cells": 300
+    }
   },
   "part_b_lhco": {
     "observed_change": {
@@ -230,14 +287,14 @@
       "10": 0.0009765625,
       "12": 0.000244140625
     },
-    "change_per_lsb": {
-      "8": 14.3104,
-      "10": 14.9504,
-      "12": 19.6608
+    "change_per_half_lsb": {
+      "8": 28.6208,
+      "10": 29.9008,
+      "12": 39.3216
     },
     "ratio_8_10": 3.828767123287671,
     "ratio_10_12": 3.041666666666667,
-    "implied_sup_density": 14.367507692307692,
+    "implied_sup_density": 28.735015384615384,
     "r_squared": 0.9986105547635956
   }
 }
