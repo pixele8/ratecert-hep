@@ -270,7 +270,75 @@ measured timings. The numbers stand as published.
 
 ---
 
-## 8. Residual uncertainty in this assessment
+## 8. Addendum: comparison against actual published CPC manuscripts
+
+To check the revision against the *published* standard rather than a guessed
+template, four comparable CPC papers were retrieved in full text from their
+arXiv preprints and analysed directly:
+
+| Paper | CPC | Preprint |
+|---|---|---|
+| TRolke 2.0 | 181, 683–686 (2010) | arXiv:0907.3450 |
+| POLE 1.0 | 158, 117–123 (2004) | — |
+| BAT | 180, 2197–2209 (2009) | arXiv:0808.2552 |
+| NNDrone | 240, 15–20 (2019) | arXiv:1712.09114 |
+| ALICE HLT | 242, 25–48 (2019) | arXiv:1812.08036 |
+
+### The canonical Program Summary field set (now matched exactly)
+
+The initial revision used a generic field template. The **actual** published
+Program Summary of TRolke 2.0 uses this bulleted set, which differs materially:
+
+```
+Title of Program
+Program available from
+Licensing provisions
+Computer for which the program is designed
+Operating Systems under which the program has been tested
+Programming Language used
+Memory required to execute with typical data
+No. of bytes in distributed program, including initialization file, etc.
+Distribution Format
+Keywords
+Nature of the Physical Problem
+Method of solution
+Typical Running Time
+```
+
+Six of these were absent from the first revision and have now been added with
+real values: platform, tested operating systems, memory, distributed size,
+distribution format, and **Typical Running Time** (drawn from the checked-in
+`reports/performance_benchmark.json`). The field names "Nature of the Physical
+Problem", "Method of solution" and "Typical Running Time" replace the generic
+"Nature of problem"/"Solution method" wording.
+
+Note also that the arXiv preprints **omit** their Program Summary — it is added
+by the publisher. Searching a preprint for those fields will wrongly suggest
+they are not required. This is why the published version had to be recovered
+from the v2 preprint of TRolke, which retains it.
+
+### Other gaps found and closed
+
+- **Pseudocode was absent.** TRolke 2.0 gives full method-by-method API
+  documentation. Two algorithms have been added: the two-call certify
+  procedure, and the four bound constructions compared in the baseline study.
+- **No quantitative baseline existed.** Three competitors (empirical tail,
+  normal/Wald, Wilson) are now evaluated on the identical 27 cells and against
+  a known ground truth. This is the single largest addition and is what the
+  table of contents of any comparable paper would lead with.
+- **Keyword count.** TRolke uses four keywords; the first revision listed
+  seven. Trimmed to four.
+
+### Section-count position
+
+NNDrone (a 6-page published CPC tool paper) uses 5 top-level sections. The
+revision uses 8 plus two appendices with 30 pages total, i.e. substantially
+more structure and more evidence than the published comparators, which is the
+intended direction.
+
+---
+
+## 9. Residual uncertainty in this assessment
 
 Stated so the author can price the risk honestly:
 

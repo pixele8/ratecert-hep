@@ -106,6 +106,25 @@ It compares a stationary Poisson window with bursty and mixed-rate windows that
 have the same nominal mean.  The latter are intentionally outside the theorem's model
 and are reported as negative diagnostics rather than certified rates.
 
+## Comparison against alternative bounds
+
+The exact construction is compared quantitatively against the empirical tail,
+a normal (Wald) bound, and a Wilson score bound:
+
+```powershell
+py examples/baseline_comparison.py
+py examples/make_baseline_figure.py `
+  --input reports/baseline_comparison.json `
+  --output-stem reports/figures/baseline_coverage
+```
+
+`baseline_comparison.py` applies all four constructions to the identical 27
+deployment cells and measures empirical coverage against a known ground-truth
+acceptance probability. The results are that the empirical tail certifies all
+27 cells while attaining only about 0.51-0.56 coverage against a nominal
+0.9996, and that the normal bound under-covers at small counts yet certifies
+more cells than the exact bound. Both facts are reported rather than hidden.
+
 Generate the paper-facing static figure and its data manifest with:
 
 ```powershell

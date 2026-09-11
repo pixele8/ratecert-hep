@@ -61,15 +61,19 @@ Poisson benchmark certified 11 of 36 explicit-exposure rate cells.  An
 independent 20{,}000-repeat finite-sample coverage stress test observed
 coverage of at least 0.99945 at the per-cell confidence used in the public-data
 sweep.  The package records machine-readable provenance, refusal reasons, and
-quantization diagnostics.  It provides a reproducible statistical contract
+quantization diagnostics.  Applied to the same 27 deployment cells, reporting
+the empirical tail as an upper bound certifies all 27 while attaining only
+about 0.51--0.56 coverage against a nominal 0.9996, whereas the exact bound
+holds its nominal coverage; a one-sided normal bound under-covers at small
+counts yet certifies more cells than the exact construction, which is exactly
+backwards.  RateCert-HEP provides a reproducible statistical contract
 conditional on the declared sampling model; it is not a detector-hardware
 timing or live-rate measurement.
 \end{abstract}
 
 \begin{keyword}
 Trigger rate \sep Fixed-point arithmetic \sep Finite-sample confidence bound \sep
-Poisson upper limit \sep Clopper--Pearson interval \sep High energy physics
-software \sep Real-time event selection
+Poisson upper limit
 \end{keyword}
 
 \end{frontmatter}
@@ -81,35 +85,51 @@ software \sep Real-time event selection
 
 \noindent\textit{Program Title:} RateCert-HEP
 
-\noindent\textit{CPC Library link to program files:}
-\texttt{[DOI assigned by the CPC Program Library upon deposit]}
-
-\noindent\textit{Developer's repository link:}
-\url{https://github.com/pixele8/ratecert-hep}
+\noindent\textit{Program available from:} CPC Program Library (DOI assigned on
+deposit); developer's repository \url{https://github.com/pixele8/ratecert-hep}
 
 \noindent\textit{Licensing provisions:} MIT
 
-\noindent\textit{Programming language:} Python 3.10
+\noindent\textit{Computer for which the program is designed:} Any platform
+supporting CPython 3.10 or later with NumPy and SciPy
 
-\noindent\textit{Nature of problem:}
-A real-time trigger must be configured against a rate budget, but the number
-that appears in the firmware is not the number the statistician certified.
-Three distinct quantities are routinely conflated: (i) the threshold is chosen
-from a finite calibration sample, so the empirical tail is not a probability;
-(ii) the deployment rate is observed over a finite exposure or a fixed-size
-event sample, so the observed count is not the true rate; and (iii) the rate is
-stored in a counter or register of finite resolution, so a register
-least-significant bit (LSB) is a representation step and not a bound on the
-change induced in the rate by score quantization.  Treating any one of these as
-exact can make a trigger menu appear to satisfy its budget while leaving no
-statistical or numerical margin.
+\noindent\textit{Operating systems under which the program has been tested:}
+Windows 10 (build 19045), tested with CPython 3.10.7, NumPy 1.26.4 and SciPy
+1.15.3
 
-\noindent\textit{Solution method:}
-RateCert-HEP separates the three quantities into independently declared objects
-joined by a single pass predicate.  Threshold selection consumes only the
-calibration block; the selected integer code is frozen and the deployment block
-is evaluated afterwards.  With a known exposure $T$ and observed count $N$ the
-program returns the exact one-sided Poisson upper limit
+\noindent\textit{Programming language used:} Python 3
+
+\noindent\textit{Memory required to execute with typical data:} A few tens of
+MB for a $10^5$-event score array; the core path holds the score stream,
+its fixed-point codes, and $O(u)$ cumulative state for $u$ distinct codes
+
+\noindent\textit{No.\ of bytes in distributed program, including
+initialization files, etc.:} $\approx 2.8\times10^{5}$ bytes (source, tests,
+example scripts and configuration)
+
+\noindent\textit{Distribution format:} tar file / Git repository
+
+\noindent\textit{Keywords:} trigger rate, fixed-point arithmetic, finite-sample
+confidence bound, Poisson upper limit
+
+\noindent\textit{Nature of the physical problem:} A real-time trigger must be
+configured against a rate budget, but the number that appears in the firmware
+is not the number that was statistically certified.  Three distinct quantities
+are routinely conflated: (i) the threshold is chosen from a finite calibration
+sample, so the empirical tail is not a probability; (ii) the deployment rate is
+observed over a finite exposure or a fixed-size event sample, so the observed
+count is not the true rate; and (iii) the rate is stored in a counter or
+register of finite resolution, so a register least-significant bit (LSB) is a
+representation step and not a bound on the change induced in the rate by score
+quantization.  Treating any one of these as exact can make a trigger menu
+appear to satisfy its budget while leaving no statistical or numerical margin.
+
+\noindent\textit{Method of solution:} Exact frequentist tail inversion.  The
+three quantities are kept as independently declared objects joined by a single
+pass predicate.  Threshold selection consumes only the calibration block; the
+selected integer code is frozen and the deployment block is evaluated
+afterwards.  With a known exposure $T$ and observed count $N$ the program
+returns the exact one-sided Poisson upper limit
 $U_\alpha(N,T)=\chi^2_{1-\alpha,2(N+1)}/2T$; with only a fixed-size sample of $n$
 events of which $K$ pass, it returns the exact one-sided Clopper--Pearson
 binomial limit $U_\alpha(K,n)=\mathrm{Beta}^{-1}(1-\alpha;K+1,n-K)$.  Both are
@@ -117,29 +137,32 @@ evaluated through survival functions (\texttt{chi2.isf}, \texttt{beta.isf})
 rather than by forming an inverse cumulative distribution at $1-\alpha$, which
 preserves precision after a family-wise alpha split.  The rate-register
 declaration contributes a deterministic rounding margin ($\Delta_r/2$ for
-nearest-even, $\Delta_r$ for floor or truncation) and a counter full-scale
-range predicate, both kept strictly separate from the statistical bound.  Score
+nearest-even, $\Delta_r$ for floor or truncation) and a counter full-scale range
+predicate, both kept strictly separate from the statistical bound.  Score
 quantization is audited by a distribution-specific diagnostic that is never
 promoted to a universal error bound.  The qualifying configuration satisfies
 $U_\alpha+\delta_r\le R_{\mathrm{budget}}$.  A configuration that fails is
 retained as a valid structured \texttt{NOT\_CERTIFIED} record with explicit
 reasons rather than discarded.
 
-\noindent\textit{Additional comments including restrictions and unusual
-features:}
-The program is model-agnostic: it accepts a caller-supplied score stream and
-does not train, replace, or benchmark a classifier.  It does not choose a
-physics observable, estimate a detector cross section, infer live time from the
-row count of a Monte Carlo file, or synthesize an FPGA design.  When only a
-public fixed-size sample is available it deliberately refuses to emit an
-absolute Hz field unless an external input flux and rate budget are supplied
-together.  The finite-sample guarantee is conditional on the declared sampling
-model; the program ships an executable demonstration of this boundary in which
-bursty and mixed-rate windows with the same nominal mean are correctly refused.
-The reference implementation is a Python throughput measurement and does not
-represent detector or firmware latency.  Core dependencies are NumPy and SciPy;
-pandas/PyTables are required only for the HDF5 public-data adapter and
-Matplotlib only for the figure scripts.
+\noindent\textit{Typical running time:} $2.4$~ms to quantize and $2.8$~ms to
+certify a $10^5$-event acceptance certificate; $7.2$~ms for an
+explicit-exposure rate certificate including the attainable threshold curve
+(median of 20 repeats, Windows 10, CPython 3.10.7).
+
+\noindent\textit{Restrictions and unusual features:} The program is
+model-agnostic: it accepts a caller-supplied score stream and does not train,
+replace, or benchmark a classifier.  It does not choose a physics observable,
+estimate a detector cross section, infer live time from the row count of a
+Monte Carlo file, or synthesize an FPGA design.  When only a public fixed-size
+sample is available it deliberately refuses to emit an absolute Hz field unless
+an external input flux and rate budget are supplied together.  The finite-sample
+guarantee is conditional on the declared sampling model; the program ships an
+executable demonstration of this boundary in which bursty and mixed-rate windows
+with the same nominal mean are correctly refused.  The timing figures are Python
+throughput measurements and do not represent detector or firmware latency.
+Core dependencies are NumPy and SciPy; pandas/PyTables are required only for the
+HDF5 public-data adapter and Matplotlib only for the figure scripts.
 
 \noindent\textit{References:} Clopper and Pearson (1934)~\cite{Clopper1934};
 prior limit-setting programs POLE 1.0~\cite{Conrad2004POLE} and
@@ -399,7 +422,90 @@ input flux is supplied.}
 \label{fig:architecture}
 \end{figure}
 
-\subsection{Algorithms and computational complexity}
+\subsection{Algorithms}
+
+Algorithm~\ref{alg:certify} states the two-call interface that every evidence
+chain in Sec.~\ref{sec:validation} uses: a calibration call that freezes an
+integer threshold, and a deployment call that certifies it on independent
+evidence.  The separation is structural, not conventional --- the deployment
+call receives a threshold code and never the calibration array, so a caller
+cannot accidentally re-certify the block that selected the threshold.
+
+\begin{table}[t]
+\centering\small
+\caption{Threshold selection on the calibration block and certification on the
+deployment block.  The two blocks must be disjoint; a call that presents the
+same block identity twice is refused.}
+\label{alg:certify}
+\begin{tabular}{@{}p{0.94\textwidth}@{}}
+\toprule
+\textbf{Algorithm 1:} certify a fixed-point threshold \\
+\midrule
+\textbf{Input:} calibration scores $C$; deployment scores $D$; exposure $T$ or
+sample size $n$; fixed-point spec $(b,f)$; rate spec $(\Delta_r,B,P)$; budget
+$R_\mathrm{budget}$ or acceptance target $p_\mathrm{target}$; confidence
+$\alpha$; block ids \\
+\textbf{Output:} certificate with status, bound, margin, provenance, reasons \\
+\midrule
+1\ \ $\mathrm{id}_C \gets$ hash of calibration block identifier \\
+2\ \ $\mathrm{id}_D \gets$ hash of deployment block identifier \\
+3\ \ \textbf{if} $\mathrm{id}_C = \mathrm{id}_D$ \textbf{then return}
+NOT\_CERTIFIED (\textit{calibration/deployment overlap}) \\
+4\ \ $c \gets Q_b(C)$ \quad (\textit{vectorized fixed-point codes}, $O(n)$) \\
+5\ \ \textbf{if} any code saturated \textbf{then} record saturation count \\
+6\ \ $u \gets \mathrm{unique}(c)$; $r \gets$ reverse cumulative count of $u$
+\quad (\textit{attainable curve}, $O(n\log n)$) \\
+7\ \ $q \gets \arg\min_{q'\in u}$ having
+$\mathrm{Upper}(r(q'),n,\alpha) < p_\mathrm{target}$ or
+$\mathrm{Upper}(r(q'),T,\alpha)+\delta_r \le R_\mathrm{budget}$ \\
+8\ \ \textbf{if} no such $q'$ \textbf{then return} NOT\_CERTIFIED
+(\textit{target unreachable at this $\alpha$}) \\
+9\ \ $K \gets \#\{d \in Q_b(D) : d \ge q\}$
+\quad (\textit{deployment count, threshold frozen}) \\
+10\ \ $U \gets$ Upper$(K, n$ or $T, \alpha)$
+\quad (\textit{Eq.~\eqref{eq:poisson} or Eq.~\eqref{eq:binomial}}) \\
+11\ \ $\delta_r \gets \Delta_r/2$ \textbf{if} nearest-even \textbf{else}
+$\Delta_r$ \\
+12\ \ \textbf{if} $(2^B-1)\Delta_r < U$ \textbf{then} reason $\gets$ counter
+full scale \\
+13\ \ \textbf{if} $U+\delta_r > R_\mathrm{budget}$ \textbf{then} reason $\gets$
+budget margin \\
+14\ \ \textbf{if} observed count overflows $B$ bits \textbf{then} reason $\gets$
+count overflow \\
+15\ \ \textbf{return} $U$, $\delta_r$, provenance, reasons, and status \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Algorithm~\ref{alg:baseline} states the four bound constructions compared in
+Sec.~\ref{sec:baseline}.  Line 1 is the practice the paper argues against: it
+returns the empirical tail, which is a point estimate and carries no coverage
+guarantee.
+
+\begin{table}[t]
+\centering\small
+\caption{The four upper-bound constructions evaluated on identical deployment
+counts.  Only line 4 inverts an exact discrete sampling tail.}
+\label{alg:baseline}
+\begin{tabular}{@{}p{0.94\textwidth}@{}}
+\toprule
+\textbf{Algorithm 2:} upper bound $\mathrm{Upper}(K,n,\alpha)$ \\
+\midrule
+1\ \ \textbf{empirical:} \textbf{return} $K/n$ \\
+2\ \ \textbf{Wald:} \textbf{return} $\hat p + z_{1-\alpha}
+\sqrt{\hat p (1-\hat p)/n}$, \ where $\hat p = K/n$ \\
+3\ \ \textbf{Wilson:} \textbf{return}
+$\big(\hat p + z^2/2n + z\sqrt{\hat p(1-\hat p)/n + z^2/4n^2}\big)/(1+z^2/n)$,
+\ where $z = z_{1-\alpha}$ \\
+4\ \ \textbf{exact:} \textbf{if} $K = n$ \textbf{return} $1$
+\quad (\textit{the incomplete beta degenerates here}) \\
+\hspace*{2.2em} \textbf{else return}
+$\mathrm{Beta}^{-1}(1-\alpha; K+1, n-K)$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Computational complexity}
 
 For a score array of length $n$, fixed-point conversion is a vectorized pass
 with $O(n)$ time and memory.  The attainable threshold curve is constructed
@@ -672,6 +778,104 @@ coverage.  These are implementation diagnostics, not substitutes for the
 exact Clopper--Pearson or Poisson bounds.}
 \label{fig:coverage}
 \end{figure}
+
+\subsection{Quantitative comparison with alternative bounds}
+\label{sec:baseline}
+
+The preceding sections argue that an exact one-sided bound is the right
+construction, but they do not show what the alternatives would have produced.
+We therefore apply four upper-bound constructions to the \emph{identical} 27
+deployment cells at the same per-cell $\alpha$; only the construction differs.
+The four are the empirical tail reported as if it were a probability
+($U=K/n$), a one-sided normal (Wald) bound, a one-sided Wilson score bound, and
+the exact Clopper--Pearson bound of Eq.~\eqref{eq:binomial} used here.
+
+\begin{table}[t]
+\centering\small
+\caption{The same 27 deployment cells certified under four upper-bound
+constructions, at the identical per-cell $\alpha=0.01/27$.  A cell is certified
+when its bound falls below the requested target.}
+\label{tab:baseline}
+\begin{tabular}{lr}
+\toprule
+Bound construction & Cells certified (of 27) \\
+\midrule
+Empirical tail $K/n$ (no uncertainty) & 27 \\
+One-sided normal (Wald) bound & 20 \\
+One-sided Wilson score bound & 18 \\
+Exact Clopper--Pearson (this work) & 19 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Table~\ref{tab:baseline} is the substance of the argument.  The empirical tail
+certifies \emph{every} cell.  It does so not because every configuration is
+safe but because it carries no uncertainty at all: at $n=10^4$ and a target of
+0.5\% it returns an upper bound of 0.0024 where the exact construction returns
+0.0045, roughly a factor of two optimism from a quantity that is supposed to be
+a bound toward safety.  Reporting $K/n$ as an upper limit is therefore not a
+conservative approximation; it is the removal of the guarantee.
+
+Coverage against a known ground truth makes the consequence explicit.
+Table~\ref{tab:coverage-baseline} draws binomial counts with a declared true
+acceptance probability and measures how often each bound actually contains it,
+at the per-cell $\alpha$ of the public sweep.
+
+\begin{table}[t]
+\centering\small
+\caption{Empirical coverage of the true acceptance probability, nominal
+coverage $0.9996296$, 20{,}000 repeats per setting.  A valid one-sided bound
+must reach the nominal value; a value below it means operating points can be
+certified that should not be.}
+\label{tab:coverage-baseline}
+\begin{tabular}{rrcccc}
+\toprule
+$n$ & true $p$ & Clopper--Pearson & Wilson & Normal & $K/n$ \\
+\midrule
+1{,}000   & 0.005 & 1.000000 & 1.000000 & 0.958500 & 0.559900 \\
+10{,}000  & 0.005 & 0.999750 & 0.999950 & 0.997800 & 0.522150 \\
+10{,}000  & 0.010 & 0.999750 & 0.999800 & 0.998950 & 0.509800 \\
+100{,}000 & 0.010 & 0.999650 & 0.999700 & 0.999300 & 0.505350 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Two results are worth stating precisely.  First, the empirical tail attains
+about 0.51--0.56 coverage against a nominal $0.9996296$.  It is a point
+estimate, so it covers only when the sample proportion happens to exceed the
+true probability, and the certification it grants is not a statistical
+statement at all.  Any workflow that treats a small empirical tail as a
+certified rate inherits this failure mode, and the failure is silent: the
+report looks like a pass.  Second, the one-sided normal bound under-covers at
+the small counts that matter most here ($0.9585$ at $n=10^3$, $p=0.005$),
+which is the known degeneracy of the Wald interval when $n\hat p$ is small ---
+precisely the regime of a high-tail trigger threshold.  It nevertheless
+certifies \emph{more} cells than the exact bound (20 against 19), which is
+exactly backwards: the construction that fails to cover is the one that is more
+permissive.  Figure~\ref{fig:baseline} shows both effects together.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{baseline_coverage}
+\caption{Baseline comparison.  (a) Empirical coverage of the true acceptance
+probability against the nominal $0.9996296$, 20{,}000 repeats per setting.  The
+normal bound under-covers at small counts; the empirical tail covers roughly
+half the time.  (b) Certification decisions of the four constructions on the
+identical 27 deployment cells.  More certifiable is not better: the empirical
+tail certifies every cell while providing no coverage guarantee.}
+\label{fig:baseline}
+\end{figure}
+
+Wilson's interval tracks the exact bound closely in coverage and is the
+strongest of the three alternatives; we do not claim otherwise.  The reason we
+ship the exact construction rather than Wilson is not superior coverage but
+non-negotiability.  Clopper--Pearson is an inversion of the exact discrete
+sampling tail, so its coverage is guaranteed at every $(n,p)$ rather than
+asymptotically, and the guarantee is what a rate-budget pass is supposed to
+mean.  The price is visible in Table~\ref{tab:baseline}: two cells that Wilson
+would certify are refused here.  We regard refusing a marginal cell as the
+correct behaviour for a certification tool, and the refusal is retained with
+its reason rather than dropped.
 
 \subsection{Evidence-chain summary}
 
