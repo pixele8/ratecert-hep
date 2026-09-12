@@ -238,7 +238,7 @@ measurements and do not represent detector or firmware latency.
 | Path | Contents |
 | --- | --- |
 | `src/ratecert/` | Core package: `core.py`, `acceptance.py`, `public_data.py`, `cli.py`, `io.py` |
-| `tests/` | 39-test suite asserting scientific invariants, including the worked example |
+| `tests/` | 78-test suite asserting scientific invariants, including the worked example |
 | `examples/` | Benchmark, figure, coverage-stress, and replay-table scripts |
 | `configs/` | Example configuration files |
 | `reports/` | Checked-in JSON reports and generated figures |

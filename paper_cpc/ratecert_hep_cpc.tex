@@ -652,10 +652,24 @@ call per candidate when calibration confidence is requested.  The final
 certificate requires one count, one special-function evaluation, and constant
 size metadata.
 
-The quantization audit has two paths.  It uses a histogram and reverse
-cumulative sum for quantized counts, then a sorted raw array for the descriptive
-unquantized comparison.  Its memory use is linear in the supplied score stream;
-the audit is therefore explicit and can be omitted in a latency-critical
+We record that the acceptance-threshold selector did not initially honour this
+complexity.  It evaluated the criterion by rescanning the score array once per
+distinct code, which is the $O(nu)$ construction the paragraph above warns
+against; at $10^5$ events and a 16-bit format it took $14.1$~s, against
+$0.009$~s once rewritten as a single unique-plus-reverse-cumulative-sum pass,
+a factor of about $1600$.  The rewrite is bit-identical on $400$ randomised
+configurations, and a regression test asserts both the agreement and the
+timing.  The complexity statement is now a property of the code rather than an
+intention.
+
+The quantization audit has two paths.  It builds its histogram over the distinct
+observed codes rather than over the whole representable code range, so its
+memory is bounded by the number of distinct codes in the supplied stream: an
+implementation that allocated one bin per representable code would need $8\cdot
+2^{b}$ bytes and exhaust memory on a three-element input at $b=32$.  It then uses
+a sorted raw array for the descriptive unquantized comparison, so memory remains
+linear in the supplied score stream; the audit is therefore explicit and can be
+omitted in a latency-critical
 caller while retaining the certificate contract.
 
 \subsection{Certificate schema}
@@ -1336,7 +1350,7 @@ who does not have the public file can still run the synthetic certificate and
 all core tests, while the public-data result is correctly unavailable rather
 than silently replaced by synthetic rows.
 
-The current run produces 39 passing tests, the 27-cell public report, and the
+The current run produces 78 passing tests, the 27-cell public report, and the
 36-cell explicit-rate report.  It also produces the architecture diagram,
 three diagnostic figures plus the assumption-boundary stress figure (each in
 300 dpi PNG and vector PDF form), a reviewer replay table, a timing report,
@@ -1489,7 +1503,7 @@ adapter can reuse the cumulative-code and JSON layers while replacing the
 independent-block assumption with a declared sequential confidence procedure.
 
 The distributed release includes a compact verification checklist: install the
-core extra, run the synthetic certificate, run the 39-test suite, replay the
+core extra, run the synthetic certificate, run the 78-test suite, replay the
 public-data command when the 74 MB file is available, inspect the JSON refusal
 reasons, and regenerate both figure formats.  Each step has a checked-in input
 or a precise external-data hash, so a failure can be localized to dependencies,
@@ -1554,7 +1568,7 @@ the contribution on the reference platform:
 
 \begin{enumerate}
 \item Install the package with the core and development extras, then run the
-      39-test suite.
+      78-test suite.
 \item Run the minimal synthetic example and inspect the separate raw and
       prescaled rates in its JSON output.
 \item When the LHCO file is available, run the public acceptance command and

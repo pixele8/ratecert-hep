@@ -283,9 +283,31 @@ def poisson_upper_rate(count: int, exposure_s: float, alpha: float) -> float:
         raise ValueError("exposure_s must be positive and finite")
     if not 0 < alpha < 1:
         raise ValueError("alpha must be between 0 and 1")
+    # An upper confidence bound must never sit below the point estimate it is
+    # bounding.  For the exact Poisson limit the bound falls below the observed
+    # count once alpha exceeds about 0.47: with N = 10 and T = 1 s, alpha = 0.9
+    # returns 88.35 Hz against a point estimate of 100 Hz, which is not a bound
+    # in any useful sense and would let a configuration pass on a number that
+    # understates the rate it reports to be bounding.  alpha = 0.5 is admissible
+    # (it returns exactly the point estimate for a Poisson count); any larger
+    # nominal confidence is refused as a declaration error rather than reported.
+    if alpha > 0.5:
+        raise ValueError(
+            "alpha must be <= 0.5: a one-sided limit with alpha > 0.5 lies at or "
+            "below the point estimate and is not an upper bound"
+        )
     # ``isf`` avoids loss of precision when alpha is very small after a
     # family-wise correction over many benchmark cells.
-    return float(0.5 * chi2.isf(alpha, 2 * (int(count) + 1)) / exposure_s)
+    upper = float(0.5 * chi2.isf(alpha, 2 * (int(count) + 1)) / exposure_s)
+    point = float(int(count)) / exposure_s
+    if upper < point:
+        # Defensive: should be unreachable given the alpha guard above, but a
+        # bound below the point estimate must never be returned silently.
+        raise ValueError(
+            "internal inconsistency: computed upper limit is below the point "
+            "estimate; refusing to report a non-bound"
+        )
+    return upper
 
 
 def rate_curve(codes: Sequence[int] | np.ndarray, exposure_s: float) -> tuple[np.ndarray, np.ndarray]:

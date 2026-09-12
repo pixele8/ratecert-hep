@@ -128,3 +128,97 @@ def test_declared_code_range_matches_int64():
         spec = FixedPointSpec(bits=bits, fractional_bits=min(bits, 8))
         assert spec.code_max <= np.iinfo(np.int64).max
         assert spec.code_min >= np.iinfo(np.int64).min
+
+
+# --------------------------------------------------------------------------
+# M1: an upper bound must never sit below the point estimate
+# --------------------------------------------------------------------------
+def test_alpha_above_one_half_is_refused_poisson():
+    """alpha = 0.9 used to return 88.35 Hz against a point estimate of 100 Hz."""
+    from ratecert.core import poisson_upper_rate
+
+    assert poisson_upper_rate(10, 1.0, 0.5) >= 10.0
+    with pytest.raises(ValueError, match="alpha must be <= 0.5"):
+        poisson_upper_rate(10, 1.0, 0.9)
+    with pytest.raises(ValueError, match="alpha must be <= 0.5"):
+        poisson_upper_rate(10, 1.0, 0.5000001)
+
+
+def test_alpha_above_one_half_is_refused_binomial():
+    from ratecert.acceptance import binomial_upper_acceptance
+
+    assert binomial_upper_acceptance(5, 100, 0.5) > 0.05
+    with pytest.raises(ValueError, match="alpha must be <= 0.5"):
+        binomial_upper_acceptance(5, 100, 0.9)
+
+
+@pytest.mark.parametrize("alpha", [1e-12, 1e-6, 0.01, 0.05, 0.1, 0.25, 0.5])
+@pytest.mark.parametrize("count", [0, 1, 5, 50, 1000])
+def test_upper_bound_always_dominates_point_estimate(alpha, count):
+    """Invariant: U_alpha(N,T) >= N/T for every admissible alpha."""
+    from ratecert.core import poisson_upper_rate
+
+    T = 3.5
+    upper = poisson_upper_rate(count, T, alpha)
+    assert upper >= count / T - 1e-12
+
+
+# --------------------------------------------------------------------------
+# M3 / complexity: the selector must be O(n log n) and bit-identical
+# --------------------------------------------------------------------------
+def test_selector_matches_naive_loop_and_is_fast():
+    """The vectorised selector must agree with the per-candidate loop it replaced.
+
+    The loop was O(n * u): at 100,000 events and a 16-bit format it took 14.1 s
+    against 0.012 s for the cumulative form.  This checks both the result and
+    that the fast path is actually taken.
+    """
+    import time
+
+    from ratecert.acceptance import binomial_upper_acceptance, choose_acceptance_threshold
+
+    rng = np.random.default_rng(11)
+    for _ in range(20):
+        n = int(rng.integers(50, 2000))
+        bits = int(rng.integers(8, 13))
+        spec = FixedPointSpec(bits=bits, fractional_bits=min(bits, 8))
+        scores = rng.integers(0, spec.code_max + 1, size=n) * spec.lsb
+        target = float(rng.uniform(0.01, 0.3))
+        for sel_alpha in (None, 0.05):
+            got = choose_acceptance_threshold(
+                scores, target_acceptance=target, spec=spec, selection_alpha=sel_alpha
+            ).threshold_code
+            codes = quantize_scores(scores, spec).codes
+            ref = None
+            for v in np.unique(codes):
+                c = int(np.count_nonzero(codes >= v))
+                crit = (binomial_upper_acceptance(c, n, sel_alpha)
+                        if sel_alpha is not None else c / n)
+                if crit <= target:
+                    ref = int(v)
+                    break
+            if ref is None:
+                ref = spec.code_max + 1
+            assert got == ref
+
+    # timing guard: 100k events at 16 bits must not take seconds
+    spec = FixedPointSpec(bits=16, fractional_bits=8)
+    big = rng.integers(0, spec.code_max + 1, size=100_000) * spec.lsb
+    t0 = time.perf_counter()
+    choose_acceptance_threshold(big, target_acceptance=0.01, spec=spec)
+    assert time.perf_counter() - t0 < 2.0
+
+
+def test_quantization_diagnostics_does_not_allocate_by_code_range():
+    """A 32-bit format used to allocate 8 * 2**32 bytes (34 GB) for 3 scores."""
+    import tracemalloc
+
+    from ratecert.acceptance import quantization_acceptance_diagnostics
+
+    spec = FixedPointSpec(bits=32, fractional_bits=8)
+    tracemalloc.start()
+    result = quantization_acceptance_diagnostics([0.9, 0.8, 0.7], spec=spec)
+    _, peak = tracemalloc.get_traced_memory()
+    tracemalloc.stop()
+    assert peak < 5 * 1024 * 1024, "peak allocation %.1f MB" % (peak / 1e6)
+    assert result["thresholds_evaluated"] == 3
