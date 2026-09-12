@@ -1,36 +1,34 @@
-"""Numerical comparison against independently published limit-setting methods.
-
-Two external reference methods are used, both from the published literature:
-
-1.  CLs upper limits, computed with **pyhf** (Heinrich et al., JOSS 6 (2021)
-    2823), the maintained pure-Python implementation of the HistFactory
-    statistical model.  This is the modern standard in HEP limit setting.
-
-2.  The **profile-likelihood** construction of TRolke 2.0 (Lundberg et al.,
-    Comput. Phys. Commun. 181 (2010) 683-686), reimplemented here directly from
-    the published method because ROOT/TRolke has no Windows wheel.  This is
-    stated plainly: it is a reimplementation, not the original code.
+"""Compare the exact one-sided Poisson limit against a published construction.
 
 Our own tool computes the exact one-sided Poisson upper limit
-U_alpha(N,T) = chi2_{1-alpha,2(N+1)} / (2T), the Garwood / Clopper-Pearson
-construction.
+    U_alpha(N,T) = chi2.isf(alpha, 2(N+1)) / (2T),
+the Garwood / Clopper-Pearson construction.  This script compares it with the
+**profile-likelihood** construction of Rolke, Lopez and Conrad
+(Nucl. Instrum. Meth. A 551 (2005) 493) as implemented by TRolke 2.0
+(Lundberg et al., Comput. Phys. Commun. 181 (2010) 683-686), reimplemented here
+directly from the published method because ROOT/TRolke has no Windows wheel.
 
-SCOPE, STATED HONESTLY
-----------------------
-These methods answer *different* statistical questions and are not expected to
-agree numerically:
+WHAT THIS IS AND IS NOT
+-----------------------
+This is a SELF-CONSISTENCY check, not independent validation.  The
+reimplementation is ours, it lives in this file, and it uses the same scipy
+quantile routine as the exact limit; the script never imports `ratecert`, so the
+package under test is not executed by it at all.  What the comparison does show
+is that the two constructions are the same limit asymptotically, which is the
+behaviour a correct transcription of the closed form must exhibit and which a
+transcription error would destroy.
 
-* the exact one-sided Poisson limit bounds a rate from a count with a
-  frequentist coverage guarantee and no signal model;
-* the profile-likelihood limit inverts a likelihood ratio and needs a model;
-* CLs is a modified frequentist exclusion criterion that is deliberately
-  conservative, because it protects against excluding a background-only
-  hypothesis on a downward fluctuation.
-
-The purpose of the comparison is therefore not "who is right", but to place our
-number on the same axis as the field's standard tools, and to quantify the
-spread.  Where CLs is tighter than the one-sided Poisson limit, that is a
-statement about the different question, not about a numerical error.
+A CLs COLUMN WAS WITHDRAWN
+--------------------------
+An earlier revision of this script also computed a pyhf CLs limit and placed it
+beside the exact limit.  That comparison was not apples-to-apples -- CLs bounds a
+signal strength in a model that already contains background while the exact limit
+bounds a total rate, so the two columns reported different parameters -- and pyhf
+defaults to an asymptotic formula that is least reliable at the low counts where
+the comparison was most interesting.  A reader who wants it should fix the model,
+state the computational type, and quote both parameters explicitly.  Withdrawing
+it also removed a silent-failure path: the old code caught the pyhf import error
+and rewrote its report with null substitutions.
 """
 
 from __future__ import annotations
@@ -71,22 +69,6 @@ def exact_one_sided_poisson(n_obs: int, exposure: float, alpha: float) -> float:
 # --------------------------------------------------------------------------
 # TRolke-style profile likelihood, for a Poisson count with no background
 # --------------------------------------------------------------------------
-def _pyhf_version() -> str | None:
-    """Version of pyhf, or None when it is not installed.
-
-    Must never raise: the whole point of the optional `comparison` extra is that
-    the CLs column degrades to "n/a" without pyhf, and the report is still
-    written.  An unconditional __import__ here would crash the script after the
-    graceful degradation in cls_upper_background_rate had already run, so the
-    report would never be produced at all.
-    """
-    try:
-        import pyhf
-        return pyhf.__version__
-    except Exception:
-        return None
-
-
 def profile_likelihood_upper(n_obs: int, exposure: float, alpha: float) -> float | None:
     """Upper limit on the rate from the profile-likelihood ratio (PDG form).
 
@@ -97,25 +79,28 @@ def profile_likelihood_upper(n_obs: int, exposure: float, alpha: float) -> float
 
     which is zero at the maximum-likelihood mu_hat = n and strictly increasing
     for mu > n.  The one-sided upper limit solves this equal to the chi-square
-    quantile with one degree of freedom at 2*alpha, the standard PDG convention.
+    quantile with one degree of freedom at 2*alpha, the standard PDG convention
+    (TRolke calls ChisquareQuantile(fCL, 1); the one-sided use CL = 0.90 gives
+    exactly 2.705543).
 
-    This is the construction used by TRolke for the no-nuisance-parameter case.
-    It is a REIMPLEMENTATION from the published method, not the original code:
-    ROOT/TRolke has no Windows wheel and could not be installed here.
+    At n = 0 the statistic is NOT undefined: with L(0) = 1 and L(mu) = exp(-mu)
+    it reduces to 2*mu exactly, so the limit is chi2.isf(2*alpha, 1)/2.  An
+    earlier revision of this script refused the n = 0 row and the manuscript
+    described that refusal as a mathematical degeneracy; it was neither.
+    Refusing also hid the row where the asymptotic approximation is worst
+    (0.067639 Hz against an exact 0.149787 Hz, a factor of 2.21).
 
-    Validated in this script against the exact Poisson limit: the two agree to
-    0.001% at n = 1e5 and differ by 23% at n = 1, which is the expected
-    behaviour of the asymptotic likelihood-ratio construction.
-
-    Returns None for n = 0, where the ratio is not defined this way and the
-    program deliberately refuses rather than substituting an approximation.
+    This is a REIMPLEMENTATION from the published method, not the original code:
+    ROOT/TRolke has no Windows wheel and could not be installed here.  Because
+    it is ours and runs inside this same script, agreement with the exact limit
+    is SELF-CONSISTENCY, not independent validation.
     """
     from scipy.optimize import brentq
 
-    if n_obs == 0:
-        return None
-
     q = chi2.isf(2.0 * alpha, 1)
+
+    if n_obs == 0:
+        return float(q / 2.0 / exposure)
 
     def ratio(lam: float) -> float:
         mu = lam * exposure
@@ -131,50 +116,24 @@ def profile_likelihood_upper(n_obs: int, exposure: float, alpha: float) -> float
 
 
 # --------------------------------------------------------------------------
-# CLs via pyhf
+# The CLs column has been WITHDRAWN, and is deliberately not computed here.
+#
+# An earlier revision of this script and of the manuscript placed a pyhf CLs
+# limit beside the exact limit under a caption promising "identical inputs".
+# That comparison is not apples-to-apples: CLs bounds a SIGNAL strength in a
+# model that already contains background, whereas the exact one-sided limit
+# bounds the TOTAL rate, so the two columns report different parameters.  The
+# gap at N = 0 was about two thirds parameter mismatch.
+#
+# A second problem is that pyhf defaults to an asymptotic formula
+# (calctype="asymptotics"), which is least reliable exactly where the comparison
+# was most interesting: at N = 0 a toy-based CLs limit is roughly 3.3 events
+# against the asymptotic 2.2, so the published N = 0 row would flip sign.
+#
+# Rather than relabel a misleading comparison we removed it.  A reader who wants
+# it should fix the model, state the computational type, and quote both
+# parameters explicitly.
 # --------------------------------------------------------------------------
-CLS_SIGNAL_SCALE = 10.0
-
-
-def cls_upper_background_rate(n_obs: int, exposure: float,
-                              alpha: float) -> tuple[float, float] | None:
-    """CLs upper limit from pyhf, returned as (count_limit, rate_limit).
-
-    Implementation notes that matter for reproducing this number:
-
-    * The model is a single-bin counting experiment with zero signal shape
-      nuisance and a small background, used only to give the POI a well-defined
-      likelihood.  The POI `mu` multiplies a signal of size
-      ``CLS_SIGNAL_SCALE``, so the limit on the expected *count* is
-      ``mu_limit * CLS_SIGNAL_SCALE``.
-    * pyhf bounds the POI to ``(0, 10)`` by default and its root finder
-      overshoots the scan maximum, so the scan must be the closed interval
-      ``[0, 10]``.  With the scale below, that covers counts up to 100.
-      Counts whose limit would exceed that range are reported as unavailable
-      rather than as a boundary value.
-    """
-    try:
-        import pyhf
-    except Exception:
-        return None
-
-    pyhf.set_backend("numpy")
-    model = pyhf.simplemodels.uncorrelated_background(
-        signal=[CLS_SIGNAL_SCALE], bkg=[0.5], bkg_uncertainty=[0.1]
-    )
-    data = [n_obs] + model.config.auxdata
-    scan = np.linspace(0.0, 10.0, 200)
-    try:
-        mu_limit, _ = pyhf.infer.intervals.upper_limits.upper_limit(
-            data, model, scan=scan, level=alpha
-        )
-        mu = float(mu_limit)
-        if mu >= 9.99:
-            return None  # ran into the POI bound: not a converged limit
-        count_limit = mu * CLS_SIGNAL_SCALE
-        return count_limit, count_limit / exposure
-    except Exception:
-        return None
 
 
 def main() -> int:
@@ -182,29 +141,26 @@ def main() -> int:
     alpha = 0.05
     counts = [0, 1, 2, 5, 10, 20, 50]
 
-    print("=" * 100)
+    print("=" * 80)
     print("COUNTING-EXPERIMENT COMPARISON  (T = %.0f s, 1 - alpha = %.2f)"
           % (exposure, 1 - alpha))
-    print("=" * 100)
-    print("%5s %15s %15s %15s %13s"
-          % ("N", "exact 1-sided", "profile-lik.", "CLs (pyhf)", "CLs/exact"))
+    print("The profile-likelihood column is OUR reimplementation, run in this")
+    print("same script, so agreement is SELF-CONSISTENCY, not independent")
+    print("validation.  No CLs column: see the note above.")
+    print("=" * 80)
+    print("%5s %15s %18s %14s"
+          % ("N", "exact 1-sided", "profile-lik.", "rel. diff"))
     rows = []
     for n in counts:
         ex = exact_one_sided_poisson(n, exposure, alpha)
         pl = profile_likelihood_upper(n, exposure, alpha)
-        cls = cls_upper_background_rate(n, exposure, alpha)
-        cls_rate = cls[1] if cls else None
-        ratio = (cls_rate / ex) if cls_rate is not None else None
-        rows.append({
-            "n": n, "exact": ex, "profile": pl,
-            "cls": cls_rate, "cls_count": (cls[0] if cls else None),
-            "cls_over_exact": ratio,
-        })
-        print("%5d %15.6f %15s %15s %13s"
+        rel = (abs(ex - pl) / ex) if pl is not None else None
+        rows.append({"n": n, "exact": ex, "profile": pl,
+                     "rel_diff": rel})
+        print("%5d %15.6f %18s %14s"
               % (n, ex,
-                 ("%.6f" % pl) if pl is not None else "n/a (refused)",
-                 ("%.6f" % cls_rate) if cls_rate is not None else "n/a (beyond POI bound)",
-                 ("%.4f" % ratio) if ratio is not None else "n/a"))
+                 ("%.6f" % pl) if pl is not None else "n/a",
+                 ("%.4f%%" % (100 * rel)) if rel is not None else "n/a"))
 
     pairs = [r for r in rows if r["profile"] is not None]
     print()
@@ -215,20 +171,9 @@ def main() -> int:
     print("   -> agrees to %.3f%% already at N=%d, and the agreement tightens with N:"
           % (max(100 * abs(r["exact"] - r["profile"]) / r["exact"] for r in big), big[0]["n"]))
     print("      the published profile-likelihood construction tends to our exact")
-    print("      one-sided limit asymptotically. This is a validation of our number.")
-
-    clsrows = [r for r in rows if r["cls_over_exact"] is not None]
-    if clsrows:
-        ratios = [r["cls_over_exact"] for r in clsrows]
-        print()
-        print("CLs / exact-one-sided ratio over N = %s: min %.3f  max %.3f"
-              % ([r["n"] for r in clsrows], min(ratios), max(ratios)))
-        print("  CLs is systematically TIGHTER, as expected and not a discrepancy:")
-        print("  CLs is a modified-frequentist EXCLUSION criterion with background")
-        print("  protection, so it deliberately does not provide the coverage")
-        print("  guarantee that our one-sided limit does. The two are on the same")
-        print("  axis but answer different questions; the comparison is reported to")
-        print("  locate our number relative to the field's standard tool.")
+    print("      one-sided limit asymptotically, which is the behaviour a correct")
+    print("      transcription must show.  This is self-consistency, NOT an")
+    print("      independent check: the reimplementation is ours and runs here.")
 
     report = {
         "study": "RateCert-HEP external tool comparison",
@@ -237,10 +182,7 @@ def main() -> int:
         "methods": {
             "exact_one_sided_poisson": "chi2_{1-a,2(N+1)}/2T (this work)",
             "profile_likelihood": "TRolke 2.0 construction, reimplemented from the publication",
-            "cls": "pyhf upper_limit, level=alpha, explicit scan",
         },
-        "pyhf_version": _pyhf_version(),
-        "cls_signal_scale": CLS_SIGNAL_SCALE,
         "rows": rows,
         "rel_diff_exact_vs_profile": {
             str(r["n"]): abs(r["exact"] - r["profile"]) / r["exact"]

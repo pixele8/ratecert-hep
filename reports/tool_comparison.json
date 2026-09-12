@@ -4,70 +4,54 @@
   "alpha": 0.05,
   "methods": {
     "exact_one_sided_poisson": "chi2_{1-a,2(N+1)}/2T (this work)",
-    "profile_likelihood": "TRolke 2.0 construction, reimplemented from the publication",
-    "cls": "pyhf upper_limit, level=alpha, explicit scan"
+    "profile_likelihood": "TRolke 2.0 construction, reimplemented from the publication"
   },
-  "pyhf_version": "0.7.6",
-  "cls_signal_scale": 10.0,
   "rows": [
     {
       "n": 0,
       "exact": 0.14978661367769958,
-      "profile": null,
-      "cls": 0.11234578170161338,
-      "cls_count": 2.2469156340322676,
-      "cls_over_exact": 0.7500388649105268
+      "profile": 0.0676385863523855,
+      "rel_diff": 0.5484337038426844
     },
     {
       "n": 1,
       "exact": 0.23719322591952893,
       "profile": 0.18232772336150568,
-      "cls": 0.18103775592573706,
-      "cls_count": 3.620755118514741,
-      "cls_over_exact": 0.7632501106383056
+      "rel_diff": 0.23131142276650482
     },
     {
       "n": 2,
       "exact": 0.3147896810935995,
       "profile": 0.26515182724637076,
-      "cls": 0.2509822872917647,
-      "cls_count": 5.019645745835294,
-      "cls_over_exact": 0.7973015075330174
+      "rel_diff": 0.15768577189310545
     },
     {
       "n": 5,
       "exact": 0.5256517454370768,
       "profile": 0.48149982257578167,
-      "cls": 0.4583226416996046,
-      "cls_count": 9.166452833992093,
-      "cls_over_exact": 0.8719130977459452
+      "rel_diff": 0.0839946280870485
     },
     {
       "n": 10,
       "exact": 0.8481109617860948,
       "profile": 0.8069904612109368,
-      "cls": 0.7824120806746584,
-      "cls_count": 15.648241613493168,
-      "cls_over_exact": 0.9225350407297217
+      "rel_diff": 0.048484812044593276
     },
     {
       "n": 20,
       "exact": 1.4531009420217005,
       "profile": 1.4142088311391667,
-      "cls": 1.3897014922839028,
-      "cls_count": 27.794029845678057,
-      "cls_over_exact": 0.9563695488012072
+      "rel_diff": 0.026764906523577863
     },
     {
       "n": 50,
       "exact": 3.1643537047873584,
       "profile": 3.1274833782920126,
-      "cls": 3.1028662939973417,
-      "cls_count": 62.05732587994683,
-      "cls_over_exact": 0.9805687301337419
+      "rel_diff": 0.011651771557510977
     }
   ],
   "rel_diff_exact_vs_profile": {
+    "0": 0.5484337038426844,
     "1": 0.23131142276650482,
     "2": 0.15768577189310545,
     "5": 0.0839946280870485,

@@ -161,13 +161,14 @@ absolute Hz field unless an external input flux and rate budget are supplied
 together.  The finite-sample guarantee is conditional on the declared sampling
 model; the program ships an executable demonstration of this boundary in which
 bursty and mixed-rate windows with the same nominal mean are correctly refused.
-The program is a reference implementation: on the reference platform it
-requires 2.4\,ms to quantize and 2.8\,ms to certify a $10^5$-event acceptance
-certificate, and 7.2\,ms for an explicit-exposure rate certificate including
-the attainable threshold curve.  These are CPython throughput measurements and
-do not represent detector or firmware latency.  Core dependencies are NumPy and
-SciPy; pandas/PyTables are required only for the HDF5 public-data adapter and
-Matplotlib only for the figure scripts.
+The program is a reference implementation: on the reference platform the median
+time to quantize a $10^5$-event stream is $3.2$\,ms, to certify it against a
+target acceptance is $4.6$\,ms, and to produce an explicit-exposure rate
+certificate including the attainable threshold curve is $10.2$\,ms (20 repeats;
+the last figure rises to $17.5$\,ms under machine load).  These are CPython
+throughput measurements and do not represent detector or firmware latency.  Core
+dependencies are NumPy and SciPy; pandas/PyTables are required only for the HDF5
+public-data adapter and Matplotlib only for the figure scripts.
 
 \vspace{2pt}
 \begin{refnummer}
@@ -467,20 +468,35 @@ inequality~\cite{Dvoretzky1956}; the sharp constant used below is due to
 Massart~\cite{Massart1990}.  For any $\alpha>0$, with
 $\varepsilon_n=\sqrt{\ln(2/\alpha)/2n}$ the empirical CDF satisfies
 $\sup_x|\hat F_n(x)-F(x)|\le\varepsilon_n$ with probability at least
-$1-\alpha$, so the symmetric mass in Eq.~\eqref{eq:quant-bound} is bounded above
-by
+$1-\alpha$, so the half-cell mass in Eq.~\eqref{eq:quant-identity} is bounded
+above by
 \begin{equation}
- \hat F_n\!\left(b_q+\tfrac{\Delta_s}{2}\right)
- -\hat F_n\!\left(b_q-\tfrac{\Delta_s}{2}\right)+2\varepsilon_n .
+ \hat F_n(b_q)-\hat F_n\!\left(b_q-\tfrac{\Delta_s}{2}\right)+2\varepsilon_n ,
  \label{eq:quant-dkw}
 \end{equation}
-The first two terms are the empirical cell mass and the third is the price of
-estimating it.  This converts a descriptive diagnostic into a one-sided
+where $\hat F_n$ is the right-continuous empirical CDF,
+$\hat F_n(x)=\frac1n\sum_i \mathbf{1}[S_i\le x]$.  The convention matters and we
+state it because the symmetric form written with the same convention is
+\emph{not} a valid bound: the right-continuous $\hat F_n(b_q-\Delta_s/2)$
+already includes an atom sitting exactly at $b_q-\Delta_s/2$, which is the
+endpoint our own parity discussion above identifies as discriminating, so
+subtracting it drops that atom entirely.  In the worst case --- every score at
+that endpoint, $\alpha=0.05$, $n=10^4$ --- the symmetric expression evaluates to
+$0.027$ while the true mass and the true $|\Delta\text{ acceptance}|$ are both
+$1.0$.  The form used here is the half-cell, whose upper endpoint is excluded, so
+the atom is counted.  A reader re-deriving this should test an atom at
+$b_q-\Delta_s/2$ rather than a smooth density, since a continuous distribution
+cannot distinguish the two conventions.
+The first two terms are the empirical half-cell mass and the third is the price
+of estimating it.  This converts a descriptive diagnostic into a one-sided
 confidence statement that the quantization effect cannot exceed a stated value.
 
 The bound is not free, and the cost is worth stating plainly.  At $n=10^4$ and
-$\alpha=0.05$, $2\varepsilon_n\approx 0.027$, two orders of magnitude larger
-than the effects actually present in the LHCO sweep.  The DKW route therefore
+$\alpha=0.05$, $2\varepsilon_n\approx 0.027$, which is of the same order as the
+quantization effects actually present in the LHCO sweep ($0.0559$, $0.0146$ and
+$0.0041$ for 8, 10 and 12 bits): the DKW price is smaller than the 8-bit effect
+and larger than the 12-bit one.  An earlier revision described it as ``two orders
+of magnitude larger'', which its own numbers refute.  The DKW route therefore
 makes the statement rigorous but not tight at realistic sample sizes; it is the
 identity~\eqref{eq:quant-identity}, exact rather than conservative, that is
 immediately useful, and the Lipschitz form~\eqref{eq:quant-lipschitz} that is
@@ -819,12 +835,21 @@ We include a timing diagnostic to expose the cost of the Python reference
 implementation without presenting it as detector latency.  On an Intel
 Core i7-10750H laptop (6 physical cores, Python 3.10.7, NumPy 1.26.4, SciPy
 1.15.3), 20 median timings were collected for a 100,000-event array.  The
-vectorized score quantizer took 2.37 ms, the public acceptance certificate
-2.81 ms, and the explicit rate certificate 7.20 ms.  The latter includes the
-attainable threshold curve and its cumulative-code implementation.  These
-figures are reference-platform throughput measurements; firmware clocking,
-memory layout, detector deadtime, and trigger latency remain outside the
-scope of this release.
+vectorized score quantizer has a median of $3.20$~ms (min $2.40$, max $4.02$),
+the public acceptance certificate $4.57$~ms (min $3.13$, max $6.73$), and the
+explicit rate certificate $10.2$~ms (min $9.26$, max $12.2$); the last includes
+the attainable threshold curve and its cumulative-code implementation.
+
+These are single-machine throughput measurements and we do not present them as
+more than that.  Re-measuring the same code on the same machine while other work
+was running moved the explicit-rate median to $17.5$~ms, so the figure depends on
+machine load and a bare point value would mislead.  We therefore report the
+committed $20$-repeat distribution rather than a single median, and record that
+an earlier revision of this section quoted $2.37/2.81/7.20$~ms, all three of
+which lie below the minimum of the distribution they were said to summarise.
+Firmware clocking, memory layout, detector deadtime, and trigger latency remain
+outside the scope of this release; the scaling behaviour, not the absolute
+number, is what a reader should take from this diagnostic.
 
 % ---------------------------------------------------------------------------
 \section{Results}
@@ -845,15 +870,47 @@ exposures.}
 
 \subsection{Acceptance and quantization}
 
-The public experiment certifies 19 of 27 cells.  The eight refusals occur when
-the independent finite-sample upper acceptance remains above the requested
-target, primarily for the 0.5\% target at smaller prefixes.  The result is
-expected: increasing the number of events tightens the upper limit, while the
-certificate does not relax its confidence requirement to preserve a high pass
-rate.
+The public experiment certifies 19 of 27 cells.  The eight refusals all occur at
+the $50{,}000$ and $100{,}000$ prefixes --- none at $10{,}000$ --- and they split
+as $3$ at the $0.5\%$ target and $1$ at $1\%$ for the $50{,}000$ prefix, and $2$
+at $0.5\%$ and $2$ at $1\%$ for the $100{,}000$ prefix; the $2\%$ target is
+certified at every prefix for every width.
+
+We state the mechanism explicitly because the intuitive reading is the wrong way
+round.  One might expect a larger deployment block to help, since more events
+tighten the upper limit.  What actually moves is the \emph{calibration}
+selector.  At the $10{,}000$-event calibration block the empirical tail sits at
+$0.0025$ against a $0.5\%$ target, and the one-sided calibration upper bound at
+the per-cell $\alpha$ is loose enough that the selected code is pushed high
+(code 124 at 8 bits), so the deployment block accepts very few events and passes
+comfortably.  At $50{,}000$ and $100{,}000$ the calibration tail rises to about
+$0.0036$--$0.0042$ and the same selector returns a \emph{lower} code (117), which
+raises the deployment acceptance into the range where the independent upper bound
+exceeds the target.  The refusals are therefore driven by the calibration-side
+selection moving the operating point, not by the deployment bound tightening with
+sample size, and they appear at the larger prefixes rather than the smaller ones.
+All eight carry the same single reason,
+\textit{finite-sample upper acceptance exceeds target\_acceptance}.
+
+One consequence of the nested design deserves to be stated rather than left
+implicit.  The three prefixes are nested ($10{,}000\subset50{,}000\subset
+100{,}000$) and, at fixed prefix, the nine cells share one deployment array and
+differ only through the quantized threshold.  Bonferroni's union bound requires
+no independence, so the family-wise statement of Eq.~\eqref{eq:familywise} is
+unaffected and is merely conservative here, and the reports record the sharing.
+What the design does not provide is replication: the effective number of
+independent deployment blocks is three, the sample-size axis is a single
+realization read at increasing depth and therefore carries no error bar, and the
+verdict for identical events can still turn on the score width.  At the
+$100{,}000$ prefix and $0.5\%$ target, for instance, the 8-bit cell is certified
+(count 424, upper $0.004979$) while the 10- and 12-bit cells are refused (450 and
+455, upper $0.005259$ and $0.005313$): a quantization-induced count change of
+about $3\%$ flips the published verdict.  We report this rather than presenting
+19 of 27 as nineteen independent confirmations.
 
 The all-threshold quantization audit finds maximum absolute acceptance changes
-of 0.0559, 0.0146, and 0.0048 for 8, 10, and 12 bits, respectively.  At the
+of 0.0559, 0.0146, and 0.0041 for 8, 10, and 12 bits at the $50{,}000$-event
+prefix, the common prefix at which all three widths are available.  At the
 selected high-tail thresholds the corresponding signed diagnostic is often much
 smaller, because the released feature values leave few events in the half-LSB
 boundary interval.  Both facts are retained: the former warns about potential
@@ -882,13 +939,22 @@ of finite prefixes.}
 
 \subsection{Explicit rate and coverage}
 
-The explicit-exposure benchmark certifies 11 of 36 cells.  One-second cells
-often fail because the confidence upper bound is too wide for a 10--12 Hz
-budget.  Eight-bit counters fail at 100 s because their full scale is below the
-approximately 8 Hz rate when the declared LSB is 0.01, 0.05, or 0.1 Hz.  These
-are distinct refusal reasons in the JSON report.  The 1, 10, and 100 s
-coverage diagnostics are 1.0000, 0.9998, and 0.9998, respectively, against the
-nominal per-cell coverage 0.9997222.
+The explicit-exposure benchmark certifies 11 of 36 cells.  All twelve one-second
+cells fail, because the confidence upper bound is too wide for a 10--12 Hz budget
+at that exposure.  The twelve hundred-second cells also all fail, but for two
+distinct reasons that the JSON report keeps separate, and the distinction matters
+because it points at different remedies.  A counter whose full scale lies below
+the certified rate is a representation problem: at a $0.01$~Hz LSB an 8-bit
+counter saturates at $255\times0.01=2.55$~Hz, far below the approximately
+$9$~Hz upper rate, and those cells are refused on the counter full-scale clause.
+At $0.05$ and $0.1$~Hz the same counter reaches $12.75$ and $25.5$~Hz, which
+comfortably contains the $8.98$ and $9.11$~Hz upper rates, so those cells are
+\emph{not} refused on range: they are refused because the observed count of about
+$800$ does not fit in 8 bits, which is a count-overflow problem.  We state the
+split explicitly because an earlier revision attributed all three to the
+full-scale clause, which is true only for the $0.01$~Hz cells and wrong for the
+other two.  The 1, 10, and 100 s coverage diagnostics are 1.0000, 0.9998, and
+0.9998, respectively, against the nominal per-cell coverage 0.9997222.
 
 The assumption-boundary stress makes the scope testable.  At $\alpha=0.01$,
 the stationary reference covers 0.99108 of repeats, while the two-state burst
@@ -1027,11 +1093,17 @@ strictly more informative.  It is the wrong trade for a pass/fail deployment
 predicate, because there the interval is being used as a guarantee and the
 cost of over-coverage is a refused configuration whereas the cost of
 under-coverage is an unsafe one accepted.  The price is visible in
-Table~\ref{tab:baseline}: two cells that Wilson would certify are refused here.
-We regard refusing a marginal cell as the correct behaviour for a certification
-tool, and the refusal is retained with its reason rather than dropped.  For the
-same reason the Poisson path follows the classical
-Garwood construction~\cite{Garwood1936} rather than a normal approximation.
+Table~\ref{tab:baseline}.  Wilson's interval is the \emph{stricter} bound on this
+data, not the more permissive one: it exceeds the exact bound in all 27 rows and
+certifies 18 cells against our 19, and the single cell where the two disagree in
+our favour is the 12-bit, $50{,}000$-prefix, $1\%$ target cell, where the exact
+bound is $0.009975$ and Wilson's is $0.010001$ against a $0.01$ target.  We
+report the direction of that difference because it is the opposite of the usual
+expectation, and only one cell rests on it.  We regard certifying a marginal cell
+as defensible when the bound is an exact inversion, and the refusal is retained
+with its reason rather than dropped.  For the same reason the Poisson path
+follows the classical Garwood construction~\cite{Garwood1936} rather than a
+normal approximation.
 
 \subsection{Quantization scaling, verified}
 \label{sec:quant-results}
@@ -1040,52 +1112,58 @@ The three quantization constants reported above deserve to be tested rather than
 merely reported.  Equation~\eqref{eq:quant-lipschitz} predicts that the
 quantization-induced acceptance change is proportional to the half-cell
 $\Delta_s/2$.  The public sweep uses 8, 10 and 12 bits, whose LSBs stand in the
-ratio $16:4:1$, so the law predicts that the reported changes fall in that same
-ratio.  Dividing each reported change by $\Delta_s/2$ gives $28.62$, $29.90$ and
-$39.32$, spanning a factor of $1.37$ where exact linearity would give $1.00$.
+ratio $16:4:1$, so the law predicts that the changes fall in that same ratio.
+Dividing each change at the common $50{,}000$-event prefix by $\Delta_s/2$ gives
+$28.62$, $29.90$ and $33.59$, spanning a factor of $1.17$ where exact linearity
+would give $1.00$.
 
 The three ratios are not equal, so a single constant is not a bound for all
-three.  A least-squares fit through the origin gives $R^2 = 0.9986$ and
+three.  A least-squares fit through the origin gives $R^2 = 0.9995$ and
 $\bar L \approx 28.7$, but that fit lies \emph{below} two of the three points
-($0.0146 > 0.0140$ and $0.0048 > 0.0035$), so it is a trend line and not an upper
+($0.0146 > 0.0140$ and $0.0041 > 0.0035$), so it is a trend line and not an upper
 bound.  A constant that actually satisfies Eq.~\eqref{eq:quant-lipschitz} on this
 sample is the largest observed ratio,
 \begin{equation}
  L_{\rm eff} \;=\; \max_{i}\,
- \frac{\bigl|\Delta\text{ acceptance}\bigr|_i}{\Delta_{s,i}/2} \;=\; 39.3 ,
+ \frac{\bigl|\Delta\text{ acceptance}\bigr|_i}{\Delta_{s,i}/2} \;=\; 33.6 ,
  \label{eq:quant-leff}
 \end{equation}
 which we report instead, because the quantity the contract needs is a bound and
 not a best fit.  Spread of this size is itself the finding: $L$ is a
 \emph{local} quantity and should be re-estimated near the operating threshold
-rather than transferred from a fit at another width.
+rather than transferred from a fit at another width.  We also record that an
+earlier revision of this table mixed deployment prefixes --- the 8- and 10-bit
+entries came from $50{,}000$ events while the 12-bit entry came from
+$10{,}000$ --- which inflated $L_{\rm eff}$ from $33.6$ to $39.3$.  The
+comparison is only like-for-like at a single prefix, and the corrected value is
+the one used everywhere else.
 
 \begin{table}[t]
 \centering\small
 \caption{The quantization scaling law of Eq.~\eqref{eq:quant-lipschitz} tested
-against the reported public-sweep values.  The proportionality is to
-$\Delta_s/2$, the half-cell, not to the full LSB.  The three ratios are not
-constant, so no single fitted constant bounds all three: the least-squares
-$\bar L = 28.7$ is below the 10- and 12-bit measurements, and only
-$L_{\rm eff} = 39.3$, the largest observed ratio, satisfies
+against the reported public-sweep values, all three taken at the same
+$50{,}000$-event deployment prefix so the comparison is like-for-like.  The
+proportionality is to $\Delta_s/2$, the half-cell, not to the full LSB.  The
+three ratios are not constant, so no single fitted constant bounds all three:
+the least-squares $\bar L = 28.7$ is below the 10- and 12-bit measurements, and
+only $L_{\rm eff} = 33.6$, the largest observed ratio, satisfies
 Eq.~\eqref{eq:quant-lipschitz} for every point.}
 \label{tab:quant-scaling}
 \begin{tabular}{rcccc}
 \toprule
 width [bit] & $\Delta_s/2$ & change & change$/(\Delta_s/2)$ & bounded by \\
- & & measured & & $\bar L{=}28.7$ / $L_{\rm eff}{=}39.3$ \\
+ & & measured & & $\bar L{=}28.7$ / $L_{\rm eff}{=}33.6$ \\
 \midrule
 8  & $1.953\times10^{-3}$ & 0.0559 & 28.62 & yes / yes \\
 10 & $4.883\times10^{-4}$ & 0.0146 & 29.90 & \textbf{no} / yes \\
-12 & $1.221\times10^{-4}$ & 0.0048 & 39.32 & \textbf{no} / yes \\
+12 & $1.221\times10^{-4}$ & 0.0041 & 33.59 & \textbf{no} / yes \\
 \bottomrule
 \end{tabular}
 \end{table}
 
 The 12-bit point is the outlier that forces $L_{\rm eff}$ above the fitted
-value.  Because all three numbers are taken at a single common deployment
-prefix, $n=50{,}000$, the comparison is like-for-like and the variation is not a
-sample-size artefact.  The identity~\eqref{eq:quant-identity} was also verified
+value, and it is also the one that an earlier revision had drawn from the wrong
+prefix.  The identity~\eqref{eq:quant-identity} was also verified
 directly, on $626$ configurations: $300$ randomised ones spanning U-shaped,
 atom-laden, point-mass and narrow-spike score distributions over $4$--$12$ bit
 widths, plus $326$ deterministic cases placing an atom exactly at the endpoint
@@ -1100,60 +1178,77 @@ test exposed it.  The DKW certificate~\eqref{eq:quant-dkw} covered the true
 change in $6/6$ cells across $n=10^4$, $5\times10^4$ and $2\times10^5$.  Both
 checks are reproducible from the deposited scripts.
 
-\subsection{Comparison with external limit-setting software}
+\subsection{Comparison with a published limit construction}
 \label{sec:tools}
 
-A claim of correctness is weaker than a comparison with independently published
-software, so the program was run against two external reference methods on
-identical inputs: the profile-likelihood construction of Rolke, L\'opez and
-Conrad~\cite{Rolke2005} as implemented by TRolke 2.0~\cite{Lundberg2010TRolke},
-reimplemented here from the published method
-because ROOT has no Windows wheel and could not be installed, and the CLs
-upper limit computed with pyhf~\cite{pyhf2021}, the maintained pure-Python
-implementation of HistFactory.  Table~\ref{tab:tools} reports the comparison for
-a counting experiment at $T=20$~s and $1-\alpha=0.95$.
+Two different questions can be asked of a limit like ours, and we separate them
+because an earlier revision of this section conflated them.
+
+The first is whether the closed form we evaluate is the one we claim.  For that,
+the exact one-sided Poisson limit is compared against the profile-likelihood
+construction of Rolke, L\'opez and Conrad~\cite{Rolke2005} as implemented by
+TRolke 2.0~\cite{Lundberg2010TRolke}, reimplemented here from the published
+method because ROOT has no Windows wheel and could not be installed on the
+reference platform.  Table~\ref{tab:tools} reports the comparison at
+$T=20$~s and $1-\alpha=0.95$.  This is a \emph{self-consistency} check and we
+label it as one: the reimplementation is ours, it runs in the same script, and it
+uses the same quantile routine, so agreement does not constitute external
+validation.  What it does show is that the two constructions are the same limit
+asymptotically, which is the behaviour a correct implementation must exhibit and
+which a transcription error in the closed form would destroy.
 
 \begin{table}[t]
 \centering\small
-\caption{Rate limits in Hz from three independent constructions on identical
-inputs ($T=20$~s, $1-\alpha=0.95$).  The exact one-sided limit is this work; the
-profile likelihood is the TRolke 2.0 construction reimplemented; CLs is pyhf.
-The right-hand column tracks the approach of the published profile-likelihood
-limit to the exact limit as the count grows.}
+\caption{One-sided 95\% upper limits in Hz at $T=20$~s.  The exact column is this
+work; the profile-likelihood column is the Rolke--L\'opez--Conrad construction
+reimplemented in the same script, so the agreement between them is
+self-consistency rather than independent validation.  The right-hand column
+shows the two converging as the count grows, as they must if the closed form is
+transcribed correctly.}
 \label{tab:tools}
-\begin{tabular}{rcccc}
+\begin{tabular}{rccc}
 \toprule
-$N$ & exact one-sided & profile likelihood & CLs (pyhf) & exact vs profile \\
+$N$ & exact one-sided & profile likelihood & relative difference \\
 \midrule
-0  & 0.149787 & refused & 0.112346 & --- \\
-1  & 0.237193 & 0.182328 & 0.181038 & 23.13\% \\
-2  & 0.314790 & 0.265152 & 0.250982 & 15.77\% \\
-5  & 0.525652 & 0.481500 & 0.458323 & 8.40\% \\
-10 & 0.848111 & 0.806990 & 0.782412 & 4.85\% \\
-20 & 1.453101 & 1.414209 & 1.389701 & 2.68\% \\
-50 & 3.164354 & 3.127483 & 3.102866 & 1.17\% \\
+0  & 0.149787 & 0.067639 & 54.85\% \\
+1  & 0.237193 & 0.182328 & 23.13\% \\
+2  & 0.314790 & 0.265152 & 15.77\% \\
+5  & 0.525652 & 0.481500 & 8.40\% \\
+10 & 0.848111 & 0.806990 & 4.85\% \\
+20 & 1.453101 & 1.414209 & 2.68\% \\
+50 & 3.164354 & 3.127483 & 1.17\% \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-Two features of Table~\ref{tab:tools} are the point of the exercise.  First, the
-published profile-likelihood construction converges to our exact one-sided
-limit, the relative difference falling monotonically from $23.1\%$ at $N=1$ to
-$1.17\%$ at $N=50$; the two are the same limit asymptotically, which is an
-independent check that our implementation computes what it claims.  Second, CLs
-sits systematically \emph{below} both, by a factor that tends to one as $N$
-grows ($0.750$ at $N=0$, $0.981$ at $N=50$).  This is not a discrepancy and we
-do not present it as agreement.  CLs is a modified-frequentist exclusion
-criterion with background protection, and it deliberately does not carry the
-coverage guarantee that a one-sided limit on the rate does.  Reporting our
-number on the same axis as the field's standard tool is the purpose; calibrating
-the difference is a question of hypothesis-testing conventions, not of
-numerical accuracy.
+The difference falls monotonically from $54.9\%$ at $N=0$ to $1.17\%$ at $N=50$.
+The large-$N$ behaviour is the informative part: the likelihood-ratio statistic
+is asymptotically chi-square distributed with one degree of freedom, so the two
+constructions coincide there, and the residual is a property of the asymptotic
+approximation rather than of either implementation.  At small counts they
+diverge, and the exact construction is the one we ship, because the exact tail
+inversion carries a coverage guarantee at every count while the asymptotic form
+does not.
 
-At $N=0$ the profile-likelihood row is marked ``refused'' rather than filled in.
-The likelihood-ratio form used here is not defined at zero count, and the
-program returns a structured refusal instead of substituting an approximation,
-consistent with the failure semantics of Sec.~\ref{sec:contract}.
+We note that our first attempt at this section reported the zero-count
+profile-likelihood entry as ``refused'', on the grounds that the
+likelihood-ratio form is undefined at zero count.  That was wrong twice over.
+The ratio is perfectly well defined there --- with the observed count at zero the
+statistic reduces to $2\mu$, giving $0.0676$~Hz, a factor $2.21$ below the exact
+value --- and it is the row where the asymptotic approximation is worst, so
+refusing to print it hid the least favourable entry in our own table.  The row is
+now filled in.
+
+The second question, whether a modified-frequentist exclusion criterion such as
+CLs reproduces our number, we deliberately do not claim to answer here.  A CLs
+limit computed for a signal strength in a model containing background bounds the
+signal rate, whereas our exact limit bounds the total rate; quoting the two side
+by side under a caption promising identical inputs would compare different
+parameters, and we withdraw such a comparison rather than relabel it.  A reader
+who wants it should fix the model, state the computational type of the CLs
+calculation (pyhf defaults to an asymptotic formula, which is unreliable at the
+low counts where the rows would be interesting), and quote the two parameters
+explicitly.
 
 \subsection{Evidence-chain summary}
 
@@ -1211,8 +1306,10 @@ diagnostic of failure modes rather than a partition of the 36 cells.}
 The cumulative-code construction in \texttt{rate\_curve} changes the reference
 certificate timing for 100,000 events from a repeated full-array scan to a
 single unique-and-cumulative pass.  On the reference platform the median
-timings are 2.37 ms for quantization, 2.81 ms for the public acceptance
-certificate, and 7.20 ms for the explicit rate certificate over 20 repeats.
+median timings are 3.20 ms for quantization, 4.57 ms for the public acceptance
+certificate, and 10.25 ms for the explicit rate certificate over 20 repeats
+(medians of a committed 20-repeat distribution; see Sec. 4.8 for the spread and
+its load sensitivity).
 These numbers are included to make scaling behavior inspectable, not to imply
 that Python is a trigger implementation or that the statistic can be evaluated
 inside a detector clock cycle.
@@ -1232,6 +1329,8 @@ $dataset += "events_anomalydetection_v2.features.full.h5"
 py examples/unified_benchmark.py `
   --public-input $dataset `
   --output reports/unified_benchmark.json
+py examples/coverage_stress.py `
+  --output reports/coverage_stress.json
 py examples/make_unified_figure.py `
   --input reports/unified_benchmark.json `
   --output-stem reports/figures/unified_benchmark
@@ -1247,8 +1346,18 @@ py examples/make_replay_table.py `
   --input reports/unified_benchmark.json `
   --output reports/reviewer_replay_table.csv
 py examples/performance_benchmark.py
-py -m pytest tests -q
+py -m pytest tests
 \end{verbatim}
+
+The coverage-stress step is present because \path{make_diagnostic_figures.py}
+consumes its output; an earlier revision of this block passed
+\path{reports/coverage_stress.json} to the figure script without ever generating
+it, so the sequence failed on a clean tree.  The test command is written without
+\path{-q} because \path{pyproject.toml} already sets \texttt{addopts = "-q"}, and
+a second \path{-q} suppresses the summary line altogether.  A reviewer who
+prefers the committed artifacts to a full replay can verify the deposited
+\path{reports/} directory instead; it is shipped in the deposit so that this
+script does not have to be re-run to exist.
 
 \subsection{Worked API path}
 
@@ -1473,15 +1582,25 @@ entry points that disagree about the same numbers are worse than one that is
 merely wrong, because a user cannot tell which answer to believe.  Both clauses
 are now applied on both paths.
 
-The audit also confirmed the properties on which the contract depends: the pass
-predicate $U_\alpha+\delta_r\le R_{\mathrm{budget}}$ was checked with exact
-rational arithmetic on $395{,}136$ structured and $60{,}000$ randomised
-configurations including the inclusive boundary, with no violation; the Poisson
-and binomial bounds match 30-digit bisection of the exact tails; and the
-implementation mutates no input and carries no state.  The defects above were
-found in the surrounding plumbing, not in the statistical core.  We report the
-episode because a certificate tool that published only its passing tests would
-be asking for exactly the trust it has not earned.
+The audit also exercised the properties on which the contract depends, and we
+separate here what the deposited package actually contains from what was
+inspected ad hoc.  The deposit includes a parametrised invariant asserting that
+the exact one-sided bound never falls below the point estimate, evaluated over
+$35$ alpha and count combinations, together with the $626$-configuration
+quantization check reported in Sec.~\ref{sec:quant-results}; both are in the test
+suite and reproduce from a clean clone.  The wider adversarial sweeps that
+motivated the fixes --- several hundred thousand generated configurations checked
+with exact rational arithmetic, and high-precision bisection of the exact tails
+--- were run during review but are \emph{not} shipped, so a reader cannot
+reproduce them from the deposit and we do not present them as evidence.  What can
+be asserted from the deposit is the weaker but checkable statement that the
+predicate is enforced exactly at the boundary, since the comparison admits
+equality and the regression suite exercises the passing side of it.
+
+The defects above were found in the surrounding plumbing rather than in the
+statistical core, and we report the episode because a certificate tool that
+published only its passing tests would be asking for exactly the trust it has
+not earned.
 
 \subsection{Threats to validity and extension path}
 

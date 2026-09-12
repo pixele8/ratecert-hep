@@ -277,7 +277,45 @@ def main() -> int:
     print("=" * 78)
     print("PART B  real LHCO sweep: does the reported change scale with Delta/2?")
     print("=" * 78)
-    obs = {8: 0.0559, 10: 0.0146, 12: 0.0048}
+    # The three changes are READ FROM THE DEPOSITED PUBLIC-DATA REPORT, at a
+    # single common deployment prefix, rather than typed in as literals.
+    #
+    # An earlier revision hard-coded obs = {8: 0.0559, 10: 0.0146, 12: 0.0048}
+    # and read no file at all, so the "cross-check against the real LHCO
+    # results" was arithmetic on three constants: it could not detect the
+    # report changing, and two of the three values came from one prefix while
+    # the third came from another.  Keys are `quantization_sweep.
+    # max_abs_acceptance_delta`, the maximum over all observed code thresholds.
+    PREFIX = 50000
+    report_path = REPO / "reports" / "public_lhco_acceptance.json"
+    if not report_path.exists():
+        raise SystemExit(
+            "missing %s: run examples/public_lhco_acceptance.py first, or set "
+            "--public-report to a deposited report" % report_path
+        )
+    public = json.loads(report_path.read_text(encoding="utf-8"))
+    obs: dict[int, float] = {}
+    for cell in public["cells"]:
+        if cell.get("sample_size_requested") != PREFIX:
+            continue
+        sweep = cell.get("quantization_sweep")
+        if not isinstance(sweep, dict):
+            continue
+        value = sweep.get("max_abs_acceptance_delta")
+        if value is None:
+            continue
+        bits = int(cell["bits"])
+        obs[bits] = max(obs.get(bits, 0.0), float(value))
+    want = (8, 10, 12)
+    missing = [b for b in want if b not in obs]
+    if missing:
+        raise SystemExit(
+            "report has no quantization_sweep maximum for bits %s at prefix %d; "
+            "found %s" % (missing, PREFIX, sorted(obs))
+        )
+    print("  source: %s" % report_path.name)
+    print("  prefix: %d events (common to all three widths)" % PREFIX)
+    obs = {b: obs[b] for b in want}
     lsb = {b: 2.0 ** (-b) for b in obs}
     print("%4s %14s %16s %16s" % ("bits", "Delta_s", "reported change", "change/(Delta/2)"))
     for b in (8, 10, 12):

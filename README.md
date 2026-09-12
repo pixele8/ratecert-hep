@@ -40,7 +40,11 @@ states the Poisson confidence level, records the fixed-point format, and returns
 
 The rate resolution is a deployment declaration (`rate_lsb_hz` and optional
 `rate_counter_bits`). For a pure count-per-window implementation it can be
-derived with `RateQuantizationSpec.from_counter_window(window_s, counter_bits=...)`.
+derived with
+`RateQuantizationSpec.from_counter_window(exposure_s, counter_bits=...)`.
+The first parameter is the **exposure** in seconds, not a variable named
+`window_s`; an earlier version of this line documented the wrong name and raised
+`TypeError` for anyone who copied it.
 
 ## Public HEP validation
 
@@ -118,11 +122,17 @@ The exact construction is compared quantitatively against the empirical tail,
 a normal (Wald) bound, and a Wilson score bound:
 
 ```powershell
+py -m pip install -e ".[figures]"
 py examples/baseline_comparison.py
 py examples/make_baseline_figure.py `
   --input reports/baseline_comparison.json `
   --output-stem reports/figures/baseline_coverage
 ```
+
+The extra is installed here rather than later because
+`make_baseline_figure.py` needs Matplotlib; an earlier version of this README
+ran the figure script 56 lines before the install, so the first figure command a
+new user tried failed with `ModuleNotFoundError`.
 
 `baseline_comparison.py` applies all four constructions to the identical 27
 deployment cells and measures empirical coverage against a known ground-truth
@@ -145,32 +155,54 @@ holds for *every* distribution:
 py examples/quantization_certificate.py
 ```
 
-The script verifies the identity on a controlled distribution (12/12 cells),
-measures the linear scaling `boundary mass ~ L * Delta_s` (Lipschitz form), and
-applies a Dvoretzky-Kiefer-Wolfowitz band to turn the boundary mass into a
-finite-sample certificate (6/6 cells covered). It then tests the scaling law
-against the real 8/10/12-bit LHCO results, where a fit through the origin gives
-R^2 = 0.9986.
+The script verifies the **exact half-cell identity** `|change| == P(b - Delta/2
+<= S < b)` on a controlled distribution and on adversarial ones (626
+configurations, including a deterministic family with an atom exactly at the
+interval endpoint), measures the linear scaling `change ~ L * (Delta_s / 2)`,
+and applies a Dvoretzky-Kiefer-Wolfowitz band to turn the cell mass into a
+finite-sample certificate. It then tests the scaling law against the real
+LHCO results at a single common deployment prefix, where a fit through the
+origin gives R^2 = 0.9995 and the bound-consistent constant is L_eff = 33.6.
+
+Note the factor of two, because an earlier version of this section got it wrong:
+the symmetric bound `P(b - Delta/2 <= S < b + Delta/2)` (a *full* cell) is valid
+but about twice as loose as the half-cell identity, and the Lipschitz
+consequence is `L * Delta_s / 2`, **not** `L * Delta_s`. The script prints both
+and says which is which; do not quote the symmetric form as "the exact
+identity".
 
 The DKW route is rigorous but loose at small samples (2*eps ~ 0.027 at
 n = 1e4); the script reports that cost rather than presenting only the
 favourable numbers.
 
-## Comparison with external limit-setting software
+## Comparison with a published limit construction
 
 ```powershell
 py -m pip install pyhf
 py examples/tool_comparison.py
 ```
 
-Compares three constructions on identical counting-experiment inputs: this
-work's exact one-sided Poisson limit, the TRolke 2.0 profile-likelihood
+Compares this work's exact one-sided Poisson limit against the profile-likelihood
+construction of Rolke, Lopez and Conrad as implemented by TRolke 2.0,
+reimplemented here because ROOT has no Windows wheel. The two agree to 1.17% at
+N = 50 and differ by 54.9% at N = 0, which is the expected behaviour of the
+asymptotic likelihood-ratio form.
+
+This is **self-consistency, not independent validation**: the reimplementation
+is ours, it runs in the same script, and it never imports `ratecert`. The script
+also no longer quotes a CLs column, because a CLs limit on a signal strength in
+a background-bearing model bounds a different parameter from a total-rate limit,
+and the two cannot be placed side by side under a claim of identical inputs.
 construction reimplemented from its publication (ROOT has no Windows wheel), and
 the CLs upper limit from pyhf. The published profile-likelihood limit converges
-to our exact limit (23.1% difference at N=1, 1.17% at N=50), which is an
-independent check that our implementation computes the right quantity. CLs sits
-systematically below both, which is expected for an exclusion criterion, and the
-script says so rather than presenting it as agreement.
+to our exact limit (23.1% difference at N=1, 1.17% at N=50).
+
+Two corrections to how this was previously described here. First, this is
+**self-consistency, not an independent check** — the reimplementation is ours,
+it lives in the same script, and `tool_comparison.py` never imports `ratecert`,
+so the package is not executed by it at all. Second, the CLs column has been
+withdrawn: CLs bounds a signal strength in a background-bearing model, which is a
+different parameter from the total-rate bound our exact column reports.
 
 Generate the paper-facing static figure and its data manifest with:
 

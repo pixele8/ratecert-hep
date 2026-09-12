@@ -22,9 +22,17 @@ FIELDS = [
     "sample_size",
     "point_estimate",
     "upper_bound",
-    "rate_margin_hz",
+    # The decision margin is the quantity that decides pass/fail:
+    # budget - (upper + quantization margin).  It is NEGATIVE on a refusal.
+    # The quantization margin (lsb/2) is a different, always-positive constant
+    # and was previously published under the name "rate_margin_hz", which made
+    # 25 refused rows display a positive "margin".  Both are now present, under
+    # names that say which is which.
+    "deployment_margin_hz",
+    "quantization_margin_hz",
     "counter_max_count",
     "status",
+    "warnings",
     "reasons",
 ]
 
@@ -47,9 +55,11 @@ def _public_rows(report: dict) -> list[dict[str, object]]:
                 "sample_size": cell["sample_size"],
                 "point_estimate": cell["empirical_acceptance"],
                 "upper_bound": cell["upper_acceptance"],
-                "rate_margin_hz": "",
+                "deployment_margin_hz": "",
+                "quantization_margin_hz": "",
                 "counter_max_count": "",
                 "status": cell["status"],
+                "warnings": "; ".join(cell.get("warnings", [])),
                 "reasons": "; ".join(cell["reasons"]),
             }
         )
@@ -75,9 +85,11 @@ def _rate_rows(report: dict) -> list[dict[str, object]]:
                 "sample_size": cell["fixed_point"]["n_scores"],
                 "point_estimate": cell["point_rate_hz"],
                 "upper_bound": cell["upper_rate_hz"],
-                "rate_margin_hz": cell["quantization_margin_hz"],
+                "deployment_margin_hz": cell["deployment_margin_hz"],
+                "quantization_margin_hz": cell["quantization_margin_hz"],
                 "counter_max_count": rate_spec["max_count"],
                 "status": cell["status"],
+                "warnings": "; ".join(cell.get("warnings", [])),
                 "reasons": "; ".join(cell["reasons"]),
             }
         )

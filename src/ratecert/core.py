@@ -252,18 +252,46 @@ def quantize_scores(
         raw = np.trunc(scaled)
         error_bound = spec.lsb
 
+    # Range test and cast, done so that no out-of-range value can slip through.
+    #
+    # The comparison is in float64, and for widths of 54 bits and above
+    # float(code_max) rounds UP, so `raw > code_max` misses the value code_max+1
+    # exactly (at 63 bits, float(2**63 - 1) == 2**63).  Those values then wrapped
+    # to INT64_MIN in the cast below, giving saturation_count = 0 and a count of
+    # zero for a stream that is entirely in range --- a false CERTIFIED.
+    #
+    # Two independent checks close it: the float comparison, and a post-cast
+    # integer comparison against code_max, which is exact and catches anything
+    # the float test let through.
     outside = (raw < spec.code_min) | (raw > spec.code_max)
+    clipped = np.clip(raw, spec.code_min, spec.code_max)
+    # Cast through int64 without letting NumPy warn: values that survive the
+    # float test can still equal 2**63 at wide formats (float(2**63 - 1) == 2**63),
+    # which is out of int64 range and would raise "invalid value encountered in
+    # cast".  Reducing modulo 2**64 first keeps the cast well-defined; the
+    # post-cast comparison below then flags anything that did not fit.
+    if spec.signed:
+        codes = np.clip(clipped, -(2.0 ** 63), 2.0 ** 63 - 1024.0).astype(np.int64)
+    else:
+        wrapped = np.mod(clipped, 2.0 ** 64)
+        codes = wrapped.astype(np.uint64).astype(np.int64)
+        codes = np.where(clipped > float(np.iinfo(np.int64).max), np.int64(-1), codes)
+    overflow = (codes > spec.code_max) | (codes < spec.code_min)
+    outside = outside | overflow
     saturation_count = int(np.count_nonzero(outside))
     if saturation_count and spec.saturation == "error":
         raise ValueError(
             f"{saturation_count} score(s) exceed fixed-point range "
             f"[{spec.code_min}, {spec.code_max}]"
         )
-    codes = np.clip(raw, spec.code_min, spec.code_max).astype(np.int64)
     dequantized = codes.astype(float) * spec.lsb
-    max_abs_error = float(np.max(np.abs(values - dequantized)))
+    max_abs_error = float(np.max(np.abs(values - dequantized))) if values.size else 0.0
     if saturation_count:
         # A range-clipped value has no finite lsb-only error guarantee.
+        error_bound = math.inf
+    elif error_bound > 0 and max_abs_error > error_bound:
+        # The deterministic lsb bound must actually hold; if it does not, the
+        # certificate is not entitled to claim it.
         error_bound = math.inf
     return QuantizedScores(codes, saturation_count, max_abs_error, error_bound)
 
@@ -385,7 +413,7 @@ def certify_rate(
     rate_budget_hz: float,
     alpha: float,
     spec: FixedPointSpec,
-    rate_spec: RateQuantizationSpec | None,
+    rate_spec: RateQuantizationSpec | None = None,
     deployment_block_id: str,
     calibration_block_id: str,
     prescale: int = 1,
@@ -481,6 +509,23 @@ def certify_rate(
     except ValueError as exc:
         reasons.append(str(exc))
         upper_rate = math.inf
+    # A non-finite statistical bound must be an explicit refusal.
+    #
+    # Previously every clause that could catch this was itself gated behind
+    # math.isfinite(upper_rate), so a bound that overflowed to inf --- reachable
+    # with a subnormal exposure_s, which the validators accept --- skipped the
+    # counter-range, counter-full-scale and budget clauses simultaneously and
+    # produced CERTIFIED with upper_rate_hz = inf and an empty reason list.
+    # The published JSON then showed "status": "CERTIFIED" next to a null bound.
+    # A certificate is a claim about a number; if there is no finite number,
+    # there is nothing to certify.
+    if not math.isfinite(point_rate):
+        reasons.append("point rate is not finite; cannot certify a rate")
+    if not math.isfinite(upper_rate):
+        reasons.append(
+            "finite-sample upper rate is not finite; refusing to certify a "
+            "configuration whose bound cannot be evaluated"
+        )
     if (
         rate_spec is not None
         and rate_spec.max_rate_hz is not None

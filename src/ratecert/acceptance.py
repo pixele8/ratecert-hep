@@ -435,14 +435,33 @@ def certify_acceptance(
                     f"rate counter overflow: count {count} exceeds {rate_spec.max_count}"
                 )
             if (rate_spec.max_rate_hz is not None
+                    and math.isfinite(upper_rate)
                     and upper_rate > rate_spec.max_rate_hz):
                 reasons.append(
                     "finite-sample upper rate exceeds the declared rate-counter full scale"
                 )
-            if budget + 1e-15 < upper_rate + rate_spec.error_bound_hz:
+            if math.isfinite(upper_rate) and not math.isfinite(upper):
+                # Defensive: an infinite acceptance bound cannot yield a finite
+                # rate limit, so a finite upper_rate here would be inconsistent.
+                reasons.append("acceptance bound is not finite; refusing to certify")
+            if (math.isfinite(upper_rate)
+                    and budget + 1e-15 < upper_rate + rate_spec.error_bound_hz):
                 reasons.append("finite-sample upper rate plus fixed-point rate margin exceeds budget")
     elif rate_spec is not None and input_rate_hz is None:
         warnings.append("rate resolution is recorded as a declaration but cannot be applied without input flux")
+    # A non-finite statistical bound must be an explicit refusal, not a silently
+    # skipped comparison.  beta.isf returns NaN for extremely small alpha (about
+    # 1e-125 and below), and NaN makes every comparison False, so the
+    # target, counter-overflow, counter-full-scale and budget clauses were all
+    # bypassed and the configuration came back CERTIFIED with a NaN bound and an
+    # empty reason list.  Non-finite in either direction is a refusal.
+    if not math.isfinite(upper):
+        reasons.append(
+            "finite-sample upper acceptance is not finite; refusing to certify a "
+            "configuration whose bound cannot be evaluated"
+        )
+    if not math.isfinite(empirical):
+        reasons.append("empirical acceptance is not finite; cannot certify")
     if math.isfinite(upper) and math.isfinite(target_value) and upper > target_value + 1e-15:
         reasons.append("finite-sample upper acceptance exceeds target_acceptance")
     certified = not reasons
